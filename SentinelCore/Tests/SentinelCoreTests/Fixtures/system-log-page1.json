@@ -1,0 +1,4010 @@
+{
+  "page_number": 1,
+  "total_element_count": 140,
+  "total_page_count": 2,
+  "data": [
+    {
+      "category": "INTERNET_AND_WAN",
+      "event": "NETWORK_WAN_RESTORED",
+      "id": "000000000000000000000054",
+      "key": "NETWORK_WAN_RESTORED_2",
+      "message_raw": "Internet connection {WAN_ID} {ISP_NAME} on port {PORT} is restored.",
+      "parameters": {
+        "CONSOLE_NAME": {
+          "id": "Dream Machine Pro Max",
+          "name": "Dream Machine Pro Max"
+        },
+        "DEVICE": {
+          "fingerprint_source": 0,
+          "id": "02:00:00:00:00:05",
+          "ip": "10.20.0.8",
+          "model": "UDM-Pro-Max",
+          "model_name": "UDMPROMAX",
+          "name": "Dream Machine Pro Max",
+          "version": "5.1.33"
+        },
+        "ISP_NAME": {
+          "enclosed_with_brackets": true,
+          "name": "China Telecom",
+          "not_actionable": true
+        },
+        "ISP_ASN": {
+          "enclosed_with_brackets": true,
+          "name": "4134",
+          "not_actionable": true
+        },
+        "PORT": {
+          "id": "10",
+          "name": "10",
+          "not_actionable": true
+        },
+        "DURATION": {
+          "id": "88",
+          "name": "1m 28s",
+          "not_actionable": true
+        },
+        "WAN_ID": {
+          "id": "WAN",
+          "name": "WAN1",
+          "not_actionable": true
+        },
+        "WAN_NAME": {
+          "id": "WAN",
+          "name": "Internet 1"
+        },
+        "WAN_SUBNET": {
+          "name": "203.0.113.19/32",
+          "not_actionable": true
+        },
+        "WAN_SLA": {
+          "id": "000000000000000000000011",
+          "name": "Custom Verification"
+        }
+      },
+      "severity": "MEDIUM",
+      "show_on_dashboard": false,
+      "status": "NEW",
+      "subcategory": "INTERNET_OUTAGE_AND_FAILOVER",
+      "target": "WAN_ID",
+      "timestamp": 1790980397701,
+      "title_raw": "{WAN_ID} Internet Restored",
+      "type": "BACKUP_CONNECTION_IN_USE"
+    },
+    {
+      "category": "INTERNET_AND_WAN",
+      "event": "NETWORK_WAN_FAILED",
+      "id": "000000000000000000000055",
+      "key": "NETWORK_WAN_FAILED_2",
+      "message_raw": "Internet connection {WAN_ID} {ISP_NAME} on port {PORT} is down.",
+      "parameters": {
+        "CONSOLE_NAME": {
+          "id": "Dream Machine Pro Max",
+          "name": "Dream Machine Pro Max"
+        },
+        "DEVICE": {
+          "fingerprint_source": 0,
+          "id": "02:00:00:00:00:05",
+          "ip": "10.20.0.8",
+          "model": "UDM-Pro-Max",
+          "model_name": "UDMPROMAX",
+          "name": "Dream Machine Pro Max",
+          "version": "5.1.33"
+        },
+        "ISP_NAME": {
+          "enclosed_with_brackets": true,
+          "name": "China Telecom",
+          "not_actionable": true
+        },
+        "ISP_ASN": {
+          "enclosed_with_brackets": true,
+          "name": "4134",
+          "not_actionable": true
+        },
+        "PORT": {
+          "id": "10",
+          "name": "10",
+          "not_actionable": true
+        },
+        "WAN_ID": {
+          "id": "WAN",
+          "name": "WAN1",
+          "not_actionable": true
+        },
+        "WAN_NAME": {
+          "id": "WAN",
+          "name": "Internet 1"
+        },
+        "WAN_SLA": {
+          "id": "000000000000000000000011",
+          "name": "Custom Verification"
+        }
+      },
+      "severity": "VERY_HIGH",
+      "show_on_dashboard": true,
+      "status": "HIDDEN",
+      "subcategory": "INTERNET_OUTAGE_AND_FAILOVER",
+      "target": "WAN_ID",
+      "timestamp": 1790980367219,
+      "title_raw": "{WAN_ID} Internet Down",
+      "type": "BACKUP_CONNECTION_IN_USE"
+    },
+    {
+      "category": "SECURITY",
+      "event": "THREAT_DETECTED",
+      "id": "000000000000000000000056",
+      "key": "THREAT_DETECTED_V3",
+      "message_raw": "A network intrusion attempt from {SRC_IP} to {DST_IP} has been detected.",
+      "parameters": {
+        "CONSOLE_NAME": {
+          "id": "Dream Machine Pro Max",
+          "name": "Dream Machine Pro Max"
+        },
+        "CONSOLE_WITH_DEVICE_NAME": {
+          "id": "Dream Machine Pro Max",
+          "name": "Dream Machine Pro Max"
+        },
+        "DEVICE": {
+          "fingerprint_source": 0,
+          "id": "02:00:00:00:00:05",
+          "ip": "10.20.0.8",
+          "model": "UDM-Pro-Max",
+          "model_name": "UDMPROMAX",
+          "name": "Dream Machine Pro Max",
+          "version": "5.1.33"
+        },
+        "DST_IP": {
+          "id": "203.0.113.20",
+          "name": "203.0.113.20",
+          "not_actionable": true
+        },
+        "SRC_IP": {
+          "id": "10.20.0.2",
+          "name": "10.20.0.2",
+          "not_actionable": true
+        },
+        "INITIATOR_ID": {
+          "id": "000000000000000000000057"
+        }
+      },
+      "severity": "LOW",
+      "show_on_dashboard": false,
+      "status": "NEW",
+      "subcategory": "SECURITY_INTRUSION_PREVENTION",
+      "target": "DEVICE",
+      "timestamp": 1790897620957,
+      "title_raw": "Threat Detected",
+      "type": "THREAT_DETECTION_AND_PREVENTION"
+    },
+    {
+      "category": "INTERNET_AND_WAN",
+      "event": "NETWORK_WAN_RESTORED",
+      "id": "000000000000000000000058",
+      "key": "NETWORK_WAN_RESTORED_2",
+      "message_raw": "Internet connection {WAN_ID} {ISP_NAME} on port {PORT} is restored.",
+      "parameters": {
+        "CONSOLE_NAME": {
+          "id": "Dream Machine Pro Max",
+          "name": "Dream Machine Pro Max"
+        },
+        "DEVICE": {
+          "fingerprint_source": 0,
+          "id": "02:00:00:00:00:05",
+          "ip": "10.20.0.8",
+          "model": "UDM-Pro-Max",
+          "model_name": "UDMPROMAX",
+          "name": "Dream Machine Pro Max",
+          "version": "5.1.33"
+        },
+        "ISP_NAME": {
+          "enclosed_with_brackets": true,
+          "name": "China Telecom",
+          "not_actionable": true
+        },
+        "ISP_ASN": {
+          "enclosed_with_brackets": true,
+          "name": "4134",
+          "not_actionable": true
+        },
+        "PORT": {
+          "id": "10",
+          "name": "10",
+          "not_actionable": true
+        },
+        "DURATION": {
+          "id": "66",
+          "name": "1m 6s",
+          "not_actionable": true
+        },
+        "WAN_ID": {
+          "id": "WAN",
+          "name": "WAN1",
+          "not_actionable": true
+        },
+        "WAN_NAME": {
+          "id": "WAN",
+          "name": "Internet 1"
+        },
+        "WAN_SUBNET": {
+          "name": "203.0.113.21/32",
+          "not_actionable": true
+        },
+        "WAN_SLA": {
+          "id": "000000000000000000000011",
+          "name": "Custom Verification"
+        }
+      },
+      "severity": "MEDIUM",
+      "show_on_dashboard": false,
+      "status": "NEW",
+      "subcategory": "INTERNET_OUTAGE_AND_FAILOVER",
+      "target": "WAN_ID",
+      "timestamp": 1790893970632,
+      "title_raw": "{WAN_ID} Internet Restored",
+      "type": "BACKUP_CONNECTION_IN_USE"
+    },
+    {
+      "category": "INTERNET_AND_WAN",
+      "event": "NETWORK_WAN_FAILED",
+      "id": "000000000000000000000059",
+      "key": "NETWORK_WAN_FAILED_2",
+      "message_raw": "Internet connection {WAN_ID} {ISP_NAME} on port {PORT} is down.",
+      "parameters": {
+        "CONSOLE_NAME": {
+          "id": "Dream Machine Pro Max",
+          "name": "Dream Machine Pro Max"
+        },
+        "DEVICE": {
+          "fingerprint_source": 0,
+          "id": "02:00:00:00:00:05",
+          "ip": "10.20.0.8",
+          "model": "UDM-Pro-Max",
+          "model_name": "UDMPROMAX",
+          "name": "Dream Machine Pro Max",
+          "version": "5.1.33"
+        },
+        "ISP_NAME": {
+          "enclosed_with_brackets": true,
+          "name": "China Telecom",
+          "not_actionable": true
+        },
+        "ISP_ASN": {
+          "enclosed_with_brackets": true,
+          "name": "4134",
+          "not_actionable": true
+        },
+        "PORT": {
+          "id": "10",
+          "name": "10",
+          "not_actionable": true
+        },
+        "WAN_ID": {
+          "id": "WAN",
+          "name": "WAN1",
+          "not_actionable": true
+        },
+        "WAN_NAME": {
+          "id": "WAN",
+          "name": "Internet 1"
+        },
+        "WAN_SLA": {
+          "id": "000000000000000000000011",
+          "name": "Custom Verification"
+        }
+      },
+      "severity": "VERY_HIGH",
+      "show_on_dashboard": true,
+      "status": "HIDDEN",
+      "subcategory": "INTERNET_OUTAGE_AND_FAILOVER",
+      "target": "WAN_ID",
+      "timestamp": 1790893965307,
+      "title_raw": "{WAN_ID} Internet Down",
+      "type": "BACKUP_CONNECTION_IN_USE"
+    },
+    {
+      "category": "INTERNET_AND_WAN",
+      "event": "ISP_PACKET_LOSS",
+      "id": "00000000000000000000005a",
+      "key": "ISP_PACKET_LOSS_2",
+      "message_raw": "Internet connection {WAN_ID} {ISP_NAME} on port {PORT} is experiencing packet loss.",
+      "parameters": {
+        "CONSOLE_NAME": {
+          "id": "Dream Machine Pro Max",
+          "name": "Dream Machine Pro Max"
+        },
+        "DEVICE": {
+          "fingerprint_source": 0,
+          "id": "02:00:00:00:00:05",
+          "ip": "10.20.0.8",
+          "model": "UDM-Pro-Max",
+          "model_name": "UDMPROMAX",
+          "name": "Dream Machine Pro Max",
+          "version": "5.1.33"
+        },
+        "ISP_NAME": {
+          "enclosed_with_brackets": true,
+          "name": "China Telecom",
+          "not_actionable": true
+        },
+        "ISP_ASN": {
+          "enclosed_with_brackets": true,
+          "name": "4134",
+          "not_actionable": true
+        },
+        "PORT": {
+          "id": "10",
+          "name": "10",
+          "not_actionable": true
+        },
+        "WAN_ID": {
+          "id": "WAN",
+          "name": "WAN1",
+          "not_actionable": true
+        },
+        "WAN_NAME": {
+          "id": "WAN",
+          "name": "Internet 1"
+        },
+        "WAN_SLA": {
+          "id": "000000000000000000000011",
+          "name": "Custom Verification"
+        },
+        "WAN_SLA_SERVER": {
+          "name": "203.0.113.6"
+        }
+      },
+      "severity": "MEDIUM",
+      "show_on_dashboard": false,
+      "status": "NEW",
+      "subcategory": "INTERNET_PERFORMANCE",
+      "target": "WAN_ID",
+      "timestamp": 1790893926462,
+      "title_raw": "{WAN_ID} Packet Loss Detected",
+      "type": "ISP"
+    },
+    {
+      "category": "INTERNET_AND_WAN",
+      "event": "NETWORK_WAN_RESTORED",
+      "id": "00000000000000000000005b",
+      "key": "NETWORK_WAN_RESTORED_2",
+      "message_raw": "Internet connection {WAN_ID} {ISP_NAME} on port {PORT} is restored.",
+      "parameters": {
+        "CONSOLE_NAME": {
+          "id": "Dream Machine Pro Max",
+          "name": "Dream Machine Pro Max"
+        },
+        "DEVICE": {
+          "fingerprint_source": 0,
+          "id": "02:00:00:00:00:05",
+          "ip": "10.20.0.8",
+          "model": "UDM-Pro-Max",
+          "model_name": "UDMPROMAX",
+          "name": "Dream Machine Pro Max",
+          "version": "5.1.33"
+        },
+        "ISP_NAME": {
+          "enclosed_with_brackets": true,
+          "name": "China Telecom",
+          "not_actionable": true
+        },
+        "ISP_ASN": {
+          "enclosed_with_brackets": true,
+          "name": "4134",
+          "not_actionable": true
+        },
+        "PORT": {
+          "id": "10",
+          "name": "10",
+          "not_actionable": true
+        },
+        "DURATION": {
+          "id": "92",
+          "name": "1m 32s",
+          "not_actionable": true
+        },
+        "WAN_ID": {
+          "id": "WAN",
+          "name": "WAN1",
+          "not_actionable": true
+        },
+        "WAN_NAME": {
+          "id": "WAN",
+          "name": "Internet 1"
+        },
+        "WAN_SUBNET": {
+          "name": "203.0.113.21/32",
+          "not_actionable": true
+        },
+        "WAN_SLA": {
+          "id": "000000000000000000000011",
+          "name": "Custom Verification"
+        }
+      },
+      "severity": "MEDIUM",
+      "show_on_dashboard": false,
+      "status": "NEW",
+      "subcategory": "INTERNET_OUTAGE_AND_FAILOVER",
+      "target": "WAN_ID",
+      "timestamp": 1790807576577,
+      "title_raw": "{WAN_ID} Internet Restored",
+      "type": "BACKUP_CONNECTION_IN_USE"
+    },
+    {
+      "category": "INTERNET_AND_WAN",
+      "event": "NETWORK_WAN_FAILED",
+      "id": "00000000000000000000005c",
+      "key": "NETWORK_WAN_FAILED_2",
+      "message_raw": "Internet connection {WAN_ID} {ISP_NAME} on port {PORT} is down.",
+      "parameters": {
+        "CONSOLE_NAME": {
+          "id": "Dream Machine Pro Max",
+          "name": "Dream Machine Pro Max"
+        },
+        "DEVICE": {
+          "fingerprint_source": 0,
+          "id": "02:00:00:00:00:05",
+          "ip": "10.20.0.8",
+          "model": "UDM-Pro-Max",
+          "model_name": "UDMPROMAX",
+          "name": "Dream Machine Pro Max",
+          "version": "5.1.33"
+        },
+        "ISP_NAME": {
+          "enclosed_with_brackets": true,
+          "name": "China Telecom",
+          "not_actionable": true
+        },
+        "ISP_ASN": {
+          "enclosed_with_brackets": true,
+          "name": "4134",
+          "not_actionable": true
+        },
+        "PORT": {
+          "id": "10",
+          "name": "10",
+          "not_actionable": true
+        },
+        "WAN_ID": {
+          "id": "WAN",
+          "name": "WAN1",
+          "not_actionable": true
+        },
+        "WAN_NAME": {
+          "id": "WAN",
+          "name": "Internet 1"
+        },
+        "WAN_SLA": {
+          "id": "000000000000000000000011",
+          "name": "Custom Verification"
+        }
+      },
+      "severity": "VERY_HIGH",
+      "show_on_dashboard": true,
+      "status": "HIDDEN",
+      "subcategory": "INTERNET_OUTAGE_AND_FAILOVER",
+      "target": "WAN_ID",
+      "timestamp": 1790807549135,
+      "title_raw": "{WAN_ID} Internet Down",
+      "type": "BACKUP_CONNECTION_IN_USE"
+    },
+    {
+      "category": "INTERNET_AND_WAN",
+      "event": "ISP_PACKET_LOSS",
+      "id": "00000000000000000000005d",
+      "key": "ISP_PACKET_LOSS_2",
+      "message_raw": "Internet connection {WAN_ID} {ISP_NAME} on port {PORT} is experiencing packet loss.",
+      "parameters": {
+        "CONSOLE_NAME": {
+          "id": "Dream Machine Pro Max",
+          "name": "Dream Machine Pro Max"
+        },
+        "DEVICE": {
+          "fingerprint_source": 0,
+          "id": "02:00:00:00:00:05",
+          "ip": "10.20.0.8",
+          "model": "UDM-Pro-Max",
+          "model_name": "UDMPROMAX",
+          "name": "Dream Machine Pro Max",
+          "version": "5.1.33"
+        },
+        "ISP_NAME": {
+          "enclosed_with_brackets": true,
+          "name": "China Telecom",
+          "not_actionable": true
+        },
+        "ISP_ASN": {
+          "enclosed_with_brackets": true,
+          "name": "4134",
+          "not_actionable": true
+        },
+        "PORT": {
+          "id": "10",
+          "name": "10",
+          "not_actionable": true
+        },
+        "WAN_ID": {
+          "id": "WAN",
+          "name": "WAN1",
+          "not_actionable": true
+        },
+        "WAN_NAME": {
+          "id": "WAN",
+          "name": "Internet 1"
+        },
+        "WAN_SLA": {
+          "id": "000000000000000000000011",
+          "name": "Custom Verification"
+        },
+        "WAN_SLA_SERVER": {
+          "name": "203.0.113.6"
+        }
+      },
+      "severity": "MEDIUM",
+      "show_on_dashboard": false,
+      "status": "NEW",
+      "subcategory": "INTERNET_PERFORMANCE",
+      "target": "WAN_ID",
+      "timestamp": 1790807465066,
+      "title_raw": "{WAN_ID} Packet Loss Detected",
+      "type": "ISP"
+    },
+    {
+      "category": "INTERNET_AND_WAN",
+      "event": "NETWORK_WAN_RESTORED",
+      "id": "00000000000000000000005e",
+      "key": "NETWORK_WAN_RESTORED_2",
+      "message_raw": "Internet connection {WAN_ID} {ISP_NAME} on port {PORT} is restored.",
+      "parameters": {
+        "CONSOLE_NAME": {
+          "id": "Dream Machine Pro Max",
+          "name": "Dream Machine Pro Max"
+        },
+        "DEVICE": {
+          "fingerprint_source": 0,
+          "id": "02:00:00:00:00:05",
+          "ip": "10.20.0.8",
+          "model": "UDM-Pro-Max",
+          "model_name": "UDMPROMAX",
+          "name": "Dream Machine Pro Max",
+          "version": "5.1.33"
+        },
+        "ISP_NAME": {
+          "enclosed_with_brackets": true,
+          "name": "China Telecom",
+          "not_actionable": true
+        },
+        "ISP_ASN": {
+          "enclosed_with_brackets": true,
+          "name": "4134",
+          "not_actionable": true
+        },
+        "PORT": {
+          "id": "10",
+          "name": "10",
+          "not_actionable": true
+        },
+        "DURATION": {
+          "id": "69",
+          "name": "1m 9s",
+          "not_actionable": true
+        },
+        "WAN_ID": {
+          "id": "WAN",
+          "name": "WAN1",
+          "not_actionable": true
+        },
+        "WAN_NAME": {
+          "id": "WAN",
+          "name": "Internet 1"
+        },
+        "WAN_SUBNET": {
+          "name": "203.0.113.22/32",
+          "not_actionable": true
+        },
+        "WAN_SLA": {
+          "id": "000000000000000000000011",
+          "name": "Custom Verification"
+        }
+      },
+      "severity": "MEDIUM",
+      "show_on_dashboard": false,
+      "status": "NEW",
+      "subcategory": "INTERNET_OUTAGE_AND_FAILOVER",
+      "target": "WAN_ID",
+      "timestamp": 1790721167601,
+      "title_raw": "{WAN_ID} Internet Restored",
+      "type": "BACKUP_CONNECTION_IN_USE"
+    },
+    {
+      "category": "INTERNET_AND_WAN",
+      "event": "NETWORK_WAN_FAILED",
+      "id": "00000000000000000000005f",
+      "key": "NETWORK_WAN_FAILED_2",
+      "message_raw": "Internet connection {WAN_ID} {ISP_NAME} on port {PORT} is down.",
+      "parameters": {
+        "CONSOLE_NAME": {
+          "id": "Dream Machine Pro Max",
+          "name": "Dream Machine Pro Max"
+        },
+        "DEVICE": {
+          "fingerprint_source": 0,
+          "id": "02:00:00:00:00:05",
+          "ip": "10.20.0.8",
+          "model": "UDM-Pro-Max",
+          "model_name": "UDMPROMAX",
+          "name": "Dream Machine Pro Max",
+          "version": "5.1.33"
+        },
+        "ISP_NAME": {
+          "enclosed_with_brackets": true,
+          "name": "China Telecom",
+          "not_actionable": true
+        },
+        "ISP_ASN": {
+          "enclosed_with_brackets": true,
+          "name": "4134",
+          "not_actionable": true
+        },
+        "PORT": {
+          "id": "10",
+          "name": "10",
+          "not_actionable": true
+        },
+        "WAN_ID": {
+          "id": "WAN",
+          "name": "WAN1",
+          "not_actionable": true
+        },
+        "WAN_NAME": {
+          "id": "WAN",
+          "name": "Internet 1"
+        },
+        "WAN_SLA": {
+          "id": "000000000000000000000011",
+          "name": "Custom Verification"
+        }
+      },
+      "severity": "VERY_HIGH",
+      "show_on_dashboard": true,
+      "status": "HIDDEN",
+      "subcategory": "INTERNET_OUTAGE_AND_FAILOVER",
+      "target": "WAN_ID",
+      "timestamp": 1790721163251,
+      "title_raw": "{WAN_ID} Internet Down",
+      "type": "BACKUP_CONNECTION_IN_USE"
+    },
+    {
+      "category": "INTERNET_AND_WAN",
+      "event": "NETWORK_WAN_RESTORED",
+      "id": "000000000000000000000060",
+      "key": "NETWORK_WAN_RESTORED_2",
+      "message_raw": "Internet connection {WAN_ID} {ISP_NAME} on port {PORT} is restored.",
+      "parameters": {
+        "CONSOLE_NAME": {
+          "id": "Dream Machine Pro Max",
+          "name": "Dream Machine Pro Max"
+        },
+        "DEVICE": {
+          "fingerprint_source": 0,
+          "id": "02:00:00:00:00:05",
+          "ip": "10.20.0.8",
+          "model": "UDM-Pro-Max",
+          "model_name": "UDMPROMAX",
+          "name": "Dream Machine Pro Max",
+          "version": "5.1.33"
+        },
+        "ISP_NAME": {
+          "enclosed_with_brackets": true,
+          "name": "China Telecom",
+          "not_actionable": true
+        },
+        "ISP_ASN": {
+          "enclosed_with_brackets": true,
+          "name": "4134",
+          "not_actionable": true
+        },
+        "PORT": {
+          "id": "10",
+          "name": "10",
+          "not_actionable": true
+        },
+        "DURATION": {
+          "id": "68",
+          "name": "1m 8s",
+          "not_actionable": true
+        },
+        "WAN_ID": {
+          "id": "WAN",
+          "name": "WAN1",
+          "not_actionable": true
+        },
+        "WAN_NAME": {
+          "id": "WAN",
+          "name": "Internet 1"
+        },
+        "WAN_SUBNET": {
+          "name": "203.0.113.23/32",
+          "not_actionable": true
+        },
+        "WAN_SLA": {
+          "id": "000000000000000000000011",
+          "name": "Custom Verification"
+        }
+      },
+      "severity": "MEDIUM",
+      "show_on_dashboard": false,
+      "status": "NEW",
+      "subcategory": "INTERNET_OUTAGE_AND_FAILOVER",
+      "target": "WAN_ID",
+      "timestamp": 1790634777626,
+      "title_raw": "{WAN_ID} Internet Restored",
+      "type": "BACKUP_CONNECTION_IN_USE"
+    },
+    {
+      "category": "INTERNET_AND_WAN",
+      "event": "NETWORK_WAN_FAILED",
+      "id": "000000000000000000000061",
+      "key": "NETWORK_WAN_FAILED_2",
+      "message_raw": "Internet connection {WAN_ID} {ISP_NAME} on port {PORT} is down.",
+      "parameters": {
+        "CONSOLE_NAME": {
+          "id": "Dream Machine Pro Max",
+          "name": "Dream Machine Pro Max"
+        },
+        "DEVICE": {
+          "fingerprint_source": 0,
+          "id": "02:00:00:00:00:05",
+          "ip": "10.20.0.8",
+          "model": "UDM-Pro-Max",
+          "model_name": "UDMPROMAX",
+          "name": "Dream Machine Pro Max",
+          "version": "5.1.33"
+        },
+        "ISP_NAME": {
+          "enclosed_with_brackets": true,
+          "name": "China Telecom",
+          "not_actionable": true
+        },
+        "ISP_ASN": {
+          "enclosed_with_brackets": true,
+          "name": "4134",
+          "not_actionable": true
+        },
+        "PORT": {
+          "id": "10",
+          "name": "10",
+          "not_actionable": true
+        },
+        "WAN_ID": {
+          "id": "WAN",
+          "name": "WAN1",
+          "not_actionable": true
+        },
+        "WAN_NAME": {
+          "id": "WAN",
+          "name": "Internet 1"
+        },
+        "WAN_SLA": {
+          "id": "000000000000000000000011",
+          "name": "Custom Verification"
+        }
+      },
+      "severity": "VERY_HIGH",
+      "show_on_dashboard": true,
+      "status": "HIDDEN",
+      "subcategory": "INTERNET_OUTAGE_AND_FAILOVER",
+      "target": "WAN_ID",
+      "timestamp": 1790634768298,
+      "title_raw": "{WAN_ID} Internet Down",
+      "type": "BACKUP_CONNECTION_IN_USE"
+    },
+    {
+      "category": "INTERNET_AND_WAN",
+      "event": "ISP_PACKET_LOSS",
+      "id": "000000000000000000000062",
+      "key": "ISP_PACKET_LOSS_2",
+      "message_raw": "Internet connection {WAN_ID} {ISP_NAME} on port {PORT} is experiencing packet loss.",
+      "parameters": {
+        "CONSOLE_NAME": {
+          "id": "Dream Machine Pro Max",
+          "name": "Dream Machine Pro Max"
+        },
+        "DEVICE": {
+          "fingerprint_source": 0,
+          "id": "02:00:00:00:00:05",
+          "ip": "10.20.0.8",
+          "model": "UDM-Pro-Max",
+          "model_name": "UDMPROMAX",
+          "name": "Dream Machine Pro Max",
+          "version": "5.1.33"
+        },
+        "ISP_NAME": {
+          "enclosed_with_brackets": true,
+          "name": "China Telecom",
+          "not_actionable": true
+        },
+        "ISP_ASN": {
+          "enclosed_with_brackets": true,
+          "name": "4134",
+          "not_actionable": true
+        },
+        "PORT": {
+          "id": "10",
+          "name": "10",
+          "not_actionable": true
+        },
+        "WAN_ID": {
+          "id": "WAN",
+          "name": "WAN1",
+          "not_actionable": true
+        },
+        "WAN_NAME": {
+          "id": "WAN",
+          "name": "Internet 1"
+        },
+        "WAN_SLA": {
+          "id": "000000000000000000000011",
+          "name": "Custom Verification"
+        },
+        "WAN_SLA_SERVER": {
+          "name": "203.0.113.6"
+        }
+      },
+      "severity": "MEDIUM",
+      "show_on_dashboard": false,
+      "status": "NEW",
+      "subcategory": "INTERNET_PERFORMANCE",
+      "target": "WAN_ID",
+      "timestamp": 1790634729436,
+      "title_raw": "{WAN_ID} Packet Loss Detected",
+      "type": "ISP"
+    },
+    {
+      "category": "INTERNET_AND_WAN",
+      "event": "NETWORK_WAN_RESTORED",
+      "id": "000000000000000000000063",
+      "key": "NETWORK_WAN_RESTORED_2",
+      "message_raw": "Internet connection {WAN_ID} {ISP_NAME} on port {PORT} is restored.",
+      "parameters": {
+        "CONSOLE_NAME": {
+          "id": "Dream Machine Pro Max",
+          "name": "Dream Machine Pro Max"
+        },
+        "DEVICE": {
+          "fingerprint_source": 0,
+          "id": "02:00:00:00:00:05",
+          "ip": "10.20.0.8",
+          "model": "UDM-Pro-Max",
+          "model_name": "UDMPROMAX",
+          "name": "Dream Machine Pro Max",
+          "version": "5.1.33"
+        },
+        "ISP_NAME": {
+          "enclosed_with_brackets": true,
+          "name": "China Telecom",
+          "not_actionable": true
+        },
+        "ISP_ASN": {
+          "enclosed_with_brackets": true,
+          "name": "4134",
+          "not_actionable": true
+        },
+        "PORT": {
+          "id": "10",
+          "name": "10",
+          "not_actionable": true
+        },
+        "DURATION": {
+          "id": "82",
+          "name": "1m 22s",
+          "not_actionable": true
+        },
+        "WAN_ID": {
+          "id": "WAN",
+          "name": "WAN1",
+          "not_actionable": true
+        },
+        "WAN_NAME": {
+          "id": "WAN",
+          "name": "Internet 1"
+        },
+        "WAN_SUBNET": {
+          "name": "203.0.113.24/32",
+          "not_actionable": true
+        },
+        "WAN_SLA": {
+          "id": "000000000000000000000011",
+          "name": "Custom Verification"
+        }
+      },
+      "severity": "MEDIUM",
+      "show_on_dashboard": false,
+      "status": "NEW",
+      "subcategory": "INTERNET_OUTAGE_AND_FAILOVER",
+      "target": "WAN_ID",
+      "timestamp": 1790548385717,
+      "title_raw": "{WAN_ID} Internet Restored",
+      "type": "BACKUP_CONNECTION_IN_USE"
+    },
+    {
+      "category": "INTERNET_AND_WAN",
+      "event": "NETWORK_WAN_FAILED",
+      "id": "000000000000000000000064",
+      "key": "NETWORK_WAN_FAILED_2",
+      "message_raw": "Internet connection {WAN_ID} {ISP_NAME} on port {PORT} is down.",
+      "parameters": {
+        "CONSOLE_NAME": {
+          "id": "Dream Machine Pro Max",
+          "name": "Dream Machine Pro Max"
+        },
+        "DEVICE": {
+          "fingerprint_source": 0,
+          "id": "02:00:00:00:00:05",
+          "ip": "10.20.0.8",
+          "model": "UDM-Pro-Max",
+          "model_name": "UDMPROMAX",
+          "name": "Dream Machine Pro Max",
+          "version": "5.1.33"
+        },
+        "ISP_NAME": {
+          "enclosed_with_brackets": true,
+          "name": "China Telecom",
+          "not_actionable": true
+        },
+        "ISP_ASN": {
+          "enclosed_with_brackets": true,
+          "name": "4134",
+          "not_actionable": true
+        },
+        "PORT": {
+          "id": "10",
+          "name": "10",
+          "not_actionable": true
+        },
+        "WAN_ID": {
+          "id": "WAN",
+          "name": "WAN1",
+          "not_actionable": true
+        },
+        "WAN_NAME": {
+          "id": "WAN",
+          "name": "Internet 1"
+        },
+        "WAN_SLA": {
+          "id": "000000000000000000000011",
+          "name": "Custom Verification"
+        }
+      },
+      "severity": "VERY_HIGH",
+      "show_on_dashboard": true,
+      "status": "HIDDEN",
+      "subcategory": "INTERNET_OUTAGE_AND_FAILOVER",
+      "target": "WAN_ID",
+      "timestamp": 1790548363269,
+      "title_raw": "{WAN_ID} Internet Down",
+      "type": "BACKUP_CONNECTION_IN_USE"
+    },
+    {
+      "category": "INTERNET_AND_WAN",
+      "event": "ISP_PACKET_LOSS",
+      "id": "000000000000000000000065",
+      "key": "ISP_PACKET_LOSS_2",
+      "message_raw": "Internet connection {WAN_ID} {ISP_NAME} on port {PORT} is experiencing packet loss.",
+      "parameters": {
+        "CONSOLE_NAME": {
+          "id": "Dream Machine Pro Max",
+          "name": "Dream Machine Pro Max"
+        },
+        "DEVICE": {
+          "fingerprint_source": 0,
+          "id": "02:00:00:00:00:05",
+          "ip": "10.20.0.8",
+          "model": "UDM-Pro-Max",
+          "model_name": "UDMPROMAX",
+          "name": "Dream Machine Pro Max",
+          "version": "5.1.33"
+        },
+        "ISP_NAME": {
+          "enclosed_with_brackets": true,
+          "name": "China Telecom",
+          "not_actionable": true
+        },
+        "ISP_ASN": {
+          "enclosed_with_brackets": true,
+          "name": "4134",
+          "not_actionable": true
+        },
+        "PORT": {
+          "id": "10",
+          "name": "10",
+          "not_actionable": true
+        },
+        "WAN_ID": {
+          "id": "WAN",
+          "name": "WAN1",
+          "not_actionable": true
+        },
+        "WAN_NAME": {
+          "id": "WAN",
+          "name": "Internet 1"
+        },
+        "WAN_SLA": {
+          "id": "000000000000000000000011",
+          "name": "Custom Verification"
+        },
+        "WAN_SLA_SERVER": {
+          "name": "203.0.113.6"
+        }
+      },
+      "severity": "MEDIUM",
+      "show_on_dashboard": false,
+      "status": "NEW",
+      "subcategory": "INTERNET_PERFORMANCE",
+      "target": "WAN_ID",
+      "timestamp": 1790548260078,
+      "title_raw": "{WAN_ID} Packet Loss Detected",
+      "type": "ISP"
+    },
+    {
+      "category": "AUDIT",
+      "event": "GENERATED",
+      "id": "000000000000000000000066",
+      "key": "GENERATED",
+      "message_raw": "{ADMIN} created {OBJECT} {SECTION}. Source IP: {IP}",
+      "parameters": {
+        "ADMIN": {
+          "id": "000000000000000000000002",
+          "name": "Admin 1",
+          "not_actionable": true
+        },
+        "ADMIN_ACTIVITY_ID": {
+          "id": "000000000000000000000067"
+        },
+        "CONSOLE_NAME": {
+          "id": "Dream Machine Pro Max",
+          "name": "Dream Machine Pro Max"
+        },
+        "COUNT": {
+          "name": "9",
+          "not_actionable": true
+        },
+        "IP": {
+          "id": "10.20.0.2",
+          "name": "10.20.0.2",
+          "not_actionable": true
+        },
+        "OBJECT": {
+          "id": "000000000000000000000068",
+          "name": "Object 21",
+          "not_actionable": true
+        },
+        "PLATFORM": {
+          "id": "WEB",
+          "name": "web",
+          "not_actionable": true
+        },
+        "SECTION": {
+          "id": "PORT_FORWARD",
+          "not_actionable": true
+        }
+      },
+      "severity": "MEDIUM",
+      "show_on_dashboard": false,
+      "status": "NEW",
+      "subcategory": "SYSTEM_ADMIN",
+      "target": "ADMIN",
+      "timestamp": 1790537804985,
+      "title_raw": "Config Created",
+      "type": "ADMIN_ACCESS"
+    },
+    {
+      "category": "AUDIT",
+      "event": "REMOVED_ENTITY",
+      "id": "000000000000000000000069",
+      "key": "REMOVED_ENTITY",
+      "message_raw": "{ADMIN} removed {OBJECT} {SECTION}. Source IP: {IP}",
+      "parameters": {
+        "ADMIN": {
+          "id": "000000000000000000000002",
+          "name": "Admin 1",
+          "not_actionable": true
+        },
+        "ADMIN_ACTIVITY_ID": {
+          "id": "00000000000000000000006a"
+        },
+        "CONSOLE_NAME": {
+          "id": "Dream Machine Pro Max",
+          "name": "Dream Machine Pro Max"
+        },
+        "COUNT": {
+          "name": "10",
+          "not_actionable": true
+        },
+        "IP": {
+          "id": "10.20.0.2",
+          "name": "10.20.0.2",
+          "not_actionable": true
+        },
+        "OBJECT": {
+          "id": "00000000000000000000006b",
+          "name": "Object 22",
+          "not_actionable": true
+        },
+        "PLATFORM": {
+          "id": "WEB",
+          "name": "web",
+          "not_actionable": true
+        },
+        "SECTION": {
+          "id": "PORT_FORWARD",
+          "not_actionable": true
+        }
+      },
+      "severity": "MEDIUM",
+      "show_on_dashboard": false,
+      "status": "NEW",
+      "subcategory": "SYSTEM_ADMIN",
+      "target": "ADMIN",
+      "timestamp": 1790537260053,
+      "title_raw": "Config Removed",
+      "type": "ADMIN_ACCESS"
+    },
+    {
+      "category": "AUDIT",
+      "event": "REMOVED_ENTITY",
+      "id": "00000000000000000000006c",
+      "key": "REMOVED_ENTITY",
+      "message_raw": "{ADMIN} removed {OBJECT} {SECTION}. Source IP: {IP}",
+      "parameters": {
+        "ADMIN": {
+          "id": "000000000000000000000002",
+          "name": "Admin 1",
+          "not_actionable": true
+        },
+        "ADMIN_ACTIVITY_ID": {
+          "id": "00000000000000000000006d"
+        },
+        "CONSOLE_NAME": {
+          "id": "Dream Machine Pro Max",
+          "name": "Dream Machine Pro Max"
+        },
+        "COUNT": {
+          "name": "10",
+          "not_actionable": true
+        },
+        "IP": {
+          "id": "10.20.0.2",
+          "name": "10.20.0.2",
+          "not_actionable": true
+        },
+        "OBJECT": {
+          "id": "00000000000000000000006e",
+          "name": "Object 23",
+          "not_actionable": true
+        },
+        "PLATFORM": {
+          "id": "WEB",
+          "name": "web",
+          "not_actionable": true
+        },
+        "SECTION": {
+          "id": "PORT_FORWARD",
+          "not_actionable": true
+        }
+      },
+      "severity": "MEDIUM",
+      "show_on_dashboard": false,
+      "status": "NEW",
+      "subcategory": "SYSTEM_ADMIN",
+      "target": "ADMIN",
+      "timestamp": 1790537260045,
+      "title_raw": "Config Removed",
+      "type": "ADMIN_ACCESS"
+    },
+    {
+      "category": "AUDIT",
+      "event": "REMOVED_ENTITY",
+      "id": "00000000000000000000006f",
+      "key": "REMOVED_ENTITY",
+      "message_raw": "{ADMIN} removed {OBJECT} {SECTION}. Source IP: {IP}",
+      "parameters": {
+        "ADMIN": {
+          "id": "000000000000000000000002",
+          "name": "Admin 1",
+          "not_actionable": true
+        },
+        "ADMIN_ACTIVITY_ID": {
+          "id": "000000000000000000000070"
+        },
+        "CONSOLE_NAME": {
+          "id": "Dream Machine Pro Max",
+          "name": "Dream Machine Pro Max"
+        },
+        "COUNT": {
+          "name": "10",
+          "not_actionable": true
+        },
+        "IP": {
+          "id": "10.20.0.2",
+          "name": "10.20.0.2",
+          "not_actionable": true
+        },
+        "OBJECT": {
+          "id": "000000000000000000000071",
+          "name": "Object 24",
+          "not_actionable": true
+        },
+        "PLATFORM": {
+          "id": "WEB",
+          "name": "web",
+          "not_actionable": true
+        },
+        "SECTION": {
+          "id": "PORT_FORWARD",
+          "not_actionable": true
+        }
+      },
+      "severity": "MEDIUM",
+      "show_on_dashboard": false,
+      "status": "NEW",
+      "subcategory": "SYSTEM_ADMIN",
+      "target": "ADMIN",
+      "timestamp": 1790537260021,
+      "title_raw": "Config Removed",
+      "type": "ADMIN_ACCESS"
+    },
+    {
+      "category": "SECURITY",
+      "event": "THREAT_DETECTED",
+      "id": "000000000000000000000072",
+      "key": "THREAT_DETECTED_V3",
+      "message_raw": "A network intrusion attempt from {SRC_IP} to {DST_IP} has been detected.",
+      "parameters": {
+        "CONSOLE_NAME": {
+          "id": "Dream Machine Pro Max",
+          "name": "Dream Machine Pro Max"
+        },
+        "CONSOLE_WITH_DEVICE_NAME": {
+          "id": "Dream Machine Pro Max",
+          "name": "Dream Machine Pro Max"
+        },
+        "DEVICE": {
+          "fingerprint_source": 0,
+          "id": "02:00:00:00:00:05",
+          "ip": "10.20.0.8",
+          "model": "UDM-Pro-Max",
+          "model_name": "UDMPROMAX",
+          "name": "Dream Machine Pro Max",
+          "version": "5.1.33"
+        },
+        "DST_IP": {
+          "id": "10.20.0.14",
+          "name": "10.20.0.14",
+          "not_actionable": true
+        },
+        "SRC_IP": {
+          "id": "203.0.113.25",
+          "name": "203.0.113.25",
+          "not_actionable": true
+        },
+        "INITIATOR_ID": {
+          "id": "000000000000000000000073"
+        }
+      },
+      "severity": "HIGH",
+      "show_on_dashboard": false,
+      "status": "NEW",
+      "subcategory": "SECURITY_INTRUSION_PREVENTION",
+      "target": "DEVICE",
+      "timestamp": 1790528043174,
+      "title_raw": "Threat Detected",
+      "type": "THREAT_DETECTION_AND_PREVENTION"
+    },
+    {
+      "category": "INTERNET_AND_WAN",
+      "event": "NETWORK_WAN_RESTORED",
+      "id": "000000000000000000000074",
+      "key": "NETWORK_WAN_RESTORED_2",
+      "message_raw": "Internet connection {WAN_ID} {ISP_NAME} on port {PORT} is restored.",
+      "parameters": {
+        "CONSOLE_NAME": {
+          "id": "Dream Machine Pro Max",
+          "name": "Dream Machine Pro Max"
+        },
+        "DEVICE": {
+          "fingerprint_source": 0,
+          "id": "02:00:00:00:00:05",
+          "ip": "10.20.0.8",
+          "model": "UDM-Pro-Max",
+          "model_name": "UDMPROMAX",
+          "name": "Dream Machine Pro Max",
+          "version": "5.1.33"
+        },
+        "ISP_NAME": {
+          "enclosed_with_brackets": true,
+          "name": "China Telecom",
+          "not_actionable": true
+        },
+        "ISP_ASN": {
+          "enclosed_with_brackets": true,
+          "name": "4134",
+          "not_actionable": true
+        },
+        "PORT": {
+          "id": "10",
+          "name": "10",
+          "not_actionable": true
+        },
+        "DURATION": {
+          "id": "71",
+          "name": "1m 11s",
+          "not_actionable": true
+        },
+        "WAN_ID": {
+          "id": "WAN",
+          "name": "WAN1",
+          "not_actionable": true
+        },
+        "WAN_NAME": {
+          "id": "WAN",
+          "name": "Internet 1"
+        },
+        "WAN_SUBNET": {
+          "name": "203.0.113.26/32",
+          "not_actionable": true
+        },
+        "WAN_SLA": {
+          "id": "000000000000000000000011",
+          "name": "Custom Verification"
+        }
+      },
+      "severity": "MEDIUM",
+      "show_on_dashboard": false,
+      "status": "NEW",
+      "subcategory": "INTERNET_OUTAGE_AND_FAILOVER",
+      "target": "WAN_ID",
+      "timestamp": 1790461974551,
+      "title_raw": "{WAN_ID} Internet Restored",
+      "type": "BACKUP_CONNECTION_IN_USE"
+    },
+    {
+      "category": "INTERNET_AND_WAN",
+      "event": "NETWORK_WAN_FAILED",
+      "id": "000000000000000000000075",
+      "key": "NETWORK_WAN_FAILED_2",
+      "message_raw": "Internet connection {WAN_ID} {ISP_NAME} on port {PORT} is down.",
+      "parameters": {
+        "CONSOLE_NAME": {
+          "id": "Dream Machine Pro Max",
+          "name": "Dream Machine Pro Max"
+        },
+        "DEVICE": {
+          "fingerprint_source": 0,
+          "id": "02:00:00:00:00:05",
+          "ip": "10.20.0.8",
+          "model": "UDM-Pro-Max",
+          "model_name": "UDMPROMAX",
+          "name": "Dream Machine Pro Max",
+          "version": "5.1.33"
+        },
+        "ISP_NAME": {
+          "enclosed_with_brackets": true,
+          "name": "China Telecom",
+          "not_actionable": true
+        },
+        "ISP_ASN": {
+          "enclosed_with_brackets": true,
+          "name": "4134",
+          "not_actionable": true
+        },
+        "PORT": {
+          "id": "10",
+          "name": "10",
+          "not_actionable": true
+        },
+        "WAN_ID": {
+          "id": "WAN",
+          "name": "WAN1",
+          "not_actionable": true
+        },
+        "WAN_NAME": {
+          "id": "WAN",
+          "name": "Internet 1"
+        },
+        "WAN_SLA": {
+          "id": "000000000000000000000011",
+          "name": "Custom Verification"
+        }
+      },
+      "severity": "VERY_HIGH",
+      "show_on_dashboard": true,
+      "status": "HIDDEN",
+      "subcategory": "INTERNET_OUTAGE_AND_FAILOVER",
+      "target": "WAN_ID",
+      "timestamp": 1790461966230,
+      "title_raw": "{WAN_ID} Internet Down",
+      "type": "BACKUP_CONNECTION_IN_USE"
+    },
+    {
+      "category": "INTERNET_AND_WAN",
+      "event": "NETWORK_WAN_RESTORED",
+      "id": "000000000000000000000076",
+      "key": "NETWORK_WAN_RESTORED_2",
+      "message_raw": "Internet connection {WAN_ID} {ISP_NAME} on port {PORT} is restored.",
+      "parameters": {
+        "CONSOLE_NAME": {
+          "id": "Dream Machine Pro Max",
+          "name": "Dream Machine Pro Max"
+        },
+        "DEVICE": {
+          "fingerprint_source": 0,
+          "id": "02:00:00:00:00:05",
+          "ip": "10.20.0.8",
+          "model": "UDM-Pro-Max",
+          "model_name": "UDMPROMAX",
+          "name": "Dream Machine Pro Max",
+          "version": "5.1.33"
+        },
+        "ISP_NAME": {
+          "enclosed_with_brackets": true,
+          "name": "China Telecom",
+          "not_actionable": true
+        },
+        "ISP_ASN": {
+          "enclosed_with_brackets": true,
+          "name": "4134",
+          "not_actionable": true
+        },
+        "PORT": {
+          "id": "10",
+          "name": "10",
+          "not_actionable": true
+        },
+        "DURATION": {
+          "id": "90",
+          "name": "1m 30s",
+          "not_actionable": true
+        },
+        "WAN_ID": {
+          "id": "WAN",
+          "name": "WAN1",
+          "not_actionable": true
+        },
+        "WAN_NAME": {
+          "id": "WAN",
+          "name": "Internet 1"
+        },
+        "WAN_SUBNET": {
+          "name": "203.0.113.27/32",
+          "not_actionable": true
+        },
+        "WAN_SLA": {
+          "id": "000000000000000000000011",
+          "name": "Custom Verification"
+        }
+      },
+      "severity": "MEDIUM",
+      "show_on_dashboard": false,
+      "status": "NEW",
+      "subcategory": "INTERNET_OUTAGE_AND_FAILOVER",
+      "target": "WAN_ID",
+      "timestamp": 1790375595749,
+      "title_raw": "{WAN_ID} Internet Restored",
+      "type": "BACKUP_CONNECTION_IN_USE"
+    },
+    {
+      "category": "INTERNET_AND_WAN",
+      "event": "NETWORK_WAN_FAILED",
+      "id": "000000000000000000000077",
+      "key": "NETWORK_WAN_FAILED_2",
+      "message_raw": "Internet connection {WAN_ID} {ISP_NAME} on port {PORT} is down.",
+      "parameters": {
+        "CONSOLE_NAME": {
+          "id": "Dream Machine Pro Max",
+          "name": "Dream Machine Pro Max"
+        },
+        "DEVICE": {
+          "fingerprint_source": 0,
+          "id": "02:00:00:00:00:05",
+          "ip": "10.20.0.8",
+          "model": "UDM-Pro-Max",
+          "model_name": "UDMPROMAX",
+          "name": "Dream Machine Pro Max",
+          "version": "5.1.33"
+        },
+        "ISP_NAME": {
+          "enclosed_with_brackets": true,
+          "name": "China Telecom",
+          "not_actionable": true
+        },
+        "ISP_ASN": {
+          "enclosed_with_brackets": true,
+          "name": "4134",
+          "not_actionable": true
+        },
+        "PORT": {
+          "id": "10",
+          "name": "10",
+          "not_actionable": true
+        },
+        "WAN_ID": {
+          "id": "WAN",
+          "name": "WAN1",
+          "not_actionable": true
+        },
+        "WAN_NAME": {
+          "id": "WAN",
+          "name": "Internet 1"
+        },
+        "WAN_SLA": {
+          "id": "000000000000000000000011",
+          "name": "Custom Verification"
+        }
+      },
+      "severity": "VERY_HIGH",
+      "show_on_dashboard": true,
+      "status": "HIDDEN",
+      "subcategory": "INTERNET_OUTAGE_AND_FAILOVER",
+      "target": "WAN_ID",
+      "timestamp": 1790375566276,
+      "title_raw": "{WAN_ID} Internet Down",
+      "type": "BACKUP_CONNECTION_IN_USE"
+    },
+    {
+      "category": "INTERNET_AND_WAN",
+      "event": "ISP_PACKET_LOSS",
+      "id": "000000000000000000000078",
+      "key": "ISP_PACKET_LOSS_2",
+      "message_raw": "Internet connection {WAN_ID} {ISP_NAME} on port {PORT} is experiencing packet loss.",
+      "parameters": {
+        "CONSOLE_NAME": {
+          "id": "Dream Machine Pro Max",
+          "name": "Dream Machine Pro Max"
+        },
+        "DEVICE": {
+          "fingerprint_source": 0,
+          "id": "02:00:00:00:00:05",
+          "ip": "10.20.0.8",
+          "model": "UDM-Pro-Max",
+          "model_name": "UDMPROMAX",
+          "name": "Dream Machine Pro Max",
+          "version": "5.1.33"
+        },
+        "ISP_NAME": {
+          "enclosed_with_brackets": true,
+          "name": "China Telecom",
+          "not_actionable": true
+        },
+        "ISP_ASN": {
+          "enclosed_with_brackets": true,
+          "name": "4134",
+          "not_actionable": true
+        },
+        "PORT": {
+          "id": "10",
+          "name": "10",
+          "not_actionable": true
+        },
+        "WAN_ID": {
+          "id": "WAN",
+          "name": "WAN1",
+          "not_actionable": true
+        },
+        "WAN_NAME": {
+          "id": "WAN",
+          "name": "Internet 1"
+        },
+        "WAN_SLA": {
+          "id": "000000000000000000000011",
+          "name": "Custom Verification"
+        },
+        "WAN_SLA_SERVER": {
+          "name": "203.0.113.6"
+        }
+      },
+      "severity": "MEDIUM",
+      "show_on_dashboard": false,
+      "status": "NEW",
+      "subcategory": "INTERNET_PERFORMANCE",
+      "target": "WAN_ID",
+      "timestamp": 1790375529437,
+      "title_raw": "{WAN_ID} Packet Loss Detected",
+      "type": "ISP"
+    },
+    {
+      "category": "SECURITY",
+      "event": "THREAT_DETECTED",
+      "id": "000000000000000000000079",
+      "key": "THREAT_DETECTED_V3",
+      "message_raw": "A network intrusion attempt from {SRC_IP} to {DST_IP} has been detected.",
+      "parameters": {
+        "CONSOLE_NAME": {
+          "id": "Dream Machine Pro Max",
+          "name": "Dream Machine Pro Max"
+        },
+        "CONSOLE_WITH_DEVICE_NAME": {
+          "id": "Dream Machine Pro Max",
+          "name": "Dream Machine Pro Max"
+        },
+        "DEVICE": {
+          "fingerprint_source": 0,
+          "id": "02:00:00:00:00:05",
+          "ip": "10.20.0.8",
+          "model": "UDM-Pro-Max",
+          "model_name": "UDMPROMAX",
+          "name": "Dream Machine Pro Max",
+          "version": "5.1.33"
+        },
+        "DST_IP": {
+          "id": "10.20.0.14",
+          "name": "10.20.0.14",
+          "not_actionable": true
+        },
+        "SRC_IP": {
+          "id": "203.0.113.28",
+          "name": "203.0.113.28",
+          "not_actionable": true
+        },
+        "INITIATOR_ID": {
+          "id": "00000000000000000000007a"
+        }
+      },
+      "severity": "HIGH",
+      "show_on_dashboard": false,
+      "status": "NEW",
+      "subcategory": "SECURITY_INTRUSION_PREVENTION",
+      "target": "DEVICE",
+      "timestamp": 1790303911034,
+      "title_raw": "Threat Detected",
+      "type": "THREAT_DETECTION_AND_PREVENTION"
+    },
+    {
+      "category": "INTERNET_AND_WAN",
+      "event": "NETWORK_WAN_RESTORED",
+      "id": "00000000000000000000007b",
+      "key": "NETWORK_WAN_RESTORED_2",
+      "message_raw": "Internet connection {WAN_ID} {ISP_NAME} on port {PORT} is restored.",
+      "parameters": {
+        "CONSOLE_NAME": {
+          "id": "Dream Machine Pro Max",
+          "name": "Dream Machine Pro Max"
+        },
+        "DEVICE": {
+          "fingerprint_source": 0,
+          "id": "02:00:00:00:00:05",
+          "ip": "10.20.0.8",
+          "model": "UDM-Pro-Max",
+          "model_name": "UDMPROMAX",
+          "name": "Dream Machine Pro Max",
+          "version": "5.1.33"
+        },
+        "ISP_NAME": {
+          "enclosed_with_brackets": true,
+          "name": "China Telecom",
+          "not_actionable": true
+        },
+        "ISP_ASN": {
+          "enclosed_with_brackets": true,
+          "name": "4134",
+          "not_actionable": true
+        },
+        "PORT": {
+          "id": "10",
+          "name": "10",
+          "not_actionable": true
+        },
+        "DURATION": {
+          "id": "103",
+          "name": "1m 43s",
+          "not_actionable": true
+        },
+        "WAN_ID": {
+          "id": "WAN",
+          "name": "WAN1",
+          "not_actionable": true
+        },
+        "WAN_NAME": {
+          "id": "WAN",
+          "name": "Internet 1"
+        },
+        "WAN_SUBNET": {
+          "name": "203.0.113.29/32",
+          "not_actionable": true
+        },
+        "WAN_SLA": {
+          "id": "000000000000000000000011",
+          "name": "Custom Verification"
+        }
+      },
+      "severity": "MEDIUM",
+      "show_on_dashboard": false,
+      "status": "NEW",
+      "subcategory": "INTERNET_OUTAGE_AND_FAILOVER",
+      "target": "WAN_ID",
+      "timestamp": 1790289150075,
+      "title_raw": "{WAN_ID} Internet Restored",
+      "type": "BACKUP_CONNECTION_IN_USE"
+    },
+    {
+      "category": "INTERNET_AND_WAN",
+      "event": "NETWORK_WAN_FAILED",
+      "id": "00000000000000000000007c",
+      "key": "NETWORK_WAN_FAILED_2",
+      "message_raw": "Internet connection {WAN_ID} {ISP_NAME} on port {PORT} is down.",
+      "parameters": {
+        "CONSOLE_NAME": {
+          "id": "Dream Machine Pro Max",
+          "name": "Dream Machine Pro Max"
+        },
+        "DEVICE": {
+          "fingerprint_source": 0,
+          "id": "02:00:00:00:00:05",
+          "ip": "10.20.0.8",
+          "model": "UDM-Pro-Max",
+          "model_name": "UDMPROMAX",
+          "name": "Dream Machine Pro Max",
+          "version": "5.1.33"
+        },
+        "ISP_NAME": {
+          "enclosed_with_brackets": true,
+          "name": "China Telecom",
+          "not_actionable": true
+        },
+        "ISP_ASN": {
+          "enclosed_with_brackets": true,
+          "name": "4134",
+          "not_actionable": true
+        },
+        "PORT": {
+          "id": "10",
+          "name": "10",
+          "not_actionable": true
+        },
+        "WAN_ID": {
+          "id": "WAN",
+          "name": "WAN1",
+          "not_actionable": true
+        },
+        "WAN_NAME": {
+          "id": "WAN",
+          "name": "Internet 1"
+        },
+        "WAN_SLA": {
+          "id": "000000000000000000000011",
+          "name": "Custom Verification"
+        }
+      },
+      "severity": "VERY_HIGH",
+      "show_on_dashboard": true,
+      "status": "HIDDEN",
+      "subcategory": "INTERNET_OUTAGE_AND_FAILOVER",
+      "target": "WAN_ID",
+      "timestamp": 1790289112686,
+      "title_raw": "{WAN_ID} Internet Down",
+      "type": "BACKUP_CONNECTION_IN_USE"
+    },
+    {
+      "category": "INTERNET_AND_WAN",
+      "event": "ISP_PACKET_LOSS",
+      "id": "00000000000000000000007d",
+      "key": "ISP_PACKET_LOSS_2",
+      "message_raw": "Internet connection {WAN_ID} {ISP_NAME} on port {PORT} is experiencing packet loss.",
+      "parameters": {
+        "CONSOLE_NAME": {
+          "id": "Dream Machine Pro Max",
+          "name": "Dream Machine Pro Max"
+        },
+        "DEVICE": {
+          "fingerprint_source": 0,
+          "id": "02:00:00:00:00:05",
+          "ip": "10.20.0.8",
+          "model": "UDM-Pro-Max",
+          "model_name": "UDMPROMAX",
+          "name": "Dream Machine Pro Max",
+          "version": "5.1.33"
+        },
+        "ISP_NAME": {
+          "enclosed_with_brackets": true,
+          "name": "China Telecom",
+          "not_actionable": true
+        },
+        "ISP_ASN": {
+          "enclosed_with_brackets": true,
+          "name": "4134",
+          "not_actionable": true
+        },
+        "PORT": {
+          "id": "10",
+          "name": "10",
+          "not_actionable": true
+        },
+        "WAN_ID": {
+          "id": "WAN",
+          "name": "WAN1",
+          "not_actionable": true
+        },
+        "WAN_NAME": {
+          "id": "WAN",
+          "name": "Internet 1"
+        },
+        "WAN_SLA": {
+          "id": "000000000000000000000011",
+          "name": "Custom Verification"
+        },
+        "WAN_SLA_SERVER": {
+          "name": "203.0.113.6"
+        }
+      },
+      "severity": "MEDIUM",
+      "show_on_dashboard": false,
+      "status": "NEW",
+      "subcategory": "INTERNET_PERFORMANCE",
+      "target": "WAN_ID",
+      "timestamp": 1790289060512,
+      "title_raw": "{WAN_ID} Packet Loss Detected",
+      "type": "ISP"
+    },
+    {
+      "category": "SECURITY",
+      "event": "THREAT_DETECTED",
+      "id": "00000000000000000000007e",
+      "key": "THREAT_DETECTED_V3",
+      "message_raw": "A network intrusion attempt from {SRC_IP} to {DST_IP} has been detected.",
+      "parameters": {
+        "CONSOLE_NAME": {
+          "id": "Dream Machine Pro Max",
+          "name": "Dream Machine Pro Max"
+        },
+        "CONSOLE_WITH_DEVICE_NAME": {
+          "id": "Dream Machine Pro Max",
+          "name": "Dream Machine Pro Max"
+        },
+        "DEVICE": {
+          "fingerprint_source": 0,
+          "id": "02:00:00:00:00:05",
+          "ip": "10.20.0.8",
+          "model": "UDM-Pro-Max",
+          "model_name": "UDMPROMAX",
+          "name": "Dream Machine Pro Max",
+          "version": "5.1.33"
+        },
+        "DST_IP": {
+          "id": "10.20.0.16",
+          "name": "10.20.0.16",
+          "not_actionable": true
+        },
+        "SRC_IP": {
+          "id": "203.0.113.30",
+          "name": "203.0.113.30",
+          "not_actionable": true
+        },
+        "INITIATOR_ID": {
+          "id": "00000000000000000000007f"
+        }
+      },
+      "severity": "HIGH",
+      "show_on_dashboard": false,
+      "status": "NEW",
+      "subcategory": "SECURITY_INTRUSION_PREVENTION",
+      "target": "DEVICE",
+      "timestamp": 1790265431193,
+      "title_raw": "Threat Detected",
+      "type": "THREAT_DETECTION_AND_PREVENTION"
+    },
+    {
+      "category": "SECURITY",
+      "event": "THREAT_DETECTED",
+      "id": "000000000000000000000080",
+      "key": "THREAT_DETECTED_V3",
+      "message_raw": "A network intrusion attempt from {SRC_IP} to {DST_IP} has been detected.",
+      "parameters": {
+        "CONSOLE_NAME": {
+          "id": "Dream Machine Pro Max",
+          "name": "Dream Machine Pro Max"
+        },
+        "CONSOLE_WITH_DEVICE_NAME": {
+          "id": "Dream Machine Pro Max",
+          "name": "Dream Machine Pro Max"
+        },
+        "DEVICE": {
+          "fingerprint_source": 0,
+          "id": "02:00:00:00:00:05",
+          "ip": "10.20.0.8",
+          "model": "UDM-Pro-Max",
+          "model_name": "UDMPROMAX",
+          "name": "Dream Machine Pro Max",
+          "version": "5.1.33"
+        },
+        "DST_IP": {
+          "id": "10.20.0.14",
+          "name": "10.20.0.14",
+          "not_actionable": true
+        },
+        "SRC_IP": {
+          "id": "203.0.113.31",
+          "name": "203.0.113.31",
+          "not_actionable": true
+        },
+        "INITIATOR_ID": {
+          "id": "000000000000000000000081"
+        }
+      },
+      "severity": "HIGH",
+      "show_on_dashboard": false,
+      "status": "NEW",
+      "subcategory": "SECURITY_INTRUSION_PREVENTION",
+      "target": "DEVICE",
+      "timestamp": 1790264370351,
+      "title_raw": "Threat Detected",
+      "type": "THREAT_DETECTION_AND_PREVENTION"
+    },
+    {
+      "category": "SECURITY",
+      "event": "THREAT_DETECTED",
+      "id": "000000000000000000000082",
+      "key": "THREAT_DETECTED_V3",
+      "message_raw": "A network intrusion attempt from {SRC_IP} to {DST_IP} has been detected.",
+      "parameters": {
+        "CONSOLE_NAME": {
+          "id": "Dream Machine Pro Max",
+          "name": "Dream Machine Pro Max"
+        },
+        "CONSOLE_WITH_DEVICE_NAME": {
+          "id": "Dream Machine Pro Max",
+          "name": "Dream Machine Pro Max"
+        },
+        "DEVICE": {
+          "fingerprint_source": 0,
+          "id": "02:00:00:00:00:05",
+          "ip": "10.20.0.8",
+          "model": "UDM-Pro-Max",
+          "model_name": "UDMPROMAX",
+          "name": "Dream Machine Pro Max",
+          "version": "5.1.33"
+        },
+        "DST_IP": {
+          "id": "10.20.0.14",
+          "name": "10.20.0.14",
+          "not_actionable": true
+        },
+        "SRC_IP": {
+          "id": "203.0.113.32",
+          "name": "203.0.113.32",
+          "not_actionable": true
+        },
+        "INITIATOR_ID": {
+          "id": "000000000000000000000083"
+        }
+      },
+      "severity": "HIGH",
+      "show_on_dashboard": false,
+      "status": "NEW",
+      "subcategory": "SECURITY_INTRUSION_PREVENTION",
+      "target": "DEVICE",
+      "timestamp": 1790257264093,
+      "title_raw": "Threat Detected",
+      "type": "THREAT_DETECTION_AND_PREVENTION"
+    },
+    {
+      "category": "SECURITY",
+      "event": "THREAT_DETECTED",
+      "id": "000000000000000000000084",
+      "key": "THREAT_DETECTED_V3",
+      "message_raw": "A network intrusion attempt from {SRC_IP} to {DST_IP} has been detected.",
+      "parameters": {
+        "CONSOLE_NAME": {
+          "id": "Dream Machine Pro Max",
+          "name": "Dream Machine Pro Max"
+        },
+        "CONSOLE_WITH_DEVICE_NAME": {
+          "id": "Dream Machine Pro Max",
+          "name": "Dream Machine Pro Max"
+        },
+        "DEVICE": {
+          "fingerprint_source": 0,
+          "id": "02:00:00:00:00:05",
+          "ip": "10.20.0.8",
+          "model": "UDM-Pro-Max",
+          "model_name": "UDMPROMAX",
+          "name": "Dream Machine Pro Max",
+          "version": "5.1.33"
+        },
+        "DST_IP": {
+          "id": "10.20.0.14",
+          "name": "10.20.0.14",
+          "not_actionable": true
+        },
+        "SRC_IP": {
+          "id": "203.0.113.33",
+          "name": "203.0.113.33",
+          "not_actionable": true
+        },
+        "INITIATOR_ID": {
+          "id": "000000000000000000000085"
+        }
+      },
+      "severity": "HIGH",
+      "show_on_dashboard": false,
+      "status": "NEW",
+      "subcategory": "SECURITY_INTRUSION_PREVENTION",
+      "target": "DEVICE",
+      "timestamp": 1790221435209,
+      "title_raw": "Threat Detected",
+      "type": "THREAT_DETECTION_AND_PREVENTION"
+    },
+    {
+      "category": "SECURITY",
+      "event": "THREAT_DETECTED",
+      "id": "000000000000000000000086",
+      "key": "THREAT_DETECTED_V3",
+      "message_raw": "A network intrusion attempt from {SRC_IP} to {DST_IP} has been detected.",
+      "parameters": {
+        "CONSOLE_NAME": {
+          "id": "Dream Machine Pro Max",
+          "name": "Dream Machine Pro Max"
+        },
+        "CONSOLE_WITH_DEVICE_NAME": {
+          "id": "Dream Machine Pro Max",
+          "name": "Dream Machine Pro Max"
+        },
+        "DEVICE": {
+          "fingerprint_source": 0,
+          "id": "02:00:00:00:00:05",
+          "ip": "10.20.0.8",
+          "model": "UDM-Pro-Max",
+          "model_name": "UDMPROMAX",
+          "name": "Dream Machine Pro Max",
+          "version": "5.1.33"
+        },
+        "DST_IP": {
+          "id": "10.20.0.16",
+          "name": "10.20.0.16",
+          "not_actionable": true
+        },
+        "SRC_IP": {
+          "id": "203.0.113.34",
+          "name": "203.0.113.34",
+          "not_actionable": true
+        },
+        "INITIATOR_ID": {
+          "id": "000000000000000000000087"
+        }
+      },
+      "severity": "HIGH",
+      "show_on_dashboard": false,
+      "status": "NEW",
+      "subcategory": "SECURITY_INTRUSION_PREVENTION",
+      "target": "DEVICE",
+      "timestamp": 1790219371105,
+      "title_raw": "Threat Detected",
+      "type": "THREAT_DETECTION_AND_PREVENTION"
+    },
+    {
+      "category": "INTERNET_AND_WAN",
+      "event": "NETWORK_WAN_RESTORED",
+      "id": "000000000000000000000088",
+      "key": "NETWORK_WAN_RESTORED_2",
+      "message_raw": "Internet connection {WAN_ID} {ISP_NAME} on port {PORT} is restored.",
+      "parameters": {
+        "CONSOLE_NAME": {
+          "id": "Dream Machine Pro Max",
+          "name": "Dream Machine Pro Max"
+        },
+        "DEVICE": {
+          "fingerprint_source": 0,
+          "id": "02:00:00:00:00:05",
+          "ip": "10.20.0.8",
+          "model": "UDM-Pro-Max",
+          "model_name": "UDMPROMAX",
+          "name": "Dream Machine Pro Max",
+          "version": "5.1.33"
+        },
+        "ISP_NAME": {
+          "enclosed_with_brackets": true,
+          "name": "China Telecom",
+          "not_actionable": true
+        },
+        "ISP_ASN": {
+          "enclosed_with_brackets": true,
+          "name": "4134",
+          "not_actionable": true
+        },
+        "PORT": {
+          "id": "10",
+          "name": "10",
+          "not_actionable": true
+        },
+        "DURATION": {
+          "id": "64",
+          "name": "1m 4s",
+          "not_actionable": true
+        },
+        "WAN_ID": {
+          "id": "WAN",
+          "name": "WAN1",
+          "not_actionable": true
+        },
+        "WAN_NAME": {
+          "id": "WAN",
+          "name": "Internet 1"
+        },
+        "WAN_SUBNET": {
+          "name": "203.0.113.35/32",
+          "not_actionable": true
+        },
+        "WAN_SLA": {
+          "id": "000000000000000000000011",
+          "name": "Custom Verification"
+        }
+      },
+      "severity": "MEDIUM",
+      "show_on_dashboard": false,
+      "status": "NEW",
+      "subcategory": "INTERNET_OUTAGE_AND_FAILOVER",
+      "target": "WAN_ID",
+      "timestamp": 1790202773642,
+      "title_raw": "{WAN_ID} Internet Restored",
+      "type": "BACKUP_CONNECTION_IN_USE"
+    },
+    {
+      "category": "INTERNET_AND_WAN",
+      "event": "NETWORK_WAN_FAILED",
+      "id": "000000000000000000000089",
+      "key": "NETWORK_WAN_FAILED_2",
+      "message_raw": "Internet connection {WAN_ID} {ISP_NAME} on port {PORT} is down.",
+      "parameters": {
+        "CONSOLE_NAME": {
+          "id": "Dream Machine Pro Max",
+          "name": "Dream Machine Pro Max"
+        },
+        "DEVICE": {
+          "fingerprint_source": 0,
+          "id": "02:00:00:00:00:05",
+          "ip": "10.20.0.8",
+          "model": "UDM-Pro-Max",
+          "model_name": "UDMPROMAX",
+          "name": "Dream Machine Pro Max",
+          "version": "5.1.33"
+        },
+        "ISP_NAME": {
+          "enclosed_with_brackets": true,
+          "name": "China Telecom",
+          "not_actionable": true
+        },
+        "ISP_ASN": {
+          "enclosed_with_brackets": true,
+          "name": "4134",
+          "not_actionable": true
+        },
+        "PORT": {
+          "id": "10",
+          "name": "10",
+          "not_actionable": true
+        },
+        "WAN_ID": {
+          "id": "WAN",
+          "name": "WAN1",
+          "not_actionable": true
+        },
+        "WAN_NAME": {
+          "id": "WAN",
+          "name": "Internet 1"
+        },
+        "WAN_SLA": {
+          "id": "000000000000000000000011",
+          "name": "Custom Verification"
+        }
+      },
+      "severity": "VERY_HIGH",
+      "show_on_dashboard": true,
+      "status": "HIDDEN",
+      "subcategory": "INTERNET_OUTAGE_AND_FAILOVER",
+      "target": "WAN_ID",
+      "timestamp": 1790202769301,
+      "title_raw": "{WAN_ID} Internet Down",
+      "type": "BACKUP_CONNECTION_IN_USE"
+    },
+    {
+      "category": "INTERNET_AND_WAN",
+      "event": "ISP_PACKET_LOSS",
+      "id": "00000000000000000000008a",
+      "key": "ISP_PACKET_LOSS_2",
+      "message_raw": "Internet connection {WAN_ID} {ISP_NAME} on port {PORT} is experiencing packet loss.",
+      "parameters": {
+        "CONSOLE_NAME": {
+          "id": "Dream Machine Pro Max",
+          "name": "Dream Machine Pro Max"
+        },
+        "DEVICE": {
+          "fingerprint_source": 0,
+          "id": "02:00:00:00:00:05",
+          "ip": "10.20.0.8",
+          "model": "UDM-Pro-Max",
+          "model_name": "UDMPROMAX",
+          "name": "Dream Machine Pro Max",
+          "version": "5.1.33"
+        },
+        "ISP_NAME": {
+          "enclosed_with_brackets": true,
+          "name": "China Telecom",
+          "not_actionable": true
+        },
+        "ISP_ASN": {
+          "enclosed_with_brackets": true,
+          "name": "4134",
+          "not_actionable": true
+        },
+        "PORT": {
+          "id": "10",
+          "name": "10",
+          "not_actionable": true
+        },
+        "WAN_ID": {
+          "id": "WAN",
+          "name": "WAN1",
+          "not_actionable": true
+        },
+        "WAN_NAME": {
+          "id": "WAN",
+          "name": "Internet 1"
+        },
+        "WAN_SUBNET": {
+          "name": "203.0.113.36/32",
+          "not_actionable": true
+        },
+        "WAN_SLA": {
+          "id": "000000000000000000000011",
+          "name": "Custom Verification"
+        },
+        "WAN_SLA_SERVER": {
+          "name": "203.0.113.6"
+        }
+      },
+      "severity": "MEDIUM",
+      "show_on_dashboard": false,
+      "status": "NEW",
+      "subcategory": "INTERNET_PERFORMANCE",
+      "target": "WAN_ID",
+      "timestamp": 1790202646919,
+      "title_raw": "{WAN_ID} Packet Loss Detected",
+      "type": "ISP"
+    },
+    {
+      "category": "SECURITY",
+      "event": "THREAT_DETECTED",
+      "id": "00000000000000000000008b",
+      "key": "THREAT_DETECTED_V3",
+      "message_raw": "A network intrusion attempt from {SRC_IP} to {DST_IP} has been detected.",
+      "parameters": {
+        "CONSOLE_NAME": {
+          "id": "Dream Machine Pro Max",
+          "name": "Dream Machine Pro Max"
+        },
+        "CONSOLE_WITH_DEVICE_NAME": {
+          "id": "Dream Machine Pro Max",
+          "name": "Dream Machine Pro Max"
+        },
+        "DEVICE": {
+          "fingerprint_source": 0,
+          "id": "02:00:00:00:00:05",
+          "ip": "10.20.0.8",
+          "model": "UDM-Pro-Max",
+          "model_name": "UDMPROMAX",
+          "name": "Dream Machine Pro Max",
+          "version": "5.1.33"
+        },
+        "DST_IP": {
+          "id": "10.20.0.14",
+          "name": "10.20.0.14",
+          "not_actionable": true
+        },
+        "SRC_IP": {
+          "id": "203.0.113.37",
+          "name": "203.0.113.37",
+          "not_actionable": true
+        },
+        "INITIATOR_ID": {
+          "id": "00000000000000000000008c"
+        }
+      },
+      "severity": "HIGH",
+      "show_on_dashboard": false,
+      "status": "NEW",
+      "subcategory": "SECURITY_INTRUSION_PREVENTION",
+      "target": "DEVICE",
+      "timestamp": 1790153249915,
+      "title_raw": "Threat Detected",
+      "type": "THREAT_DETECTION_AND_PREVENTION"
+    },
+    {
+      "category": "INTERNET_AND_WAN",
+      "event": "NETWORK_WAN_RESTORED",
+      "id": "00000000000000000000008d",
+      "key": "NETWORK_WAN_RESTORED_2",
+      "message_raw": "Internet connection {WAN_ID} {ISP_NAME} on port {PORT} is restored.",
+      "parameters": {
+        "CONSOLE_NAME": {
+          "id": "Dream Machine Pro Max",
+          "name": "Dream Machine Pro Max"
+        },
+        "DEVICE": {
+          "fingerprint_source": 0,
+          "id": "02:00:00:00:00:05",
+          "ip": "10.20.0.8",
+          "model": "UDM-Pro-Max",
+          "model_name": "UDMPROMAX",
+          "name": "Dream Machine Pro Max",
+          "version": "5.1.33"
+        },
+        "ISP_NAME": {
+          "enclosed_with_brackets": true,
+          "name": "China Telecom",
+          "not_actionable": true
+        },
+        "ISP_ASN": {
+          "enclosed_with_brackets": true,
+          "name": "4134",
+          "not_actionable": true
+        },
+        "PORT": {
+          "id": "10",
+          "name": "10",
+          "not_actionable": true
+        },
+        "DURATION": {
+          "id": "68",
+          "name": "1m 8s",
+          "not_actionable": true
+        },
+        "WAN_ID": {
+          "id": "WAN",
+          "name": "WAN1",
+          "not_actionable": true
+        },
+        "WAN_NAME": {
+          "id": "WAN",
+          "name": "Internet 1"
+        },
+        "WAN_SUBNET": {
+          "name": "203.0.113.36/32",
+          "not_actionable": true
+        },
+        "WAN_SLA": {
+          "id": "000000000000000000000011",
+          "name": "Custom Verification"
+        }
+      },
+      "severity": "MEDIUM",
+      "show_on_dashboard": false,
+      "status": "NEW",
+      "subcategory": "INTERNET_OUTAGE_AND_FAILOVER",
+      "target": "WAN_ID",
+      "timestamp": 1790116375604,
+      "title_raw": "{WAN_ID} Internet Restored",
+      "type": "BACKUP_CONNECTION_IN_USE"
+    },
+    {
+      "category": "INTERNET_AND_WAN",
+      "event": "NETWORK_WAN_FAILED",
+      "id": "00000000000000000000008e",
+      "key": "NETWORK_WAN_FAILED_2",
+      "message_raw": "Internet connection {WAN_ID} {ISP_NAME} on port {PORT} is down.",
+      "parameters": {
+        "CONSOLE_NAME": {
+          "id": "Dream Machine Pro Max",
+          "name": "Dream Machine Pro Max"
+        },
+        "DEVICE": {
+          "fingerprint_source": 0,
+          "id": "02:00:00:00:00:05",
+          "ip": "10.20.0.8",
+          "model": "UDM-Pro-Max",
+          "model_name": "UDMPROMAX",
+          "name": "Dream Machine Pro Max",
+          "version": "5.1.33"
+        },
+        "ISP_NAME": {
+          "enclosed_with_brackets": true,
+          "name": "China Telecom",
+          "not_actionable": true
+        },
+        "ISP_ASN": {
+          "enclosed_with_brackets": true,
+          "name": "4134",
+          "not_actionable": true
+        },
+        "PORT": {
+          "id": "10",
+          "name": "10",
+          "not_actionable": true
+        },
+        "WAN_ID": {
+          "id": "WAN",
+          "name": "WAN1",
+          "not_actionable": true
+        },
+        "WAN_NAME": {
+          "id": "WAN",
+          "name": "Internet 1"
+        },
+        "WAN_SLA": {
+          "id": "000000000000000000000011",
+          "name": "Custom Verification"
+        }
+      },
+      "severity": "VERY_HIGH",
+      "show_on_dashboard": true,
+      "status": "HIDDEN",
+      "subcategory": "INTERNET_OUTAGE_AND_FAILOVER",
+      "target": "WAN_ID",
+      "timestamp": 1790116368285,
+      "title_raw": "{WAN_ID} Internet Down",
+      "type": "BACKUP_CONNECTION_IN_USE"
+    },
+    {
+      "category": "SECURITY",
+      "event": "THREAT_DETECTED",
+      "id": "00000000000000000000008f",
+      "key": "THREAT_DETECTED_V3",
+      "message_raw": "A network intrusion attempt from {SRC_IP} to {DST_IP} has been detected.",
+      "parameters": {
+        "CONSOLE_NAME": {
+          "id": "Dream Machine Pro Max",
+          "name": "Dream Machine Pro Max"
+        },
+        "CONSOLE_WITH_DEVICE_NAME": {
+          "id": "Dream Machine Pro Max",
+          "name": "Dream Machine Pro Max"
+        },
+        "DEVICE": {
+          "fingerprint_source": 0,
+          "id": "02:00:00:00:00:05",
+          "ip": "10.20.0.8",
+          "model": "UDM-Pro-Max",
+          "model_name": "UDMPROMAX",
+          "name": "Dream Machine Pro Max",
+          "version": "5.1.33"
+        },
+        "DST_IP": {
+          "id": "10.20.0.14",
+          "name": "10.20.0.14",
+          "not_actionable": true
+        },
+        "SRC_IP": {
+          "id": "203.0.113.38",
+          "name": "203.0.113.38",
+          "not_actionable": true
+        },
+        "INITIATOR_ID": {
+          "id": "000000000000000000000090"
+        }
+      },
+      "severity": "HIGH",
+      "show_on_dashboard": false,
+      "status": "NEW",
+      "subcategory": "SECURITY_INTRUSION_PREVENTION",
+      "target": "DEVICE",
+      "timestamp": 1790096482528,
+      "title_raw": "Threat Detected",
+      "type": "THREAT_DETECTION_AND_PREVENTION"
+    },
+    {
+      "category": "INTERNET_AND_WAN",
+      "event": "NETWORK_WAN_RESTORED",
+      "id": "000000000000000000000091",
+      "key": "NETWORK_WAN_RESTORED_2",
+      "message_raw": "Internet connection {WAN_ID} {ISP_NAME} on port {PORT} is restored.",
+      "parameters": {
+        "CONSOLE_NAME": {
+          "id": "Dream Machine Pro Max",
+          "name": "Dream Machine Pro Max"
+        },
+        "DEVICE": {
+          "fingerprint_source": 0,
+          "id": "02:00:00:00:00:05",
+          "ip": "10.20.0.8",
+          "model": "UDM-Pro-Max",
+          "model_name": "UDMPROMAX",
+          "name": "Dream Machine Pro Max",
+          "version": "5.1.33"
+        },
+        "ISP_NAME": {
+          "enclosed_with_brackets": true,
+          "name": "China Telecom",
+          "not_actionable": true
+        },
+        "ISP_ASN": {
+          "enclosed_with_brackets": true,
+          "name": "4134",
+          "not_actionable": true
+        },
+        "PORT": {
+          "id": "10",
+          "name": "10",
+          "not_actionable": true
+        },
+        "DURATION": {
+          "id": "64",
+          "name": "1m 4s",
+          "not_actionable": true
+        },
+        "WAN_ID": {
+          "id": "WAN",
+          "name": "WAN1",
+          "not_actionable": true
+        },
+        "WAN_NAME": {
+          "id": "WAN",
+          "name": "Internet 1"
+        },
+        "WAN_SLA": {
+          "id": "000000000000000000000011",
+          "name": "Custom Verification"
+        }
+      },
+      "severity": "MEDIUM",
+      "show_on_dashboard": false,
+      "status": "NEW",
+      "subcategory": "INTERNET_OUTAGE_AND_FAILOVER",
+      "target": "WAN_ID",
+      "timestamp": 1790029953881,
+      "title_raw": "{WAN_ID} Internet Restored",
+      "type": "BACKUP_CONNECTION_IN_USE"
+    },
+    {
+      "category": "INTERNET_AND_WAN",
+      "event": "NETWORK_WAN_FAILED",
+      "id": "000000000000000000000092",
+      "key": "NETWORK_WAN_FAILED_2",
+      "message_raw": "Internet connection {WAN_ID} {ISP_NAME} on port {PORT} is down.",
+      "parameters": {
+        "CONSOLE_NAME": {
+          "id": "Dream Machine Pro Max",
+          "name": "Dream Machine Pro Max"
+        },
+        "DEVICE": {
+          "fingerprint_source": 0,
+          "id": "02:00:00:00:00:05",
+          "ip": "10.20.0.8",
+          "model": "UDM-Pro-Max",
+          "model_name": "UDMPROMAX",
+          "name": "Dream Machine Pro Max",
+          "version": "5.1.33"
+        },
+        "ISP_NAME": {
+          "enclosed_with_brackets": true,
+          "name": "China Telecom",
+          "not_actionable": true
+        },
+        "ISP_ASN": {
+          "enclosed_with_brackets": true,
+          "name": "4134",
+          "not_actionable": true
+        },
+        "PORT": {
+          "id": "10",
+          "name": "10",
+          "not_actionable": true
+        },
+        "WAN_ID": {
+          "id": "WAN",
+          "name": "WAN1",
+          "not_actionable": true
+        },
+        "WAN_NAME": {
+          "id": "WAN",
+          "name": "Internet 1"
+        },
+        "WAN_SLA": {
+          "id": "000000000000000000000011",
+          "name": "Custom Verification"
+        }
+      },
+      "severity": "VERY_HIGH",
+      "show_on_dashboard": true,
+      "status": "HIDDEN",
+      "subcategory": "INTERNET_OUTAGE_AND_FAILOVER",
+      "target": "WAN_ID",
+      "timestamp": 1790029951498,
+      "title_raw": "{WAN_ID} Internet Down",
+      "type": "BACKUP_CONNECTION_IN_USE"
+    },
+    {
+      "category": "INTERNET_AND_WAN",
+      "event": "ISP_PACKET_LOSS",
+      "id": "000000000000000000000093",
+      "key": "ISP_PACKET_LOSS_2",
+      "message_raw": "Internet connection {WAN_ID} {ISP_NAME} on port {PORT} is experiencing packet loss.",
+      "parameters": {
+        "CONSOLE_NAME": {
+          "id": "Dream Machine Pro Max",
+          "name": "Dream Machine Pro Max"
+        },
+        "DEVICE": {
+          "fingerprint_source": 0,
+          "id": "02:00:00:00:00:05",
+          "ip": "10.20.0.8",
+          "model": "UDM-Pro-Max",
+          "model_name": "UDMPROMAX",
+          "name": "Dream Machine Pro Max",
+          "version": "5.1.33"
+        },
+        "ISP_NAME": {
+          "enclosed_with_brackets": true,
+          "name": "China Telecom",
+          "not_actionable": true
+        },
+        "ISP_ASN": {
+          "enclosed_with_brackets": true,
+          "name": "4134",
+          "not_actionable": true
+        },
+        "PORT": {
+          "id": "10",
+          "name": "10",
+          "not_actionable": true
+        },
+        "WAN_ID": {
+          "id": "WAN",
+          "name": "WAN1",
+          "not_actionable": true
+        },
+        "WAN_NAME": {
+          "id": "WAN",
+          "name": "Internet 1"
+        },
+        "WAN_SLA": {
+          "id": "000000000000000000000011",
+          "name": "Custom Verification"
+        },
+        "WAN_SLA_SERVER": {
+          "name": "203.0.113.6"
+        }
+      },
+      "severity": "MEDIUM",
+      "show_on_dashboard": false,
+      "status": "NEW",
+      "subcategory": "INTERNET_PERFORMANCE",
+      "target": "WAN_ID",
+      "timestamp": 1790029932748,
+      "title_raw": "{WAN_ID} Packet Loss Detected",
+      "type": "ISP"
+    },
+    {
+      "category": "AUDIT",
+      "event": "MADE_CHANGES",
+      "id": "000000000000000000000094",
+      "key": "MADE_CHANGES_MULTIPLE_SETTING_OBJECTS",
+      "message_raw": "{ADMIN} made {COUNT} changes to {OBJECT} {SECTION} settings. Source IP: {IP}",
+      "parameters": {
+        "ADMIN": {
+          "id": "000000000000000000000002",
+          "name": "Admin 1",
+          "not_actionable": true
+        },
+        "ADMIN_ACTIVITY_ID": {
+          "id": "000000000000000000000095"
+        },
+        "CONSOLE_NAME": {
+          "id": "Dream Machine Pro Max",
+          "name": "Dream Machine Pro Max"
+        },
+        "COUNT": {
+          "name": "2",
+          "not_actionable": true
+        },
+        "IP": {
+          "id": "10.20.0.2",
+          "name": "10.20.0.2",
+          "not_actionable": true
+        },
+        "OBJECT": {
+          "id": "000000000000000000000096",
+          "name": "Object 25",
+          "not_actionable": true
+        },
+        "PLATFORM": {
+          "id": "WEB",
+          "name": "web",
+          "not_actionable": true
+        },
+        "SECTION": {
+          "id": "DEVICE_UPDATE_SCHEDULE",
+          "not_actionable": true
+        }
+      },
+      "severity": "MEDIUM",
+      "show_on_dashboard": false,
+      "status": "NEW",
+      "subcategory": "SYSTEM_ADMIN",
+      "target": "ADMIN",
+      "timestamp": 1790029666952,
+      "title_raw": "Config Modified",
+      "type": "ADMIN_ACCESS"
+    },
+    {
+      "category": "SECURITY",
+      "event": "THREAT_DETECTED",
+      "id": "000000000000000000000097",
+      "key": "THREAT_DETECTED_KNOWN_SOURCE_AND_DESTINATION_CLIENTS",
+      "message_raw": "A network intrusion attempt from {SRC_CLIENT} to {DST_CLIENT} has been detected.",
+      "parameters": {
+        "DST_CLIENT": {
+          "device_fingerprint_id": 5419,
+          "fingerprint_source": 0,
+          "hostname": "Client 14",
+          "id": "02:00:00:00:00:08",
+          "name": "Client 13"
+        },
+        "SRC_CLIENT": {
+          "device_fingerprint_id": 5419,
+          "fingerprint_source": 0,
+          "hostname": "Client 14",
+          "id": "02:00:00:00:00:08",
+          "name": "Client 13"
+        },
+        "CONSOLE_NAME": {
+          "id": "Dream Machine Pro Max",
+          "name": "Dream Machine Pro Max"
+        },
+        "CONSOLE_WITH_DEVICE_NAME": {
+          "id": "Dream Machine Pro Max",
+          "name": "Dream Machine Pro Max"
+        },
+        "DEVICE": {
+          "fingerprint_source": 0,
+          "id": "02:00:00:00:00:05",
+          "ip": "10.20.0.8",
+          "model": "UDM-Pro-Max",
+          "model_name": "UDMPROMAX",
+          "name": "Dream Machine Pro Max",
+          "version": "5.1.33"
+        },
+        "INITIATOR_ID": {
+          "id": "000000000000000000000098"
+        }
+      },
+      "severity": "HIGH",
+      "show_on_dashboard": false,
+      "status": "NEW",
+      "subcategory": "SECURITY_INTRUSION_PREVENTION",
+      "target": "DEVICE",
+      "timestamp": 1790007408211,
+      "title_raw": "Threat Detected",
+      "type": "THREAT_DETECTION_AND_PREVENTION"
+    },
+    {
+      "category": "SECURITY",
+      "event": "THREAT_DETECTED",
+      "id": "000000000000000000000099",
+      "key": "THREAT_DETECTED_V3",
+      "message_raw": "A network intrusion attempt from {SRC_IP} to {DST_IP} has been detected.",
+      "parameters": {
+        "CONSOLE_NAME": {
+          "id": "Dream Machine Pro Max",
+          "name": "Dream Machine Pro Max"
+        },
+        "CONSOLE_WITH_DEVICE_NAME": {
+          "id": "Dream Machine Pro Max",
+          "name": "Dream Machine Pro Max"
+        },
+        "DEVICE": {
+          "fingerprint_source": 0,
+          "id": "02:00:00:00:00:05",
+          "ip": "10.20.0.8",
+          "model": "UDM-Pro-Max",
+          "model_name": "UDMPROMAX",
+          "name": "Dream Machine Pro Max",
+          "version": "5.1.33"
+        },
+        "DST_IP": {
+          "id": "10.20.0.14",
+          "name": "10.20.0.14",
+          "not_actionable": true
+        },
+        "SRC_IP": {
+          "id": "203.0.113.39",
+          "name": "203.0.113.39",
+          "not_actionable": true
+        },
+        "INITIATOR_ID": {
+          "id": "00000000000000000000009a"
+        }
+      },
+      "severity": "HIGH",
+      "show_on_dashboard": false,
+      "status": "NEW",
+      "subcategory": "SECURITY_INTRUSION_PREVENTION",
+      "target": "DEVICE",
+      "timestamp": 1790001286331,
+      "title_raw": "Threat Detected",
+      "type": "THREAT_DETECTION_AND_PREVENTION"
+    },
+    {
+      "category": "SECURITY",
+      "event": "THREAT_DETECTED",
+      "id": "00000000000000000000009b",
+      "key": "THREAT_DETECTED_V3",
+      "message_raw": "A network intrusion attempt from {SRC_IP} to {DST_IP} has been detected.",
+      "parameters": {
+        "CONSOLE_NAME": {
+          "id": "Dream Machine Pro Max",
+          "name": "Dream Machine Pro Max"
+        },
+        "CONSOLE_WITH_DEVICE_NAME": {
+          "id": "Dream Machine Pro Max",
+          "name": "Dream Machine Pro Max"
+        },
+        "DEVICE": {
+          "fingerprint_source": 0,
+          "id": "02:00:00:00:00:05",
+          "ip": "10.20.0.8",
+          "model": "UDM-Pro-Max",
+          "model_name": "UDMPROMAX",
+          "name": "Dream Machine Pro Max",
+          "version": "5.1.33"
+        },
+        "DST_IP": {
+          "id": "10.20.0.14",
+          "name": "10.20.0.14",
+          "not_actionable": true
+        },
+        "SRC_IP": {
+          "id": "203.0.113.40",
+          "name": "203.0.113.40",
+          "not_actionable": true
+        },
+        "INITIATOR_ID": {
+          "id": "00000000000000000000009c"
+        }
+      },
+      "severity": "HIGH",
+      "show_on_dashboard": false,
+      "status": "NEW",
+      "subcategory": "SECURITY_INTRUSION_PREVENTION",
+      "target": "DEVICE",
+      "timestamp": 1789996721105,
+      "title_raw": "Threat Detected",
+      "type": "THREAT_DETECTION_AND_PREVENTION"
+    },
+    {
+      "category": "SOFTWARE_UPDATES",
+      "event": "NETWORK_UPDATED",
+      "id": "00000000000000000000009d",
+      "key": "NETWORK_UPDATED",
+      "message_raw": "UniFi Network has updated to {VERSION}",
+      "parameters": {
+        "APPLICATION": {
+          "name": "UniFi Network"
+        },
+        "CONSOLE_NAME": {
+          "id": "Dream Machine Pro Max",
+          "name": "Dream Machine Pro Max"
+        },
+        "PREVIOUS_VERSION": {
+          "name": "10.6.101"
+        },
+        "VERSION": {
+          "name": "10.6.106"
+        }
+      },
+      "severity": "MEDIUM",
+      "show_on_dashboard": false,
+      "status": "NEW",
+      "subcategory": "SYSTEM_ADMIN",
+      "target": "CONSOLE_NAME",
+      "timestamp": 1789950468562,
+      "title_raw": "Network Updated",
+      "type": "FIRMWARE_UPDATE"
+    },
+    {
+      "category": "SECURITY",
+      "event": "THREAT_DETECTED",
+      "id": "00000000000000000000009e",
+      "key": "THREAT_DETECTED_KNOWN_SOURCE_CLIENT",
+      "message_raw": "A network intrusion attempt from {SRC_CLIENT} to {DST_IP} has been detected.",
+      "parameters": {
+        "SRC_CLIENT": {
+          "device_fingerprint_id": 5419,
+          "fingerprint_source": 0,
+          "hostname": "Client 14",
+          "id": "02:00:00:00:00:08",
+          "name": "Client 13"
+        },
+        "CONSOLE_NAME": {
+          "id": "Dream Machine Pro Max",
+          "name": "Dream Machine Pro Max"
+        },
+        "CONSOLE_WITH_DEVICE_NAME": {
+          "id": "Dream Machine Pro Max",
+          "name": "Dream Machine Pro Max"
+        },
+        "DEVICE": {
+          "fingerprint_source": 0,
+          "id": "02:00:00:00:00:05",
+          "ip": "10.20.0.8",
+          "model": "UDM-Pro-Max",
+          "model_name": "UDMPROMAX",
+          "name": "Dream Machine Pro Max",
+          "version": "5.1.33"
+        },
+        "DST_IP": {
+          "id": "203.0.113.41",
+          "name": "203.0.113.41",
+          "not_actionable": true
+        },
+        "INITIATOR_ID": {
+          "id": "00000000000000000000009f"
+        }
+      },
+      "severity": "VERY_HIGH",
+      "show_on_dashboard": false,
+      "status": "NEW",
+      "subcategory": "SECURITY_INTRUSION_PREVENTION",
+      "target": "DEVICE",
+      "timestamp": 1789948990224,
+      "title_raw": "Threat Detected",
+      "type": "THREAT_DETECTION_AND_PREVENTION"
+    },
+    {
+      "category": "SECURITY",
+      "event": "THREAT_DETECTED",
+      "id": "0000000000000000000000a0",
+      "key": "THREAT_DETECTED_V3",
+      "message_raw": "A network intrusion attempt from {SRC_IP} to {DST_IP} has been detected.",
+      "parameters": {
+        "CONSOLE_NAME": {
+          "id": "Dream Machine Pro Max",
+          "name": "Dream Machine Pro Max"
+        },
+        "CONSOLE_WITH_DEVICE_NAME": {
+          "id": "Dream Machine Pro Max",
+          "name": "Dream Machine Pro Max"
+        },
+        "DEVICE": {
+          "fingerprint_source": 0,
+          "id": "02:00:00:00:00:05",
+          "ip": "10.20.0.8",
+          "model": "UDM-Pro-Max",
+          "model_name": "UDMPROMAX",
+          "name": "Dream Machine Pro Max",
+          "version": "5.1.33"
+        },
+        "DST_IP": {
+          "id": "203.0.113.41",
+          "name": "203.0.113.41",
+          "not_actionable": true
+        },
+        "SRC_IP": {
+          "id": "10.20.0.2",
+          "name": "10.20.0.2",
+          "not_actionable": true
+        },
+        "INITIATOR_ID": {
+          "id": "0000000000000000000000a1"
+        }
+      },
+      "severity": "VERY_HIGH",
+      "show_on_dashboard": false,
+      "status": "NEW",
+      "subcategory": "SECURITY_INTRUSION_PREVENTION",
+      "target": "DEVICE",
+      "timestamp": 1789948975327,
+      "title_raw": "Threat Detected",
+      "type": "THREAT_DETECTION_AND_PREVENTION"
+    },
+    {
+      "category": "INTERNET_AND_WAN",
+      "event": "NETWORK_WAN_RESTORED",
+      "id": "0000000000000000000000a2",
+      "key": "NETWORK_WAN_RESTORED_2",
+      "message_raw": "Internet connection {WAN_ID} {ISP_NAME} on port {PORT} is restored.",
+      "parameters": {
+        "CONSOLE_NAME": {
+          "id": "Dream Machine Pro Max",
+          "name": "Dream Machine Pro Max"
+        },
+        "DEVICE": {
+          "fingerprint_source": 0,
+          "id": "02:00:00:00:00:05",
+          "ip": "10.20.0.8",
+          "model": "UDM-Pro-Max",
+          "model_name": "UDMPROMAX",
+          "name": "Dream Machine Pro Max",
+          "version": "5.1.33"
+        },
+        "ISP_NAME": {
+          "enclosed_with_brackets": true,
+          "name": "China Telecom",
+          "not_actionable": true
+        },
+        "ISP_ASN": {
+          "enclosed_with_brackets": true,
+          "name": "4134",
+          "not_actionable": true
+        },
+        "PORT": {
+          "id": "10",
+          "name": "10",
+          "not_actionable": true
+        },
+        "DURATION": {
+          "id": "69",
+          "name": "1m 9s",
+          "not_actionable": true
+        },
+        "WAN_ID": {
+          "id": "WAN",
+          "name": "WAN1",
+          "not_actionable": true
+        },
+        "WAN_NAME": {
+          "id": "WAN",
+          "name": "Internet 1"
+        },
+        "WAN_SUBNET": {
+          "name": "203.0.113.42/32",
+          "not_actionable": true
+        },
+        "WAN_SLA": {
+          "id": "000000000000000000000011",
+          "name": "Custom Verification"
+        }
+      },
+      "severity": "MEDIUM",
+      "show_on_dashboard": false,
+      "status": "NEW",
+      "subcategory": "INTERNET_OUTAGE_AND_FAILOVER",
+      "target": "WAN_ID",
+      "timestamp": 1789943574288,
+      "title_raw": "{WAN_ID} Internet Restored",
+      "type": "BACKUP_CONNECTION_IN_USE"
+    },
+    {
+      "category": "INTERNET_AND_WAN",
+      "event": "NETWORK_WAN_FAILED",
+      "id": "0000000000000000000000a3",
+      "key": "NETWORK_WAN_FAILED_2",
+      "message_raw": "Internet connection {WAN_ID} {ISP_NAME} on port {PORT} is down.",
+      "parameters": {
+        "CONSOLE_NAME": {
+          "id": "Dream Machine Pro Max",
+          "name": "Dream Machine Pro Max"
+        },
+        "DEVICE": {
+          "fingerprint_source": 0,
+          "id": "02:00:00:00:00:05",
+          "ip": "10.20.0.8",
+          "model": "UDM-Pro-Max",
+          "model_name": "UDMPROMAX",
+          "name": "Dream Machine Pro Max",
+          "version": "5.1.33"
+        },
+        "ISP_NAME": {
+          "enclosed_with_brackets": true,
+          "name": "China Telecom",
+          "not_actionable": true
+        },
+        "ISP_ASN": {
+          "enclosed_with_brackets": true,
+          "name": "4134",
+          "not_actionable": true
+        },
+        "PORT": {
+          "id": "10",
+          "name": "10",
+          "not_actionable": true
+        },
+        "WAN_ID": {
+          "id": "WAN",
+          "name": "WAN1",
+          "not_actionable": true
+        },
+        "WAN_NAME": {
+          "id": "WAN",
+          "name": "Internet 1"
+        },
+        "WAN_SLA": {
+          "id": "000000000000000000000011",
+          "name": "Custom Verification"
+        }
+      },
+      "severity": "VERY_HIGH",
+      "show_on_dashboard": true,
+      "status": "HIDDEN",
+      "subcategory": "INTERNET_OUTAGE_AND_FAILOVER",
+      "target": "WAN_ID",
+      "timestamp": 1789943567935,
+      "title_raw": "{WAN_ID} Internet Down",
+      "type": "BACKUP_CONNECTION_IN_USE"
+    },
+    {
+      "category": "INTERNET_AND_WAN",
+      "event": "ISP_PACKET_LOSS",
+      "id": "0000000000000000000000a4",
+      "key": "ISP_PACKET_LOSS_2",
+      "message_raw": "Internet connection {WAN_ID} {ISP_NAME} on port {PORT} is experiencing packet loss.",
+      "parameters": {
+        "CONSOLE_NAME": {
+          "id": "Dream Machine Pro Max",
+          "name": "Dream Machine Pro Max"
+        },
+        "DEVICE": {
+          "fingerprint_source": 0,
+          "id": "02:00:00:00:00:05",
+          "ip": "10.20.0.8",
+          "model": "UDM-Pro-Max",
+          "model_name": "UDMPROMAX",
+          "name": "Dream Machine Pro Max",
+          "version": "5.1.33"
+        },
+        "ISP_NAME": {
+          "enclosed_with_brackets": true,
+          "name": "China Telecom",
+          "not_actionable": true
+        },
+        "ISP_ASN": {
+          "enclosed_with_brackets": true,
+          "name": "4134",
+          "not_actionable": true
+        },
+        "PORT": {
+          "id": "10",
+          "name": "10",
+          "not_actionable": true
+        },
+        "WAN_ID": {
+          "id": "WAN",
+          "name": "WAN1",
+          "not_actionable": true
+        },
+        "WAN_NAME": {
+          "id": "WAN",
+          "name": "Internet 1"
+        },
+        "WAN_SLA": {
+          "id": "000000000000000000000011",
+          "name": "Custom Verification"
+        },
+        "WAN_SLA_SERVER": {
+          "name": "203.0.113.6"
+        }
+      },
+      "severity": "MEDIUM",
+      "show_on_dashboard": false,
+      "status": "NEW",
+      "subcategory": "INTERNET_PERFORMANCE",
+      "target": "WAN_ID",
+      "timestamp": 1789943462752,
+      "title_raw": "{WAN_ID} Packet Loss Detected",
+      "type": "ISP"
+    },
+    {
+      "category": "SECURITY",
+      "event": "THREAT_DETECTED",
+      "id": "0000000000000000000000a5",
+      "key": "THREAT_DETECTED_V3",
+      "message_raw": "A network intrusion attempt from {SRC_IP} to {DST_IP} has been detected.",
+      "parameters": {
+        "CONSOLE_NAME": {
+          "id": "Dream Machine Pro Max",
+          "name": "Dream Machine Pro Max"
+        },
+        "CONSOLE_WITH_DEVICE_NAME": {
+          "id": "Dream Machine Pro Max",
+          "name": "Dream Machine Pro Max"
+        },
+        "DEVICE": {
+          "fingerprint_source": 0,
+          "id": "02:00:00:00:00:05",
+          "ip": "10.20.0.8",
+          "model": "UDM-Pro-Max",
+          "model_name": "UDMPROMAX",
+          "name": "Dream Machine Pro Max",
+          "version": "5.1.33"
+        },
+        "DST_IP": {
+          "id": "10.20.0.14",
+          "name": "10.20.0.14",
+          "not_actionable": true
+        },
+        "SRC_IP": {
+          "id": "203.0.113.43",
+          "name": "203.0.113.43",
+          "not_actionable": true
+        },
+        "INITIATOR_ID": {
+          "id": "0000000000000000000000a6"
+        }
+      },
+      "severity": "HIGH",
+      "show_on_dashboard": false,
+      "status": "NEW",
+      "subcategory": "SECURITY_INTRUSION_PREVENTION",
+      "target": "DEVICE",
+      "timestamp": 1789924602184,
+      "title_raw": "Threat Detected",
+      "type": "THREAT_DETECTION_AND_PREVENTION"
+    },
+    {
+      "category": "SECURITY",
+      "event": "THREAT_DETECTED",
+      "id": "0000000000000000000000a7",
+      "key": "THREAT_DETECTED_V3",
+      "message_raw": "A network intrusion attempt from {SRC_IP} to {DST_IP} has been detected.",
+      "parameters": {
+        "CONSOLE_NAME": {
+          "id": "Dream Machine Pro Max",
+          "name": "Dream Machine Pro Max"
+        },
+        "CONSOLE_WITH_DEVICE_NAME": {
+          "id": "Dream Machine Pro Max",
+          "name": "Dream Machine Pro Max"
+        },
+        "DEVICE": {
+          "fingerprint_source": 0,
+          "id": "02:00:00:00:00:05",
+          "ip": "10.20.0.8",
+          "model": "UDM-Pro-Max",
+          "model_name": "UDMPROMAX",
+          "name": "Dream Machine Pro Max",
+          "version": "5.1.33"
+        },
+        "DST_IP": {
+          "id": "10.20.0.2",
+          "name": "10.20.0.2",
+          "not_actionable": true
+        },
+        "SRC_IP": {
+          "id": "203.0.113.44",
+          "name": "203.0.113.44",
+          "not_actionable": true
+        },
+        "INITIATOR_ID": {
+          "id": "0000000000000000000000a8"
+        }
+      },
+      "severity": "HIGH",
+      "show_on_dashboard": false,
+      "status": "NEW",
+      "subcategory": "SECURITY_INTRUSION_PREVENTION",
+      "target": "DEVICE",
+      "timestamp": 1789921388050,
+      "title_raw": "Threat Detected",
+      "type": "THREAT_DETECTION_AND_PREVENTION"
+    },
+    {
+      "category": "INTERNET_AND_WAN",
+      "event": "NETWORK_WAN_RESTORED",
+      "id": "0000000000000000000000a9",
+      "key": "NETWORK_WAN_RESTORED_2",
+      "message_raw": "Internet connection {WAN_ID} {ISP_NAME} on port {PORT} is restored.",
+      "parameters": {
+        "CONSOLE_NAME": {
+          "id": "Dream Machine Pro Max",
+          "name": "Dream Machine Pro Max"
+        },
+        "DEVICE": {
+          "fingerprint_source": 0,
+          "id": "02:00:00:00:00:05",
+          "ip": "10.20.0.8",
+          "model": "UDM-Pro-Max",
+          "model_name": "UDMPROMAX",
+          "name": "Dream Machine Pro Max",
+          "version": "5.1.33"
+        },
+        "ISP_NAME": {
+          "enclosed_with_brackets": true,
+          "name": "China Telecom",
+          "not_actionable": true
+        },
+        "ISP_ASN": {
+          "enclosed_with_brackets": true,
+          "name": "4134",
+          "not_actionable": true
+        },
+        "PORT": {
+          "id": "10",
+          "name": "10",
+          "not_actionable": true
+        },
+        "DURATION": {
+          "id": "91",
+          "name": "1m 31s",
+          "not_actionable": true
+        },
+        "WAN_ID": {
+          "id": "WAN",
+          "name": "WAN1",
+          "not_actionable": true
+        },
+        "WAN_NAME": {
+          "id": "WAN",
+          "name": "Internet 1"
+        },
+        "WAN_SUBNET": {
+          "name": "203.0.113.45/32",
+          "not_actionable": true
+        },
+        "WAN_SLA": {
+          "id": "000000000000000000000011",
+          "name": "Custom Verification"
+        }
+      },
+      "severity": "MEDIUM",
+      "show_on_dashboard": false,
+      "status": "NEW",
+      "subcategory": "INTERNET_OUTAGE_AND_FAILOVER",
+      "target": "WAN_ID",
+      "timestamp": 1789857177690,
+      "title_raw": "{WAN_ID} Internet Restored",
+      "type": "BACKUP_CONNECTION_IN_USE"
+    },
+    {
+      "category": "INTERNET_AND_WAN",
+      "event": "NETWORK_WAN_FAILED",
+      "id": "0000000000000000000000aa",
+      "key": "NETWORK_WAN_FAILED_2",
+      "message_raw": "Internet connection {WAN_ID} {ISP_NAME} on port {PORT} is down.",
+      "parameters": {
+        "CONSOLE_NAME": {
+          "id": "Dream Machine Pro Max",
+          "name": "Dream Machine Pro Max"
+        },
+        "DEVICE": {
+          "fingerprint_source": 0,
+          "id": "02:00:00:00:00:05",
+          "ip": "10.20.0.8",
+          "model": "UDM-Pro-Max",
+          "model_name": "UDMPROMAX",
+          "name": "Dream Machine Pro Max",
+          "version": "5.1.33"
+        },
+        "ISP_NAME": {
+          "enclosed_with_brackets": true,
+          "name": "China Telecom",
+          "not_actionable": true
+        },
+        "ISP_ASN": {
+          "enclosed_with_brackets": true,
+          "name": "4134",
+          "not_actionable": true
+        },
+        "PORT": {
+          "id": "10",
+          "name": "10",
+          "not_actionable": true
+        },
+        "WAN_ID": {
+          "id": "WAN",
+          "name": "WAN1",
+          "not_actionable": true
+        },
+        "WAN_NAME": {
+          "id": "WAN",
+          "name": "Internet 1"
+        },
+        "WAN_SLA": {
+          "id": "000000000000000000000011",
+          "name": "Custom Verification"
+        }
+      },
+      "severity": "VERY_HIGH",
+      "show_on_dashboard": true,
+      "status": "HIDDEN",
+      "subcategory": "INTERNET_OUTAGE_AND_FAILOVER",
+      "target": "WAN_ID",
+      "timestamp": 1789857145210,
+      "title_raw": "{WAN_ID} Internet Down",
+      "type": "BACKUP_CONNECTION_IN_USE"
+    },
+    {
+      "category": "INTERNET_AND_WAN",
+      "event": "ISP_PACKET_LOSS",
+      "id": "0000000000000000000000ab",
+      "key": "ISP_PACKET_LOSS_2",
+      "message_raw": "Internet connection {WAN_ID} {ISP_NAME} on port {PORT} is experiencing packet loss.",
+      "parameters": {
+        "CONSOLE_NAME": {
+          "id": "Dream Machine Pro Max",
+          "name": "Dream Machine Pro Max"
+        },
+        "DEVICE": {
+          "fingerprint_source": 0,
+          "id": "02:00:00:00:00:05",
+          "ip": "10.20.0.8",
+          "model": "UDM-Pro-Max",
+          "model_name": "UDMPROMAX",
+          "name": "Dream Machine Pro Max",
+          "version": "5.1.33"
+        },
+        "ISP_NAME": {
+          "enclosed_with_brackets": true,
+          "name": "China Telecom",
+          "not_actionable": true
+        },
+        "ISP_ASN": {
+          "enclosed_with_brackets": true,
+          "name": "4134",
+          "not_actionable": true
+        },
+        "PORT": {
+          "id": "10",
+          "name": "10",
+          "not_actionable": true
+        },
+        "WAN_ID": {
+          "id": "WAN",
+          "name": "WAN1",
+          "not_actionable": true
+        },
+        "WAN_NAME": {
+          "id": "WAN",
+          "name": "Internet 1"
+        },
+        "WAN_SUBNET": {
+          "name": "203.0.113.46/32",
+          "not_actionable": true
+        },
+        "WAN_SLA": {
+          "id": "000000000000000000000011",
+          "name": "Custom Verification"
+        },
+        "WAN_SLA_SERVER": {
+          "name": "203.0.113.6"
+        }
+      },
+      "severity": "MEDIUM",
+      "show_on_dashboard": false,
+      "status": "NEW",
+      "subcategory": "INTERNET_PERFORMANCE",
+      "target": "WAN_ID",
+      "timestamp": 1789857043975,
+      "title_raw": "{WAN_ID} Packet Loss Detected",
+      "type": "ISP"
+    },
+    {
+      "category": "INTERNET_AND_WAN",
+      "event": "NETWORK_WAN_RESTORED",
+      "id": "0000000000000000000000ac",
+      "key": "NETWORK_WAN_RESTORED_2",
+      "message_raw": "Internet connection {WAN_ID} {ISP_NAME} on port {PORT} is restored.",
+      "parameters": {
+        "CONSOLE_NAME": {
+          "id": "Dream Machine Pro Max",
+          "name": "Dream Machine Pro Max"
+        },
+        "DEVICE": {
+          "fingerprint_source": 0,
+          "id": "02:00:00:00:00:05",
+          "ip": "10.20.0.8",
+          "model": "UDM-Pro-Max",
+          "model_name": "UDMPROMAX",
+          "name": "Dream Machine Pro Max",
+          "version": "5.1.33"
+        },
+        "ISP_NAME": {
+          "enclosed_with_brackets": true,
+          "name": "China Telecom",
+          "not_actionable": true
+        },
+        "ISP_ASN": {
+          "enclosed_with_brackets": true,
+          "name": "4134",
+          "not_actionable": true
+        },
+        "PORT": {
+          "id": "10",
+          "name": "10",
+          "not_actionable": true
+        },
+        "DURATION": {
+          "id": "70",
+          "name": "1m 10s",
+          "not_actionable": true
+        },
+        "WAN_ID": {
+          "id": "WAN",
+          "name": "WAN1",
+          "not_actionable": true
+        },
+        "WAN_NAME": {
+          "id": "WAN",
+          "name": "Internet 1"
+        },
+        "WAN_SUBNET": {
+          "name": "203.0.113.46/32",
+          "not_actionable": true
+        },
+        "WAN_SLA": {
+          "id": "000000000000000000000011",
+          "name": "Custom Verification"
+        }
+      },
+      "severity": "MEDIUM",
+      "show_on_dashboard": false,
+      "status": "NEW",
+      "subcategory": "INTERNET_OUTAGE_AND_FAILOVER",
+      "target": "WAN_ID",
+      "timestamp": 1789770787371,
+      "title_raw": "{WAN_ID} Internet Restored",
+      "type": "BACKUP_CONNECTION_IN_USE"
+    },
+    {
+      "category": "INTERNET_AND_WAN",
+      "event": "NETWORK_WAN_FAILED",
+      "id": "0000000000000000000000ad",
+      "key": "NETWORK_WAN_FAILED_2",
+      "message_raw": "Internet connection {WAN_ID} {ISP_NAME} on port {PORT} is down.",
+      "parameters": {
+        "CONSOLE_NAME": {
+          "id": "Dream Machine Pro Max",
+          "name": "Dream Machine Pro Max"
+        },
+        "DEVICE": {
+          "fingerprint_source": 0,
+          "id": "02:00:00:00:00:05",
+          "ip": "10.20.0.8",
+          "model": "UDM-Pro-Max",
+          "model_name": "UDMPROMAX",
+          "name": "Dream Machine Pro Max",
+          "version": "5.1.33"
+        },
+        "ISP_NAME": {
+          "enclosed_with_brackets": true,
+          "name": "China Telecom",
+          "not_actionable": true
+        },
+        "ISP_ASN": {
+          "enclosed_with_brackets": true,
+          "name": "4134",
+          "not_actionable": true
+        },
+        "PORT": {
+          "id": "10",
+          "name": "10",
+          "not_actionable": true
+        },
+        "WAN_ID": {
+          "id": "WAN",
+          "name": "WAN1",
+          "not_actionable": true
+        },
+        "WAN_NAME": {
+          "id": "WAN",
+          "name": "Internet 1"
+        },
+        "WAN_SLA": {
+          "id": "000000000000000000000011",
+          "name": "Custom Verification"
+        }
+      },
+      "severity": "VERY_HIGH",
+      "show_on_dashboard": true,
+      "status": "HIDDEN",
+      "subcategory": "INTERNET_OUTAGE_AND_FAILOVER",
+      "target": "WAN_ID",
+      "timestamp": 1789770779049,
+      "title_raw": "{WAN_ID} Internet Down",
+      "type": "BACKUP_CONNECTION_IN_USE"
+    },
+    {
+      "category": "INTERNET_AND_WAN",
+      "event": "NETWORK_WAN_RESTORED",
+      "id": "0000000000000000000000ae",
+      "key": "NETWORK_WAN_RESTORED_2",
+      "message_raw": "Internet connection {WAN_ID} {ISP_NAME} on port {PORT} is restored.",
+      "parameters": {
+        "CONSOLE_NAME": {
+          "id": "Dream Machine Pro Max",
+          "name": "Dream Machine Pro Max"
+        },
+        "DEVICE": {
+          "fingerprint_source": 0,
+          "id": "02:00:00:00:00:05",
+          "ip": "10.20.0.8",
+          "model": "UDM-Pro-Max",
+          "model_name": "UDMPROMAX",
+          "name": "Dream Machine Pro Max",
+          "version": "5.1.33"
+        },
+        "ISP_NAME": {
+          "enclosed_with_brackets": true,
+          "name": "China Telecom",
+          "not_actionable": true
+        },
+        "ISP_ASN": {
+          "enclosed_with_brackets": true,
+          "name": "4134",
+          "not_actionable": true
+        },
+        "PORT": {
+          "id": "10",
+          "name": "10",
+          "not_actionable": true
+        },
+        "DURATION": {
+          "id": "65",
+          "name": "1m 5s",
+          "not_actionable": true
+        },
+        "WAN_ID": {
+          "id": "WAN",
+          "name": "WAN1",
+          "not_actionable": true
+        },
+        "WAN_NAME": {
+          "id": "WAN",
+          "name": "Internet 1"
+        },
+        "WAN_SUBNET": {
+          "name": "203.0.113.47/32",
+          "not_actionable": true
+        },
+        "WAN_SLA": {
+          "id": "000000000000000000000011",
+          "name": "Custom Verification"
+        }
+      },
+      "severity": "MEDIUM",
+      "show_on_dashboard": false,
+      "status": "NEW",
+      "subcategory": "INTERNET_OUTAGE_AND_FAILOVER",
+      "target": "WAN_ID",
+      "timestamp": 1789684372204,
+      "title_raw": "{WAN_ID} Internet Restored",
+      "type": "BACKUP_CONNECTION_IN_USE"
+    },
+    {
+      "category": "INTERNET_AND_WAN",
+      "event": "NETWORK_WAN_FAILED",
+      "id": "0000000000000000000000af",
+      "key": "NETWORK_WAN_FAILED_2",
+      "message_raw": "Internet connection {WAN_ID} {ISP_NAME} on port {PORT} is down.",
+      "parameters": {
+        "CONSOLE_NAME": {
+          "id": "Dream Machine Pro Max",
+          "name": "Dream Machine Pro Max"
+        },
+        "DEVICE": {
+          "fingerprint_source": 0,
+          "id": "02:00:00:00:00:05",
+          "ip": "10.20.0.8",
+          "model": "UDM-Pro-Max",
+          "model_name": "UDMPROMAX",
+          "name": "Dream Machine Pro Max",
+          "version": "5.1.33"
+        },
+        "ISP_NAME": {
+          "enclosed_with_brackets": true,
+          "name": "China Telecom",
+          "not_actionable": true
+        },
+        "ISP_ASN": {
+          "enclosed_with_brackets": true,
+          "name": "4134",
+          "not_actionable": true
+        },
+        "PORT": {
+          "id": "10",
+          "name": "10",
+          "not_actionable": true
+        },
+        "WAN_ID": {
+          "id": "WAN",
+          "name": "WAN1",
+          "not_actionable": true
+        },
+        "WAN_NAME": {
+          "id": "WAN",
+          "name": "Internet 1"
+        },
+        "WAN_SLA": {
+          "id": "000000000000000000000011",
+          "name": "Custom Verification"
+        }
+      },
+      "severity": "VERY_HIGH",
+      "show_on_dashboard": true,
+      "status": "HIDDEN",
+      "subcategory": "INTERNET_OUTAGE_AND_FAILOVER",
+      "target": "WAN_ID",
+      "timestamp": 1789684366885,
+      "title_raw": "{WAN_ID} Internet Down",
+      "type": "BACKUP_CONNECTION_IN_USE"
+    },
+    {
+      "category": "INTERNET_AND_WAN",
+      "event": "ISP_PACKET_LOSS",
+      "id": "0000000000000000000000b0",
+      "key": "ISP_PACKET_LOSS_2",
+      "message_raw": "Internet connection {WAN_ID} {ISP_NAME} on port {PORT} is experiencing packet loss.",
+      "parameters": {
+        "CONSOLE_NAME": {
+          "id": "Dream Machine Pro Max",
+          "name": "Dream Machine Pro Max"
+        },
+        "DEVICE": {
+          "fingerprint_source": 0,
+          "id": "02:00:00:00:00:05",
+          "ip": "10.20.0.8",
+          "model": "UDM-Pro-Max",
+          "model_name": "UDMPROMAX",
+          "name": "Dream Machine Pro Max",
+          "version": "5.1.33"
+        },
+        "ISP_NAME": {
+          "enclosed_with_brackets": true,
+          "name": "China Telecom",
+          "not_actionable": true
+        },
+        "ISP_ASN": {
+          "enclosed_with_brackets": true,
+          "name": "4134",
+          "not_actionable": true
+        },
+        "PORT": {
+          "id": "10",
+          "name": "10",
+          "not_actionable": true
+        },
+        "WAN_ID": {
+          "id": "WAN",
+          "name": "WAN1",
+          "not_actionable": true
+        },
+        "WAN_NAME": {
+          "id": "WAN",
+          "name": "Internet 1"
+        },
+        "WAN_SLA": {
+          "id": "000000000000000000000011",
+          "name": "Custom Verification"
+        },
+        "WAN_SLA_SERVER": {
+          "name": "203.0.113.6"
+        }
+      },
+      "severity": "MEDIUM",
+      "show_on_dashboard": false,
+      "status": "NEW",
+      "subcategory": "INTERNET_PERFORMANCE",
+      "target": "WAN_ID",
+      "timestamp": 1789684329018,
+      "title_raw": "{WAN_ID} Packet Loss Detected",
+      "type": "ISP"
+    },
+    {
+      "category": "SECURITY",
+      "event": "THREAT_DETECTED",
+      "id": "0000000000000000000000b1",
+      "key": "THREAT_DETECTED_V3",
+      "message_raw": "A network intrusion attempt from {SRC_IP} to {DST_IP} has been detected.",
+      "parameters": {
+        "CONSOLE_NAME": {
+          "id": "Dream Machine Pro Max",
+          "name": "Dream Machine Pro Max"
+        },
+        "CONSOLE_WITH_DEVICE_NAME": {
+          "id": "Dream Machine Pro Max",
+          "name": "Dream Machine Pro Max"
+        },
+        "DEVICE": {
+          "fingerprint_source": 0,
+          "id": "02:00:00:00:00:05",
+          "ip": "10.20.0.8",
+          "model": "UDM-Pro-Max",
+          "model_name": "UDMPROMAX",
+          "name": "Dream Machine Pro Max",
+          "version": "5.1.33"
+        },
+        "DST_IP": {
+          "id": "10.20.0.14",
+          "name": "10.20.0.14",
+          "not_actionable": true
+        },
+        "SRC_IP": {
+          "id": "203.0.113.48",
+          "name": "203.0.113.48",
+          "not_actionable": true
+        },
+        "INITIATOR_ID": {
+          "id": "0000000000000000000000b2"
+        }
+      },
+      "severity": "HIGH",
+      "show_on_dashboard": false,
+      "status": "NEW",
+      "subcategory": "SECURITY_INTRUSION_PREVENTION",
+      "target": "DEVICE",
+      "timestamp": 1789646361199,
+      "title_raw": "Threat Detected",
+      "type": "THREAT_DETECTION_AND_PREVENTION"
+    },
+    {
+      "category": "INTERNET_AND_WAN",
+      "event": "NETWORK_WAN_RESTORED",
+      "id": "0000000000000000000000b3",
+      "key": "NETWORK_WAN_RESTORED_2",
+      "message_raw": "Internet connection {WAN_ID} {ISP_NAME} on port {PORT} is restored.",
+      "parameters": {
+        "CONSOLE_NAME": {
+          "id": "Dream Machine Pro Max",
+          "name": "Dream Machine Pro Max"
+        },
+        "DEVICE": {
+          "fingerprint_source": 0,
+          "id": "02:00:00:00:00:05",
+          "ip": "10.20.0.8",
+          "model": "UDM-Pro-Max",
+          "model_name": "UDMPROMAX",
+          "name": "Dream Machine Pro Max",
+          "version": "5.1.33"
+        },
+        "ISP_NAME": {
+          "enclosed_with_brackets": true,
+          "name": "China Telecom",
+          "not_actionable": true
+        },
+        "ISP_ASN": {
+          "enclosed_with_brackets": true,
+          "name": "4134",
+          "not_actionable": true
+        },
+        "PORT": {
+          "id": "10",
+          "name": "10",
+          "not_actionable": true
+        },
+        "DURATION": {
+          "id": "87",
+          "name": "1m 27s",
+          "not_actionable": true
+        },
+        "WAN_ID": {
+          "id": "WAN",
+          "name": "WAN1",
+          "not_actionable": true
+        },
+        "WAN_NAME": {
+          "id": "WAN",
+          "name": "Internet 1"
+        },
+        "WAN_SUBNET": {
+          "name": "203.0.113.49/32",
+          "not_actionable": true
+        },
+        "WAN_SLA": {
+          "id": "000000000000000000000011",
+          "name": "Custom Verification"
+        }
+      },
+      "severity": "MEDIUM",
+      "show_on_dashboard": false,
+      "status": "NEW",
+      "subcategory": "INTERNET_OUTAGE_AND_FAILOVER",
+      "target": "WAN_ID",
+      "timestamp": 1789597972196,
+      "title_raw": "{WAN_ID} Internet Restored",
+      "type": "BACKUP_CONNECTION_IN_USE"
+    },
+    {
+      "category": "INTERNET_AND_WAN",
+      "event": "NETWORK_WAN_FAILED",
+      "id": "0000000000000000000000b4",
+      "key": "NETWORK_WAN_FAILED_2",
+      "message_raw": "Internet connection {WAN_ID} {ISP_NAME} on port {PORT} is down.",
+      "parameters": {
+        "CONSOLE_NAME": {
+          "id": "Dream Machine Pro Max",
+          "name": "Dream Machine Pro Max"
+        },
+        "DEVICE": {
+          "fingerprint_source": 0,
+          "id": "02:00:00:00:00:05",
+          "ip": "10.20.0.8",
+          "model": "UDM-Pro-Max",
+          "model_name": "UDMPROMAX",
+          "name": "Dream Machine Pro Max",
+          "version": "5.1.33"
+        },
+        "ISP_NAME": {
+          "enclosed_with_brackets": true,
+          "name": "China Telecom",
+          "not_actionable": true
+        },
+        "ISP_ASN": {
+          "enclosed_with_brackets": true,
+          "name": "4134",
+          "not_actionable": true
+        },
+        "PORT": {
+          "id": "10",
+          "name": "10",
+          "not_actionable": true
+        },
+        "WAN_ID": {
+          "id": "WAN",
+          "name": "WAN1",
+          "not_actionable": true
+        },
+        "WAN_NAME": {
+          "id": "WAN",
+          "name": "Internet 1"
+        },
+        "WAN_SLA": {
+          "id": "000000000000000000000011",
+          "name": "Custom Verification"
+        }
+      },
+      "severity": "VERY_HIGH",
+      "show_on_dashboard": true,
+      "status": "HIDDEN",
+      "subcategory": "INTERNET_OUTAGE_AND_FAILOVER",
+      "target": "WAN_ID",
+      "timestamp": 1789597941736,
+      "title_raw": "{WAN_ID} Internet Down",
+      "type": "BACKUP_CONNECTION_IN_USE"
+    },
+    {
+      "category": "INTERNET_AND_WAN",
+      "event": "ISP_PACKET_LOSS",
+      "id": "0000000000000000000000b5",
+      "key": "ISP_PACKET_LOSS_2",
+      "message_raw": "Internet connection {WAN_ID} {ISP_NAME} on port {PORT} is experiencing packet loss.",
+      "parameters": {
+        "CONSOLE_NAME": {
+          "id": "Dream Machine Pro Max",
+          "name": "Dream Machine Pro Max"
+        },
+        "DEVICE": {
+          "fingerprint_source": 0,
+          "id": "02:00:00:00:00:05",
+          "ip": "10.20.0.8",
+          "model": "UDM-Pro-Max",
+          "model_name": "UDMPROMAX",
+          "name": "Dream Machine Pro Max",
+          "version": "5.1.33"
+        },
+        "ISP_NAME": {
+          "enclosed_with_brackets": true,
+          "name": "China Telecom",
+          "not_actionable": true
+        },
+        "ISP_ASN": {
+          "enclosed_with_brackets": true,
+          "name": "4134",
+          "not_actionable": true
+        },
+        "PORT": {
+          "id": "10",
+          "name": "10",
+          "not_actionable": true
+        },
+        "WAN_ID": {
+          "id": "WAN",
+          "name": "WAN1",
+          "not_actionable": true
+        },
+        "WAN_NAME": {
+          "id": "WAN",
+          "name": "Internet 1"
+        },
+        "WAN_SLA": {
+          "id": "000000000000000000000011",
+          "name": "Custom Verification"
+        },
+        "WAN_SLA_SERVER": {
+          "name": "203.0.113.6"
+        }
+      },
+      "severity": "MEDIUM",
+      "show_on_dashboard": false,
+      "status": "NEW",
+      "subcategory": "INTERNET_PERFORMANCE",
+      "target": "WAN_ID",
+      "timestamp": 1789597861628,
+      "title_raw": "{WAN_ID} Packet Loss Detected",
+      "type": "ISP"
+    }
+  ]
+}

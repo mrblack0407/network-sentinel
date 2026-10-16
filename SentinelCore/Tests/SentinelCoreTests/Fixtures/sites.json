@@ -1,0 +1,13 @@
+{
+  "offset": 0,
+  "limit": 25,
+  "count": 1,
+  "totalCount": 1,
+  "data": [
+    {
+      "id": "00000000-0000-4000-8000-000000000001",
+      "internalReference": "default",
+      "name": "Default"
+    }
+  ]
+}

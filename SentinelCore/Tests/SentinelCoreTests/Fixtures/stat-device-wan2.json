@@ -1,0 +1,55 @@
+{
+  "meta": {
+    "rc": "ok"
+  },
+  "data": [
+    {
+      "_id": "0000000000000000000000b6",
+      "mac": "02:00:00:00:00:05",
+      "ip": "203.0.113.1",
+      "name": "Dream Machine Pro Max",
+      "model": "UDMPROMAX",
+      "type": "udm",
+      "version": "5.1.33.34087",
+      "last_wan_status": {
+        "WAN": "online",
+        "WAN2": "online"
+      },
+      "last_wan_interfaces": {
+        "WAN": {
+          "ip": "203.0.113.1",
+          "alive": true
+        },
+        "WAN2": {
+          "ip": "203.0.113.200",
+          "alive": true
+        }
+      },
+      "state": 1,
+      "wan1": {
+        "name": "eth9",
+        "ifname": "eth9",
+        "up": true,
+        "enable": true,
+        "ip": "203.0.113.1",
+        "port_idx": 10,
+        "media": "SFP+",
+        "speed": 10000,
+        "full_duplex": true,
+        "is_uplink": false
+      },
+      "wan2": {
+        "name": "eth8",
+        "ifname": "eth8",
+        "up": true,
+        "enable": true,
+        "ip": "203.0.113.200",
+        "port_idx": 9,
+        "media": "GE",
+        "speed": 1000,
+        "full_duplex": true,
+        "is_uplink": false
+      }
+    }
+  ]
+}

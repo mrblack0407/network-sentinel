@@ -18,7 +18,10 @@ let package = Package(
         ),
         .testTarget(
             name: "SentinelCoreTests",
-            dependencies: ["SentinelCore"]
+            dependencies: ["SentinelCore"],
+            resources: [
+                .copy("Fixtures")
+            ]
         )
     ]
 )
