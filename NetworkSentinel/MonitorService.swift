@@ -478,7 +478,7 @@ final class MonitorService: ObservableObject {
 
         do {
             let client = BarkClient(configuration: try configuration.barkConfiguration(), session: barkSession)
-            try await client.send(title: title, body: body, level: level)
+            try await client.send(title: title, body: body, level: level, sound: configuration.barkSound)
             lastBarkResult = .success(at: Date())
         } catch {
             lastBarkResult = .failure(Self.chineseDescription(error), at: Date())
@@ -499,7 +499,8 @@ final class MonitorService: ObservableObject {
             try await client.send(
                 title: "Network Sentinel 测试推送",
                 body: "Bark 推送已连通，断网和威胁通知会同步发到这台设备。",
-                level: .active
+                level: .active,
+                sound: configuration.barkSound
             )
             let result = BarkResult.success(at: Date())
             lastBarkResult = result

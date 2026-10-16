@@ -285,9 +285,11 @@ public struct BarkClient {
     /// - Throws: `BarkError` with Chinese text. A Key that Bark refuses becomes
     ///   `BarkError.invalidKey`, a server message becomes `BarkError.server`
     ///   with the Key taken out of the text.
-    public func send(title: String, body: String, level: BarkLevel) async throws {
+    /// - Parameter sound: a Bark ringtone name; `nil` or blank keeps the
+    ///   default sound of the Bark App.
+    public func send(title: String, body: String, level: BarkLevel, sound: String? = nil) async throws {
         do {
-            let request = try makeRequest(title: title, body: body, level: level)
+            let request = try makeRequest(title: title, body: body, level: level, sound: sound)
             let (data, response) = try await session.data(for: request)
             try Self.validate(data: data, response: response, deviceKey: configuration.deviceKey)
         } catch let error as BarkError {
@@ -304,7 +306,8 @@ public struct BarkClient {
     // MARK: - Request
 
     /// The `POST` the Bark API expects.
-    private func makeRequest(title: String, body: String, level: BarkLevel) throws -> URLRequest {
+    private func makeRequest(title: String, body: String, level: BarkLevel, sound: String?) throws -> URLRequest {
+        let trimmedSound = sound?.trimmingCharacters(in: .whitespacesAndNewlines)
         var request = URLRequest(url: configuration.pushURL)
         request.httpMethod = "POST"
         request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
@@ -315,7 +318,8 @@ public struct BarkClient {
                 body: body,
                 group: BarkConfiguration.group,
                 level: level.rawValue,
-                isArchive: 1
+                isArchive: 1,
+                sound: (trimmedSound?.isEmpty ?? true) ? nil : trimmedSound
             )
         )
         return request
@@ -329,6 +333,8 @@ public struct BarkClient {
         let group: String
         let level: String
         let isArchive: Int
+        /// Left out of the JSON when `nil`, so Bark plays its default sound.
+        let sound: String?
 
         enum CodingKeys: String, CodingKey {
             case deviceKey = "device_key"
@@ -337,6 +343,7 @@ public struct BarkClient {
             case group
             case level
             case isArchive
+            case sound
         }
     }
 

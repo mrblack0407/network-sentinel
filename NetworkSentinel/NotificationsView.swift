@@ -213,11 +213,23 @@ struct NotificationsPage: View {
         return (.ok, "已开启")
     }
 
-    /// 「Bark Key」: the key, the server and the actions.
+    /// 「Bark 设置」: the server, the key, the ringtone and the actions.
     private var barkKeyCard: some View {
         VStack(alignment: .leading, spacing: 10) {
-            Text("Bark Key")
+            Text("Bark 设置")
                 .font(.system(size: SentinelMetrics.cardTitleFontSize, weight: .semibold))
+
+            VStack(alignment: .leading, spacing: 6) {
+                Text("服务器（用自建服务器时才改）")
+                    .font(.system(size: SentinelMetrics.cardBodyFontSize))
+                    .foregroundStyle(.secondary)
+                ConnectionFieldBox(isError: false) {
+                    TextField(BarkConfiguration.defaultServerAddress, text: $configuration.barkServerAddress)
+                        .textFieldStyle(.plain)
+                        .font(.system(size: SentinelMetrics.inputFontSize, design: .monospaced))
+                }
+                .accessibilityLabel("Bark 服务器地址")
+            }
 
             VStack(alignment: .leading, spacing: 6) {
                 Text(configuration.hasBarkKey ? "Key 已存在钥匙串里，粘贴新的可替换" : "在 Bark App 首页复制推送链接或 Key")
@@ -246,15 +258,15 @@ struct NotificationsPage: View {
             }
 
             VStack(alignment: .leading, spacing: 6) {
-                Text("服务器（用自建服务器时才改）")
+                Text("自定义铃声（不填用 Bark 默认铃声）")
                     .font(.system(size: SentinelMetrics.cardBodyFontSize))
                     .foregroundStyle(.secondary)
                 ConnectionFieldBox(isError: false) {
-                    TextField(BarkConfiguration.defaultServerAddress, text: $configuration.barkServerAddress)
+                    TextField("例如 minuet", text: $configuration.barkSound)
                         .textFieldStyle(.plain)
                         .font(.system(size: SentinelMetrics.inputFontSize, design: .monospaced))
                 }
-                .accessibilityLabel("Bark 服务器地址")
+                .accessibilityLabel("Bark 自定义铃声")
             }
 
             HStack(spacing: 8) {

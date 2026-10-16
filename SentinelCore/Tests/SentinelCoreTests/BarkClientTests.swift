@@ -124,6 +124,16 @@ final class BarkClientTests: XCTestCase {
         XCTAssertEqual(payload.count, 6)
     }
 
+    func testACustomSoundIsSentAndABlankOneIsLeftOut() async throws {
+        respond(statusCode: 200, body: #"{"code":200}"#)
+        try await makeClient().send(title: "t", body: "b", level: .active, sound: " minuet ")
+        XCTAssertEqual(try payload(of: XCTUnwrap(URLProtocolStub.recorded.last))["sound"] as? String, "minuet")
+
+        respond(statusCode: 200, body: #"{"code":200}"#)
+        try await makeClient().send(title: "t", body: "b", level: .active, sound: "   ")
+        XCTAssertNil(try payload(of: XCTUnwrap(URLProtocolStub.recorded.last))["sound"])
+    }
+
     func testAnActivePushCarriesTheActiveLevel() async throws {
         respond(statusCode: 200, body: #"{"code":200}"#)
 

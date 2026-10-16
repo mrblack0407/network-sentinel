@@ -22,6 +22,7 @@ final class AppConfiguration: ObservableObject {
         static let monitorSettings = "monitorSettings"
         static let barkEnabled = "barkEnabled"
         static let barkServerAddress = "barkServerAddress"
+        static let barkSound = "barkSound"
     }
 
     private let defaults: UserDefaults
@@ -49,6 +50,11 @@ final class AppConfiguration: ObservableObject {
     /// built, so a half-typed address never blocks the field.
     @Published var barkServerAddress: String {
         didSet { defaults.set(barkServerAddress, forKey: DefaultsKey.barkServerAddress) }
+    }
+
+    /// Bark ringtone name (自定义铃声); empty keeps the default sound.
+    @Published var barkSound: String {
+        didSet { defaults.set(barkSound, forKey: DefaultsKey.barkSound) }
     }
 
     /// `true` when the keychain holds a Bark Key.
@@ -82,6 +88,7 @@ final class AppConfiguration: ObservableObject {
         self.gatewayName = defaults.string(forKey: DefaultsKey.gatewayName)
         self.pinnedCertificate = Self.loadPinnedCertificate(from: defaults)
         self.barkEnabled = defaults.bool(forKey: DefaultsKey.barkEnabled)
+        self.barkSound = defaults.string(forKey: DefaultsKey.barkSound) ?? ""
         let storedBarkServer = defaults.string(forKey: DefaultsKey.barkServerAddress) ?? ""
         self.barkServerAddress = storedBarkServer.isEmpty
             ? BarkConfiguration.defaultServerAddress
