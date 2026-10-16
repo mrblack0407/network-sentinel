@@ -1,6 +1,6 @@
 import Foundation
 
-/// Time range of the 全部日志 page: 1 天 / 7 天 / 30 天.
+/// Time range of the 日志 page: 1 天 / 7 天 / 30 天.
 public enum LogTimeRange: String, CaseIterable, Identifiable {
     case day1
     case day7
@@ -32,7 +32,7 @@ public enum LogTimeRange: String, CaseIterable, Identifiable {
     }
 }
 
-/// Kind of event the 全部日志 page shows: 全部 / 网络 / 威胁.
+/// Kind of event the 日志 page shows: 全部 / 网络 / 威胁.
 public enum LogCategory: String, CaseIterable, Identifiable {
     case all
     case network
@@ -61,7 +61,7 @@ public enum LogCategory: String, CaseIterable, Identifiable {
     }
 }
 
-/// The three filters of the 全部日志 page.
+/// The three filters of the 日志 page.
 ///
 /// Pure: the window ends at the injected `now`, and an unknown severity counts
 /// as 低 like everywhere else.
@@ -117,7 +117,7 @@ public enum LogPageItem: Equatable, Identifiable {
     }
 }
 
-/// The page of the 全部日志 table: 25 entries per page.
+/// The page of the 日志 table: 25 entries per page.
 ///
 /// Pure arithmetic: the caller hands in the number of entries of the current
 /// filter and the page it wants, and reads the range text and the page numbers

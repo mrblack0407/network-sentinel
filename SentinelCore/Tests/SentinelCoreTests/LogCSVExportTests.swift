@@ -1,7 +1,7 @@
 import XCTest
 @testable import SentinelCore
 
-/// The CSV export of the 全部日志 page.
+/// The CSV export of the 日志 page.
 final class LogCSVExportTests: XCTestCase {
     private let now = LogicFixture.now
     private let utc = TimeZone(identifier: "UTC")!

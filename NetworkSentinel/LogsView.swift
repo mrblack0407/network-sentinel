@@ -3,7 +3,7 @@ import SentinelCore
 import SwiftUI
 import UniformTypeIdentifiers
 
-/// 全部日志: the monitored local log with the 时间, 类型 and 严重性 filters, a
+/// 日志: the monitored local log with the 时间, 类型 and 严重性 filters, a
 /// paged table and the CSV export.
 ///
 /// The table shows the same Chinese text the notifications use, and the entries
@@ -91,7 +91,7 @@ struct LogsView: View {
     }
 
     private var titleLabel: some View {
-        Text("全部日志")
+        Text("日志")
             .font(.system(size: SentinelMetrics.pageTitleFontSize, weight: .bold))
             .tracking(SentinelMetrics.pageTitleTracking)
             .accessibilityAddTraits(.isHeader)

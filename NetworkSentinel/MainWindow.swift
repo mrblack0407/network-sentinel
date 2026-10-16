@@ -2,7 +2,7 @@ import AppKit
 import SentinelCore
 import SwiftUI
 
-/// 主窗口: the sidebar of 「概览」「全部日志」「通知」「设置」 and the page it selects.
+/// 主窗口: the sidebar of 「概览」「日志」「通知」「设置」 and the page it selects.
 struct MainWindow: View {
     @ObservedObject var configuration: AppConfiguration
     /// The monitoring engine, for the status line of 设置 and the 线路标签.
@@ -106,7 +106,7 @@ enum SidebarItem: String, CaseIterable, Identifiable {
     var title: String {
         switch self {
         case .overview: return "概览"
-        case .logs: return "全部日志"
+        case .logs: return "日志"
         case .notifications: return "通知"
         case .settings: return "设置"
         }

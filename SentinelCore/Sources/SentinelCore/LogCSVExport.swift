@@ -1,6 +1,6 @@
 import Foundation
 
-/// Writes the current filter of the 全部日志 page as a CSV file.
+/// Writes the current filter of the 日志 page as a CSV file.
 ///
 /// The columns are 时间, 事件, 严重性, 线路 and 描述. The 描述 is the Chinese text
 /// the notification body uses, so the file never carries the English

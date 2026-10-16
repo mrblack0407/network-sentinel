@@ -1,7 +1,7 @@
 import XCTest
 @testable import SentinelCore
 
-/// The pager of the 全部日志 table: 25 entries per page.
+/// The pager of the 日志 table: 25 entries per page.
 final class LogPaginationTests: XCTestCase {
     func testOneHundredAndTwentySixEntriesMakeSixPages() {
         let pagination = LogPagination(totalCount: 126)

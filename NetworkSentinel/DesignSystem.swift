@@ -78,13 +78,13 @@ enum SentinelMetrics {
     static let cardSpacing: CGFloat = 14
     /// Space between the rows inside a card (`.sc` gap).
     static let cardContentSpacing: CGFloat = 11
-    /// Padding of a card of 概览 and 全部日志 (`.sc`).
+    /// Padding of a card of 概览 and 日志 (`.sc`).
     static let cardPadding = EdgeInsets(top: 16, leading: 18, bottom: 16, trailing: 18)
     /// Padding of a settings card (`.fc`, bottom is 14).
     static let settingsCardPadding = EdgeInsets(top: 16, leading: 18, bottom: 14, trailing: 18)
     /// Space between the rows of a settings card (`.fc` gap).
     static let settingsCardSpacing: CGFloat = 6
-    /// Padding of the table card of 全部日志 (`.tbl`).
+    /// Padding of the table card of 日志 (`.tbl`).
     static let tableCardPadding = EdgeInsets(top: 6, leading: 8, bottom: 6, trailing: 8)
     /// The three small statistics (`.subs`), separated by hairlines.
     static let subStatisticsTopPadding: CGFloat = 6
@@ -100,21 +100,21 @@ enum SentinelMetrics {
     static let tightRowPadding = EdgeInsets(top: 9.5, leading: 12, bottom: 9.5, trailing: 12)
     /// Padding of one 最近事件 row (`.lr`).
     static let listRowPadding = EdgeInsets(top: 10.5, leading: 2, bottom: 10.5, trailing: 2)
-    /// Padding of one row of the 全部日志 table (`.desk table td`).
+    /// Padding of one row of the 日志 table (`.desk table td`).
     static let tableRowPadding = EdgeInsets(top: 11.5, leading: 10, bottom: 11.5, trailing: 10)
-    /// Header of the 全部日志 table (`th`).
+    /// Header of the 日志 table (`th`).
     static let tableHeaderFontSize: CGFloat = 12
     /// Letter spacing of that header (`th`, `letter-spacing: .04em`).
     static let tableHeaderTracking: CGFloat = 0.48
-    /// Rows of the 全部日志 table (`.tbl table`).
+    /// Rows of the 日志 table (`.tbl table`).
     static let tableFontSize: CGFloat = 12.5
     /// Width of the 严重性 column of a list row (`.lr` first column).
     static let severityColumnWidth: CGFloat = 34
     /// Width of the 事件 column of a 最近事件 row (`.lr` second column).
     static let eventNameColumnWidth: CGFloat = 120
-    /// Width of the 严重性 column of the 全部日志 table.
+    /// Width of the 严重性 column of the 日志 table.
     static let logsSeverityColumnWidth: CGFloat = 90
-    /// Width of the 事件 column of the 全部日志 table.
+    /// Width of the 事件 column of the 日志 table.
     static let logsEventNameColumnWidth: CGFloat = 190
     /// Width of the 日期 and 时间 columns of a row.
     static let dateColumnWidth: CGFloat = 44
@@ -531,7 +531,7 @@ enum SettingsGridLayout {
 
 /// Date and time texts of a log entry, in the formats the app uses everywhere.
 ///
-/// The 菜单栏弹出面板, 概览 and 全部日志 share these, so a row never shows two
+/// The 菜单栏弹出面板, 概览 and 日志 share these, so a row never shows two
 /// different spellings of the same moment. All of them are in the local time
 /// zone.
 enum LogTimestampText {
@@ -594,12 +594,12 @@ struct LogTimestampColumns: View {
     }
 }
 
-/// A card of 概览 and 全部日志 (`.sc`): material, hairline border and a 20 pt
+/// A card of 概览 and 日志 (`.sc`): material, hairline border and a 20 pt
 /// corner radius, like the cards of 设置.
 struct SentinelCard<Content: View>: View {
     /// `false` for a card that keeps its own height inside a scroll view.
     private let fillsHeight: Bool
-    /// Padding of the card; the table of 全部日志 passes `.tbl`.
+    /// Padding of the card; the table of 日志 passes `.tbl`.
     private let padding: EdgeInsets
     private let content: Content
 
@@ -787,7 +787,7 @@ struct OutageStripView: View {
     }
 }
 
-/// One page number of the pager of 全部日志 (`.pg`): the current page is blue.
+/// One page number of the pager of 日志 (`.pg`): the current page is blue.
 struct PagerButton: View {
     let title: String
     let isCurrent: Bool

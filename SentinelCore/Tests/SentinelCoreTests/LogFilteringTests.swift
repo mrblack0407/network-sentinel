@@ -1,7 +1,7 @@
 import XCTest
 @testable import SentinelCore
 
-/// The three filters of the 全部日志 page.
+/// The three filters of the 日志 page.
 final class LogFilteringTests: XCTestCase {
     private let now = LogicFixture.now
 
