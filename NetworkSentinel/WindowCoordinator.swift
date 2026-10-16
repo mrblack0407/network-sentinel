@@ -15,7 +15,7 @@ final class WindowCoordinator: NSObject, NSWindowDelegate {
     static let mainWindowMinimumSize = NSSize(width: 980, height: 640)
     /// Content size the 主窗口 opens with: wide enough for the three columns of
     /// 设置 and 通知.
-    static let mainWindowSize = NSSize(width: 1180, height: 780)
+    static let mainWindowSize = NSSize(width: 1180, height: 920)
 
     /// Settings of the app, used by the content of both windows.
     let configuration: AppConfiguration
@@ -164,7 +164,14 @@ final class WindowCoordinator: NSObject, NSWindowDelegate {
         window.backgroundColor = .clear
         window.isMovableByWindowBackground = true
 
-        window.setContentSize(contentSize)
+        // The default height fits the whole 设置 page; a smaller screen gets
+        // the most it can show.
+        var size = contentSize
+        if let visible = NSScreen.main?.visibleFrame.size {
+            size.height = min(size.height, visible.height - 40)
+            size.width = min(size.width, visible.width - 40)
+        }
+        window.setContentSize(size)
         window.center()
         return window
     }

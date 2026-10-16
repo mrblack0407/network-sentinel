@@ -205,7 +205,9 @@ struct GitHubRow: View {
                     .foregroundStyle(isHovering ? Color.primary : Color.secondary)
                     .accessibilityHidden(true)
 
-                VStack(alignment: .leading, spacing: 0) {
+                // The text block is only as wide as 「Network Sentinel」, so the
+                // version sits right under the end of the name (`.gt`).
+                VStack(alignment: .leading, spacing: 2) {
                     Text("Network Sentinel")
                         .font(.system(size: SentinelMetrics.githubNameFontSize, weight: .semibold))
                         .lineLimit(1)
@@ -218,7 +220,7 @@ struct GitHubRow: View {
                     .foregroundStyle(.secondary)
                     .lineLimit(1)
                 }
-                .frame(maxWidth: .infinity, alignment: .leading)
+                .fixedSize()
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding(SentinelMetrics.githubRowPadding)
