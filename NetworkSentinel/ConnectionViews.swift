@@ -105,7 +105,7 @@ struct ConnectionFieldBox<Content: View>: View {
         content
             .padding(.horizontal, SentinelMetrics.inputHorizontalPadding)
             .padding(.vertical, SentinelMetrics.inputVerticalPadding)
-            .background(.regularMaterial, in: RoundedRectangle(cornerRadius: SentinelMetrics.inputCornerRadius))
+            .background(SentinelColor.card, in: RoundedRectangle(cornerRadius: SentinelMetrics.inputCornerRadius))
             .overlay(
                 RoundedRectangle(cornerRadius: SentinelMetrics.inputCornerRadius)
                     .stroke(isError ? SentinelColor.failure : SentinelColor.controlBorder, lineWidth: 1)

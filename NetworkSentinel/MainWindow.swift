@@ -31,6 +31,7 @@ struct MainWindow: View {
             minWidth: WindowCoordinator.mainWindowMinimumSize.width,
             minHeight: WindowCoordinator.mainWindowMinimumSize.height
         )
+        .background(GlassBackground())
     }
 
     @ViewBuilder
@@ -151,8 +152,10 @@ struct SidebarView: View {
             GitHubRow()
         }
         .padding(SentinelMetrics.sidebarPadding)
+        // The window has no title bar: the traffic lights sit at the top of the
+        // sidebar, as in the mockup, so the rows start below them.
+        .padding(.top, SentinelMetrics.trafficLightsInset)
         .frame(maxHeight: .infinity, alignment: .top)
-        .background(.regularMaterial)
     }
 }
 

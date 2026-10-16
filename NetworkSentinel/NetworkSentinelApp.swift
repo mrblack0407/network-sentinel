@@ -12,6 +12,9 @@ struct NetworkSentinelApp: App {
     @StateObject private var state: AppState
 
     init() {
+        #if DEBUG
+        if SnapshotRenderer.runIfRequested() { exit(0) }
+        #endif
         let state = AppState(configuration: AppConfiguration())
         _state = StateObject(wrappedValue: state)
         AppDelegate.appState = state

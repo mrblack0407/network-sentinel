@@ -155,6 +155,15 @@ final class WindowCoordinator: NSObject, NSWindowDelegate {
             )
         }
 
+        // Frosted glass as in the mockup: no title bar, the content runs under
+        // the traffic lights and the SwiftUI root draws `GlassBackground`.
+        window.styleMask.insert(.fullSizeContentView)
+        window.titlebarAppearsTransparent = true
+        window.titleVisibility = .hidden
+        window.isOpaque = false
+        window.backgroundColor = .clear
+        window.isMovableByWindowBackground = true
+
         window.setContentSize(contentSize)
         window.center()
         return window

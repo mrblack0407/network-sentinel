@@ -18,18 +18,20 @@ final class AppState: ObservableObject {
     /// `true` while the menu bar icon is inserted.
     @Published var showsMenuBarIcon: Bool
 
-    init(configuration: AppConfiguration) {
+    init(configuration: AppConfiguration, monitor injectedMonitor: MonitorService? = nil) {
         self.configuration = configuration
         // An unconfigured app shows the 首次启动窗口 only: no menu bar icon.
         self.showsMenuBarIcon = configuration.isConfigured
-        let monitor = MonitorService(configuration: configuration)
+        let monitor = injectedMonitor ?? MonitorService(configuration: configuration)
         self.monitor = monitor
         self.windows = WindowCoordinator(configuration: configuration, monitor: monitor)
         windows.state = self
         // A notification tap opens the 主窗口.
         monitor.windows = windows
 
-        if configuration.isConfigured {
+        if injectedMonitor != nil {
+            // The debug snapshot renderer drives an injected engine itself.
+        } else if configuration.isConfigured {
             // A configured app starts monitoring right away.
             monitor.start()
         } else {

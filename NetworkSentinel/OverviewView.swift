@@ -17,7 +17,7 @@ struct OverviewView: View {
     @State private var eventFilter: PanelEventFilter = .all
 
     /// Events the 最近事件 card lists at most.
-    private static let eventLimit = 10
+    private static let eventLimit = 5
 
     var body: some View {
         // 「已断开 3 分」 and the strip count from 「现在」, so the page follows
@@ -181,7 +181,7 @@ struct OverviewView: View {
 
                 BigStat(text: Self.stateText(line.state), color: Self.stateColor(line.state))
 
-                Text(line.detailText(now: now))
+                Text(Self.hint(for: line, now: now))
                     .font(.system(size: SentinelMetrics.hintFontSize))
                     .foregroundStyle(.secondary)
                     .lineLimit(1)
@@ -283,7 +283,7 @@ struct OverviewView: View {
                 .lineLimit(1)
                 .frame(width: SentinelMetrics.eventNameColumnWidth, alignment: .leading)
 
-            Text(NotificationPlanner().notificationBody(for: event))
+            Text(LogDescription.text(for: event))
                 .font(.system(size: SentinelMetrics.bodyFontSize))
                 .foregroundStyle(.secondary)
                 .lineLimit(1)
@@ -330,7 +330,15 @@ struct OverviewView: View {
     /// One event in one sentence, for a screen reader.
     private static func readOut(of event: MonitoredLogEvent) -> String {
         let severity = event.severity?.displayName ?? "严重性未知"
-        let description = NotificationPlanner().notificationBody(for: event)
+        let description = LogDescription.text(for: event)
         return "\(severity)，\(event.event.displayName)，\(description)，\(LogTimestampText.stamp(event.timestamp))"
+    }
+
+    /// The line hint under the big state: the state is already written large
+    /// above it, so 「在线 · 已恢复 X」 drops its 「在线 · 」 prefix.
+    private static func hint(for line: WANLineStatus, now: Date) -> String {
+        let text = line.detailText(now: now)
+        let prefix = "在线 · "
+        return text.hasPrefix(prefix) ? String(text.dropFirst(prefix.count)) : text
     }
 }

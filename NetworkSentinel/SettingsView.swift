@@ -23,7 +23,7 @@ struct SettingsPage: View {
                         .accessibilityAddTraits(.isHeader)
 
                     GroupHeader(title: "UniFi 网关", color: SentinelColor.groupGateway)
-                    LazyVGrid(columns: columns, alignment: .leading, spacing: SentinelMetrics.cardSpacing) {
+                    LazyVGrid(columns: SettingsGridLayout.twoColumns, alignment: .leading, spacing: SentinelMetrics.cardSpacing) {
                         connectionCard
                         queryIntervalCard
                     }
@@ -36,7 +36,7 @@ struct SettingsPage: View {
                     }
 
                     GroupHeader(title: "通用", color: SentinelColor.groupGeneral)
-                    LazyVGrid(columns: columns, alignment: .leading, spacing: SentinelMetrics.cardSpacing) {
+                    LazyVGrid(columns: SettingsGridLayout.twoColumns, alignment: .leading, spacing: SentinelMetrics.cardSpacing) {
                         launchAtLoginCard
                         logRetentionCard
                     }

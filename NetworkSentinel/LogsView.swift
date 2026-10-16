@@ -47,10 +47,13 @@ struct LogsView: View {
             currentPage: currentPage
         )
 
-        return VStack(alignment: .leading, spacing: SentinelMetrics.contentSpacing) {
-            header(entries)
-            table(pagination.page(of: entries))
-            pager(pagination)
+        return ScrollView {
+            VStack(alignment: .leading, spacing: SentinelMetrics.contentSpacing) {
+                header(entries)
+                table(pagination.page(of: entries))
+                pager(pagination)
+            }
+            .frame(maxWidth: .infinity, alignment: .topLeading)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
         // A changed filter always starts at the first page.
@@ -132,7 +135,7 @@ struct LogsView: View {
     // MARK: - Table
 
     private func table(_ rows: [MonitoredLogEvent]) -> some View {
-        SentinelCard(padding: SentinelMetrics.tableCardPadding) {
+        SentinelCard(fillsHeight: false, padding: SentinelMetrics.tableCardPadding) {
             VStack(alignment: .leading, spacing: 0) {
                 tableHeader
 
@@ -141,14 +144,13 @@ struct LogsView: View {
                 if rows.isEmpty {
                     emptyMessage
                 } else {
-                    ScrollView {
-                        LazyVStack(alignment: .leading, spacing: 0) {
-                            ForEach(Array(rows.enumerated()), id: \.element.id) { index, event in
-                                if index > 0 {
-                                    Divider()
-                                }
-                                tableRow(event)
+                    // The card hugs its rows, as in the mockup; the page scrolls.
+                    VStack(alignment: .leading, spacing: 0) {
+                        ForEach(Array(rows.enumerated()), id: \.element.id) { index, event in
+                            if index > 0 {
+                                Divider()
                             }
+                            tableRow(event)
                         }
                     }
                 }
@@ -181,7 +183,8 @@ struct LogsView: View {
         Text("这段时间没有符合条件的日志")
             .font(.system(size: SentinelMetrics.bodyFontSize))
             .foregroundStyle(.secondary)
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, 40)
             .accessibilityLabel("这段时间没有符合条件的日志")
     }
 
@@ -195,7 +198,7 @@ struct LogsView: View {
                 .lineLimit(1)
                 .frame(width: Self.eventNameWidth, alignment: .leading)
 
-            Text(NotificationPlanner().notificationBody(for: event))
+            Text(LogDescription.text(for: event))
                 .font(.system(size: SentinelMetrics.tableFontSize))
                 .foregroundStyle(.secondary)
                 .lineLimit(1)
@@ -288,7 +291,7 @@ struct LogsView: View {
     private static func readOut(of event: MonitoredLogEvent) -> String {
         let severity = event.severity?.displayName ?? "严重性未知"
         let line = event.wanID.map { "\($0)，" } ?? ""
-        let description = NotificationPlanner().notificationBody(for: event)
+        let description = LogDescription.text(for: event)
         return "\(severity)，\(event.event.displayName)，\(line)\(description)，\(LogTimestampText.stamp(event.timestamp))"
     }
 }

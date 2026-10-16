@@ -72,10 +72,12 @@ enum SentinelMetrics {
 
     /// Corner radius of a card (`.sc`, `.fc`).
     static let cardCornerRadius: CGFloat = 20
+    /// Room for the traffic lights above the first sidebar row (`.side .lights`).
+    static let trafficLightsInset: CGFloat = 28
     /// Space between two cards (`.cgrid`, `.fgrid`).
     static let cardSpacing: CGFloat = 14
     /// Space between the rows inside a card (`.sc` gap).
-    static let cardContentSpacing: CGFloat = 8
+    static let cardContentSpacing: CGFloat = 11
     /// Padding of a card of 概览 and 全部日志 (`.sc`).
     static let cardPadding = EdgeInsets(top: 16, leading: 18, bottom: 16, trailing: 18)
     /// Padding of a settings card (`.fc`, bottom is 14).
@@ -95,11 +97,11 @@ enum SentinelMetrics {
     /// Padding above and below the rows of a grouped list (`.sc.tight`).
     static let tightGroupVerticalPadding: CGFloat = 4
     /// Padding of one row of a grouped list (`.sc.tight .lr`).
-    static let tightRowPadding = EdgeInsets(top: 7, leading: 12, bottom: 7, trailing: 12)
+    static let tightRowPadding = EdgeInsets(top: 9.5, leading: 12, bottom: 9.5, trailing: 12)
     /// Padding of one 最近事件 row (`.lr`).
-    static let listRowPadding = EdgeInsets(top: 8, leading: 2, bottom: 8, trailing: 2)
+    static let listRowPadding = EdgeInsets(top: 10.5, leading: 2, bottom: 10.5, trailing: 2)
     /// Padding of one row of the 全部日志 table (`.desk table td`).
-    static let tableRowPadding = EdgeInsets(top: 9, leading: 10, bottom: 9, trailing: 10)
+    static let tableRowPadding = EdgeInsets(top: 11.5, leading: 10, bottom: 11.5, trailing: 10)
     /// Header of the 全部日志 table (`th`).
     static let tableHeaderFontSize: CGFloat = 12
     /// Letter spacing of that header (`th`, `letter-spacing: .04em`).
@@ -111,9 +113,9 @@ enum SentinelMetrics {
     /// Width of the 事件 column of a 最近事件 row (`.lr` second column).
     static let eventNameColumnWidth: CGFloat = 120
     /// Width of the 严重性 column of the 全部日志 table.
-    static let logsSeverityColumnWidth: CGFloat = 40
+    static let logsSeverityColumnWidth: CGFloat = 90
     /// Width of the 事件 column of the 全部日志 table.
-    static let logsEventNameColumnWidth: CGFloat = 130
+    static let logsEventNameColumnWidth: CGFloat = 190
     /// Width of the 日期 and 时间 columns of a row.
     static let dateColumnWidth: CGFloat = 44
     static let timeColumnWidth: CGFloat = 64
@@ -124,8 +126,8 @@ enum SentinelMetrics {
     static let stripHeight: CGFloat = 22
     static let stripQuietHeight: CGFloat = 12
     static let stripCurrentHeight: CGFloat = 16
-    static let stripCellSpacing: CGFloat = 3
-    static let stripCornerRadius: CGFloat = 6
+    static let stripCellSpacing: CGFloat = 2
+    static let stripCornerRadius: CGFloat = 2
     /// Tick labels of the 色条 (`.stripx`).
     static let stripTickFontSize: CGFloat = 10
 
@@ -134,21 +136,24 @@ enum SentinelMetrics {
     /// Chip (`.chip`): 30 秒查一次, 线路标签.
     static let chipFontSize: CGFloat = 12
     static let chipHorizontalPadding: CGFloat = 12
-    static let chipVerticalPadding: CGFloat = 3
+    static let chipVerticalPadding: CGFloat = 5.5
+    // The mockup sets `line-height: 1.65` on the page, so its rows, pills and
+    // buttons are taller than SwiftUI text alone; the vertical paddings below
+    // add that difference back.
     /// Segmented control (`.pills`).
     static let pillFontSize: CGFloat = 12
     static let pillHorizontalPadding: CGFloat = 12
-    static let pillVerticalPadding: CGFloat = 2
+    static let pillVerticalPadding: CGFloat = 4.5
     static let pillTrackCornerRadius: CGFloat = 10
     static let pillTrackPadding: CGFloat = 2
     static let pillCornerRadius: CGFloat = 8
     /// Bordered button of a page toolbar (`.pbtn`).
     static let smallButtonFontSize: CGFloat = 12
     static let smallButtonHorizontalPadding: CGFloat = 14
-    static let smallButtonVerticalPadding: CGFloat = 3
+    static let smallButtonVerticalPadding: CGFloat = 5.5
     static let smallButtonCornerRadius: CGFloat = 9
     /// Page number of the pager (`.pg`).
-    static let pagerButtonSize: CGFloat = 26
+    static let pagerButtonSize: CGFloat = 28
     static let pagerButtonCornerRadius: CGFloat = 8
     /// Status dot of a row (`.dot`).
     static let statusDotSize: CGFloat = 10
@@ -208,6 +213,44 @@ enum SentinelMetrics {
     static let panelFooterTopPadding: CGFloat = 10
 }
 
+/// The frosted window background of the mockup (`.glass`): a behind-window
+/// blur with a faint plum tint in dark mode.
+struct GlassBackground: View {
+    var body: some View {
+        ZStack {
+            VisualEffectBackground()
+            Color(nsColor: NSColor(name: nil) { appearance in
+                appearance.bestMatch(from: [.darkAqua, .aqua]) == .darkAqua
+                    ? NSColor(red: 0.125, green: 0.118, blue: 0.149, alpha: 0.55)
+                    : NSColor(white: 1, alpha: 0.25)
+            })
+        }
+        .ignoresSafeArea()
+    }
+}
+
+/// `NSVisualEffectView` blending with what is behind the window.
+struct VisualEffectBackground: NSViewRepresentable {
+    func makeNSView(context: Context) -> NSVisualEffectView {
+        let view = NSVisualEffectView()
+        view.material = .hudWindow
+        view.blendingMode = .behindWindow
+        view.state = .active
+        return view
+    }
+
+    func updateNSView(_ nsView: NSVisualEffectView, context: Context) {}
+}
+
+/// The description column of a log list: the notification body without its
+/// closing 「。」, as the mockup lists it.
+enum LogDescription {
+    static func text(for event: MonitoredLogEvent) -> String {
+        let body = NotificationPlanner().notificationBody(for: event)
+        return body.hasSuffix("。") ? String(body.dropLast()) : body
+    }
+}
+
 /// Colors shared by the windows.
 ///
 /// The severity colors come from the system palette, so the app follows the
@@ -241,8 +284,13 @@ enum SentinelColor {
     static let selection = Color.primary.opacity(0.09)
     /// A bar of a severity bar the entry did not reach.
     static let severityOff = Color.primary.opacity(0.16)
-    /// Background of a card, a chip and a grouped list.
-    static let card = Color.primary.opacity(0.05)
+    /// Background of a card, a chip and a grouped list (`--card`): darker than
+    /// the frosted window in dark mode, lighter in light mode.
+    static let card = Color(nsColor: NSColor(name: nil) { appearance in
+        appearance.bestMatch(from: [.darkAqua, .aqua]) == .darkAqua
+            ? NSColor.black.withAlphaComponent(0.30)
+            : NSColor.white.withAlphaComponent(0.55)
+    })
 
     /// Color of one severity: 低 green, 中 yellow, 高 orange, 非常高 red.
     ///
@@ -367,8 +415,8 @@ struct SettingsCard<Control: View, Accessory: View>: View {
             .accessibilityLabel("\(title)：\(statusText)")
         }
         .padding(SentinelMetrics.settingsCardPadding)
-        .frame(maxWidth: .infinity, minHeight: 128, maxHeight: .infinity, alignment: .topLeading)
-        .background(.regularMaterial, in: RoundedRectangle(cornerRadius: SentinelMetrics.cardCornerRadius))
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+        .background(SentinelColor.card, in: RoundedRectangle(cornerRadius: SentinelMetrics.cardCornerRadius))
         .overlay(
             RoundedRectangle(cornerRadius: SentinelMetrics.cardCornerRadius)
                 .stroke(SentinelColor.border, lineWidth: 1)
@@ -412,8 +460,15 @@ struct SegmentedPills<Value: Hashable>: View {
 
     var body: some View {
         HStack(spacing: 2) {
-            ForEach(options) { option in
+            ForEach(Array(options.enumerated()), id: \.element.id) { index, option in
                 let isSelected = option.value == selection
+                // A hairline between two options that are both unselected
+                // (`.pills span + span::before`), as in the mockup.
+                if index > 0, !isSelected, options[index - 1].value != selection {
+                    Rectangle()
+                        .fill(SentinelColor.controlBorder)
+                        .frame(width: 1, height: SentinelMetrics.pillFontSize)
+                }
                 Button {
                     onSelect(option.value)
                 } label: {
@@ -448,6 +503,9 @@ struct SegmentedPills<Value: Hashable>: View {
 
 /// Grid columns of the pages that lay their cards out in a grid.
 enum SettingsGridLayout {
+    /// Two wide columns (`.fgrid`): the groups 「UniFi 网关」 and 「通用」.
+    static let twoColumns = Array(repeating: GridItem(.flexible(), spacing: SentinelMetrics.cardSpacing), count: 2)
+
     /// Width below which the cards drop to two columns.
     static let threeColumnMinimumWidth: CGFloat = 620
 
@@ -560,7 +618,7 @@ struct SentinelCard<Content: View>: View {
             .frame(maxWidth: .infinity, alignment: .topLeading)
             .frame(maxHeight: fillsHeight ? .infinity : nil, alignment: .topLeading)
             .padding(padding)
-            .background(.regularMaterial, in: RoundedRectangle(cornerRadius: SentinelMetrics.cardCornerRadius))
+            .background(SentinelColor.card, in: RoundedRectangle(cornerRadius: SentinelMetrics.cardCornerRadius))
             .overlay(
                 RoundedRectangle(cornerRadius: SentinelMetrics.cardCornerRadius)
                     .stroke(SentinelColor.border, lineWidth: 1)
@@ -747,7 +805,11 @@ struct PagerButton: View {
                 .padding(.horizontal, 6)
                 .background(
                     RoundedRectangle(cornerRadius: SentinelMetrics.pagerButtonCornerRadius)
-                        .fill(isCurrent ? Color.accentColor : Color.clear)
+                        .fill(isCurrent ? Color.accentColor : SentinelColor.card)
+                )
+                .overlay(
+                    RoundedRectangle(cornerRadius: SentinelMetrics.pagerButtonCornerRadius)
+                        .stroke(isCurrent ? Color.accentColor : SentinelColor.border, lineWidth: 1)
                 )
                 .foregroundStyle(isCurrent ? Color.white : Color.primary)
                 .contentShape(Rectangle())

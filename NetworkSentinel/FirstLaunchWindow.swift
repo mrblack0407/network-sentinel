@@ -34,7 +34,9 @@ struct FirstLaunchWindow: View {
             }
         }
         .padding(SentinelMetrics.welcomePadding)
+        .padding(.top, SentinelMetrics.trafficLightsInset - 8)
         .frame(width: WindowCoordinator.firstLaunchSize.width, height: WindowCoordinator.firstLaunchSize.height)
+        .background(GlassBackground())
     }
 
     // MARK: - Page 1

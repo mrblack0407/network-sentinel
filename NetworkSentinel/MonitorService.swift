@@ -456,6 +456,16 @@ final class MonitorService: ObservableObject {
 
     // MARK: - Published state
 
+    #if DEBUG
+    /// Fills the published state from the local log and a given gateway state,
+    /// without querying. Only the debug snapshot renderer uses it.
+    func loadSnapshotState(gatewayStatus: GatewayStatus?, now: Date) {
+        self.gatewayStatus = gatewayStatus
+        refreshPublishedState(now: now)
+        lastQueryAt = now
+    }
+    #endif
+
     private func refreshPublishedState(now: Date) {
         let monitored = lastStoredEvents.compactMap(\.monitoredLogEvent)
         events = monitored.sorted { $0.timestamp > $1.timestamp }
