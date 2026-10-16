@@ -26,6 +26,11 @@ public enum SentinelAPIError: Error, Equatable {
     case tooManyPages(Int)
     /// The configured gateway address could not be turned into a URL.
     case invalidURL
+    /// The gateway presented a certificate that does not match the pinned one.
+    ///
+    /// A separate case on purpose: the app asks for a new 「测试连接」 instead
+    /// of showing a generic network failure.
+    case certificateChanged
 }
 
 extension SentinelAPIError: LocalizedError {
@@ -49,6 +54,8 @@ extension SentinelAPIError: LocalizedError {
             return "日志页数超过安全上限（\(limit) 页），已停止读取。"
         case .invalidURL:
             return "网关地址无效。"
+        case .certificateChanged:
+            return "UniFi 网关的证书变了，请在连接设置里重新测试连接。"
         }
     }
 

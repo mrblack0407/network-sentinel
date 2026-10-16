@@ -3,8 +3,9 @@ import Foundation
 /// Reads the UniFi gateway with an API Key only.
 ///
 /// Every request carries the `X-API-Key` header. The gateway uses a self-signed
-/// certificate, so the caller injects the `URLSession` (certificate handling is
-/// a later task; tests inject a stub session).
+/// certificate, so the caller injects the `URLSession`:
+/// `GatewayTrust.session(...)` builds one that accepts the gateway certificate
+/// after the first successful 「测试连接」 (tests inject a stub session).
 ///
 /// The API Key is never logged: the client has no logging, the errors carry no
 /// request data, and `description` / `debugDescription` redact the key.
@@ -124,6 +125,13 @@ public struct UniFiGatewayClient {
         do {
             (data, response) = try await session.data(for: request)
         } catch let error as URLError {
+            // The pinned-certificate delegate rejects a changed certificate by
+            // cancelling the challenge, which surfaces as `.cancelled`. The app
+            // must not show that as a plain network failure, so the delegate's
+            // flag turns it into its own error case.
+            if let trust = session.delegate as? GatewayTrustDelegate, trust.didRejectCertificate {
+                throw SentinelAPIError.certificateChanged
+            }
             throw SentinelAPIError.network(error)
         } catch {
             throw SentinelAPIError.network(URLError(.unknown))
