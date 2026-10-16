@@ -190,27 +190,44 @@ struct MenuBarPanel: View {
                 .lineLimit(1)
                 .truncationMode(.tail)
                 .frame(maxWidth: .infinity, alignment: .leading)
+                .foregroundStyle(.primary)
 
-            Text(Self.timeText(event.timestamp))
-                .font(.system(size: 12, design: .monospaced))
-                .foregroundStyle(.secondary)
-                .monospacedDigit()
+            // Date and time are two right-aligned columns, so rows line up
+            // whatever the number of digits in the month, day or hour.
+            Group {
+                Text(Self.dateFormatter.string(from: event.timestamp))
+                    .frame(width: 44, alignment: .trailing)
+                Text(Self.clockFormatter.string(from: event.timestamp))
+                    .frame(width: 64, alignment: .trailing)
+                    .padding(.leading, 4)
+            }
+            .foregroundStyle(.secondary)
         }
+        .font(.system(size: 12, design: .monospaced))
+        .monospacedDigit()
         .padding(.vertical, 6)
         .accessibilityElement(children: .combine)
         .accessibilityLabel(Self.readOut(of: event))
     }
 
-    /// `10/16 9:44:20` in the local time zone.
-    private static let timeFormatter: DateFormatter = {
+    /// `10/16` in the local time zone.
+    private static let dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
         formatter.locale = Locale(identifier: "zh_Hans_CN")
-        formatter.dateFormat = "M/d H:mm:ss"
+        formatter.dateFormat = "M/d"
+        return formatter
+    }()
+
+    /// `9:44:20` in the local time zone.
+    private static let clockFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: "zh_Hans_CN")
+        formatter.dateFormat = "H:mm:ss"
         return formatter
     }()
 
     private static func timeText(_ date: Date) -> String {
-        timeFormatter.string(from: date)
+        "\(dateFormatter.string(from: date)) \(clockFormatter.string(from: date))"
     }
 
     /// One event in one sentence, for a screen reader.
