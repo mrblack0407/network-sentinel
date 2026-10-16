@@ -17,3 +17,6 @@ build/
 
 # Local API test output (contains real IPs and MACs)
 unifi-api-test/
+
+# Local design mockups (plan page copy, reference for development only)
+Design/Mockups.html
