@@ -17,8 +17,22 @@ struct NetworkSentinelApp: App {
         AppDelegate.appState = state
     }
 
+    /// `MenuBarExtra` writes the binding back while it updates the status item.
+    /// Writing an unchanged value to the published property would re-render the
+    /// app and loop forever, so only real changes go through.
+    private var menuBarIconInserted: Binding<Bool> {
+        Binding(
+            get: { state.showsMenuBarIcon },
+            set: { newValue in
+                if state.showsMenuBarIcon != newValue {
+                    state.showsMenuBarIcon = newValue
+                }
+            }
+        )
+    }
+
     var body: some Scene {
-        MenuBarExtra(isInserted: $state.showsMenuBarIcon) {
+        MenuBarExtra(isInserted: menuBarIconInserted) {
             MenuBarPanel(state: state, configuration: state.configuration)
         } label: {
             Image("MenuBarIcon")
