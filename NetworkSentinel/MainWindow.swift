@@ -1,21 +1,29 @@
 import AppKit
+import SentinelCore
 import SwiftUI
 
 /// 主窗口: the sidebar of 「概览」「全部日志」「设置」 and the page it selects.
 struct MainWindow: View {
     @ObservedObject var configuration: AppConfiguration
-    /// The monitoring engine, for the status line of 设置.
+    /// The monitoring engine, for the status line of 设置 and the 线路标签.
     @ObservedObject var monitor: MonitorService
-
-    @State private var selection: SidebarItem = .overview
+    /// The selected page, owned by `WindowCoordinator` so 「设置…」 of the
+    /// 菜单栏弹出面板 can switch the page of a window that is already open.
+    @ObservedObject var windowState: MainWindowState
 
     var body: some View {
         HStack(spacing: 0) {
-            SidebarView(selection: $selection)
+            SidebarView(selection: $windowState.selection)
                 .frame(width: 200)
 
-            page
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
+            VStack(spacing: 0) {
+                WANStatusChips(configuration: configuration, monitor: monitor)
+                    .frame(maxWidth: .infinity, alignment: .trailing)
+                    .padding(EdgeInsets(top: 14, leading: 22, bottom: 0, trailing: 22))
+
+                page
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+            }
         }
         .frame(
             minWidth: WindowCoordinator.mainWindowMinimumSize.width,
@@ -25,7 +33,7 @@ struct MainWindow: View {
 
     @ViewBuilder
     private var page: some View {
-        switch selection {
+        switch windowState.selection {
         case .overview:
             PlaceholderPage(title: "概览")
         case .logs:
@@ -33,6 +41,51 @@ struct MainWindow: View {
         case .settings:
             SettingsPage(configuration: configuration, monitor: monitor)
         }
+    }
+}
+
+/// The page the 主窗口 shows.
+///
+/// The 主窗口 keeps no selection of its own, so 「设置…」 of the 菜单栏弹出面板
+/// can open a window that is already up on 设置.
+@MainActor
+final class MainWindowState: ObservableObject {
+    @Published var selection: SidebarItem = .overview
+}
+
+/// 线路标签: one small chip per WAN line, at the top right of the 主窗口.
+struct WANStatusChips: View {
+    @ObservedObject var configuration: AppConfiguration
+    @ObservedObject var monitor: MonitorService
+
+    var body: some View {
+        let now = Date()
+        let status = MenuBarStatusBuilder.status(
+            gatewayName: monitor.gatewayStatus?.name ?? configuration.gatewayName,
+            queryIntervalSeconds: configuration.monitorSettings.queryIntervalSeconds,
+            connectionState: monitor.connectionState,
+            errorDescription: monitor.lastErrorDescription,
+            gatewayStatus: monitor.gatewayStatus,
+            events: monitor.events,
+            now: now
+        )
+
+        HStack(spacing: 8) {
+            if status.isGatewayUnreachable {
+                // Without the gateway the line states of the last query would be
+                // a guess, so the chips say why they are missing.
+                StatusChip(tone: .neutral, text: "网关连不上", accessibilityLabel: "网关连不上")
+            } else {
+                ForEach(status.lines) { line in
+                    StatusChip(
+                        tone: line.state.tone,
+                        text: line.chipText,
+                        accessibilityLabel: line.accessibilityText(now: now)
+                    )
+                }
+            }
+        }
+        .accessibilityElement(children: .contain)
     }
 }
 

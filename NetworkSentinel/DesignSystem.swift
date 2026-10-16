@@ -1,3 +1,5 @@
+import AppKit
+import SentinelCore
 import SwiftUI
 
 /// Version of the running app, read from the bundle so no number is written twice.
@@ -39,6 +41,48 @@ enum SentinelColor {
     static let border = Color.primary.opacity(0.09)
     /// Background of a selected sidebar row: light gray, never the accent color.
     static let selection = Color.primary.opacity(0.09)
+    /// A bar of a severity bar the entry did not reach.
+    static let severityOff = Color.primary.opacity(0.16)
+
+    /// Color of one severity: 低 green, 中 yellow, 高 orange, 非常高 red.
+    ///
+    /// The colors come from the system palette, like the status colors above, so
+    /// the bars follow the light and dark appearance.
+    static func severity(_ severity: LogSeverity) -> Color {
+        switch severity {
+        case .low: return Color(nsColor: .systemGreen)
+        case .medium: return Color(nsColor: .systemYellow)
+        case .high: return Color(nsColor: .systemOrange)
+        case .veryHigh: return Color(nsColor: .systemRed)
+        }
+    }
+}
+
+/// The meaning of the dot of the 菜单栏图标.
+extension MenuBarIndicatorState {
+    /// Color of the dot; `nil` while the icon shows the shield alone.
+    ///
+    /// Fixed colors: the dot never follows the appearance, only the shield does.
+    var dotColor: NSColor? {
+        switch self {
+        case .quiet: return nil
+        case .warning: return .systemYellow
+        case .critical: return .systemRed
+        case .disconnected: return .systemGray
+        }
+    }
+}
+
+/// The meaning of a WAN line, for the dots of the 菜单栏弹出面板 and the 主窗口.
+extension SnapshotWANState {
+    /// 在线 green, 已断开 red, 未启用 and 备用 gray.
+    var tone: StatusTone {
+        switch self {
+        case .online: return .ok
+        case .offline: return .failure
+        case .disabled, .standby: return .neutral
+        }
+    }
 }
 
 /// The meaning of one status dot.
@@ -206,5 +250,77 @@ enum SettingsGridLayout {
     static func columns(forWidth width: CGFloat) -> [GridItem] {
         let count = width >= threeColumnMinimumWidth ? 3 : 2
         return Array(repeating: GridItem(.flexible(), spacing: 14), count: count)
+    }
+}
+
+/// A status dot with the soft halo of the mockup.
+///
+/// The halo is drawn behind the dot and grows outside its layout frame, so a row
+/// of dots keeps the spacing the mockup shows.
+struct GlowDot: View {
+    let tone: StatusTone
+    /// Diameter of the solid dot; the halo adds 8 pt around it.
+    var size: CGFloat = 10
+
+    var body: some View {
+        Circle()
+            .fill(tone.color)
+            .frame(width: size, height: size)
+            .background(
+                Circle()
+                    .fill(tone.color.opacity(0.22))
+                    .frame(width: size + 8, height: size + 8)
+            )
+            .accessibilityHidden(true)
+    }
+}
+
+/// The four small bars that show the severity of one log entry.
+///
+/// Every bar up to the rank of the entry is filled with the severity color, the
+/// rest stay gray. A severity this version does not know fills no bar at all.
+struct SeverityBar: View {
+    /// `nil` when the gateway sent a severity this version does not know.
+    let severity: LogSeverity?
+
+    /// Bars of the mockup: 低 one, 中 two, 高 three, 非常高 four.
+    private static let barCount = 4
+
+    var body: some View {
+        HStack(spacing: 2) {
+            ForEach(1...Self.barCount, id: \.self) { rank in
+                RoundedRectangle(cornerRadius: 1)
+                    .fill(rank <= filledBars ? SentinelColor.severity(severity ?? .low) : SentinelColor.severityOff)
+                    .frame(width: 7, height: 4)
+            }
+        }
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel("严重性：\(severity?.displayName ?? "未知")")
+    }
+
+    private var filledBars: Int { severity?.rank ?? 0 }
+}
+
+/// One 线路标签 of the 主窗口: a small dot and a short text.
+struct StatusChip: View {
+    let tone: StatusTone
+    let text: String
+    let accessibilityLabel: String
+
+    var body: some View {
+        HStack(spacing: 7) {
+            Circle()
+                .fill(tone.color)
+                .frame(width: 7, height: 7)
+            Text(text)
+                .font(.system(size: 12))
+                .lineLimit(1)
+        }
+        .padding(.horizontal, 12)
+        .padding(.vertical, 3)
+        .background(Capsule().fill(Color.primary.opacity(0.05)))
+        .overlay(Capsule().stroke(SentinelColor.border, lineWidth: 1))
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(accessibilityLabel)
     }
 }

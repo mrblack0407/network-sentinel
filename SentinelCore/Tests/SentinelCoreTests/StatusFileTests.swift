@@ -177,7 +177,20 @@ final class StatusFileTests: XCTestCase {
         XCTAssertEqual(snapshot.recentLogs.map(\.id), ["down-8", "down-7", "down-6", "down-5", "down-4"])
         XCTAssertEqual(snapshot.recentLogs.first?.event, .internetDown)
         XCTAssertEqual(snapshot.recentLogs.first?.severity, .high)
-        XCTAssertEqual(snapshot.recentLogs.first?.title, "WAN1 Internet Down")
+        XCTAssertEqual(snapshot.recentLogs.first?.title, "互联网中断")
+    }
+
+    func testTheRecentLogTitlesAreTheChineseEventNames() throws {
+        let events = try [
+            LogicFixture.monitoredEvent(id: "threat", event: .threatDetected, at: LogicFixture.time(-120), wanID: nil, ispName: nil, severity: .high),
+            LogicFixture.monitoredEvent(id: "down", event: .internetDown, at: LogicFixture.time(-60), severity: .veryHigh),
+        ]
+
+        let summaries = StatusSnapshotBuilder.summaries(of: events)
+
+        XCTAssertEqual(summaries.map(\.title), ["互联网中断", "检测到威胁"])
+        XCTAssertEqual(summaries.map(\.event), [.internetDown, .threatDetected])
+        XCTAssertEqual(summaries.map(\.id), ["down", "threat"])
     }
 
     func testTheCountsOnlyCoverTheLast24Hours() throws {
@@ -216,7 +229,7 @@ final class StatusFileTests: XCTestCase {
         XCTAssertTrue(snapshot.recentLogs.isEmpty)
     }
 
-    func testAnOpenOutageShowsOnTheWANAndMakesTheLineStandby() throws {
+    func testAnOpenOutageKeepsTheUpLineOnline() throws {
         let events = try [
             LogicFixture.monitoredEvent(id: "down", event: .internetDown, at: LogicFixture.time(-600), severity: .veryHigh)
         ]
@@ -229,10 +242,36 @@ final class StatusFileTests: XCTestCase {
         )
 
         let wan1 = try XCTUnwrap(snapshot.wan1)
-        XCTAssertEqual(wan1.state, .standby)
+        // The gateway reports the line as up, so the unrestored entry only
+        // stays visible as the start of the outage.
+        XCTAssertEqual(wan1.state, .online)
         XCTAssertEqual(wan1.ispName, "China Telecom")
         XCTAssertEqual(wan1.outageStartedAt, LogicFixture.time(-600))
         XCTAssertEqual(snapshot.currentOutageWAN?.id, "WAN1")
+    }
+
+    func testASecondLineThatIsUpIsStandby() throws {
+        let snapshot = StatusSnapshotBuilder.snapshot(
+            gatewayStatus: LogicFixture.gatewayStatus(wan2: .online),
+            events: [],
+            now: LogicFixture.now,
+            isGatewayReachable: true
+        )
+
+        XCTAssertEqual(snapshot.wan1?.state, .online)
+        XCTAssertEqual(snapshot.wan2?.state, .standby)
+        XCTAssertNil(snapshot.currentOutageWAN)
+    }
+
+    func testADownLineIsOfflineInTheStatusFile() throws {
+        let snapshot = StatusSnapshotBuilder.snapshot(
+            gatewayStatus: LogicFixture.gatewayStatus(wan2: .offline),
+            events: [],
+            now: LogicFixture.now,
+            isGatewayReachable: true
+        )
+
+        XCTAssertEqual(snapshot.wan2?.state, .offline)
     }
 
     func testAClosedOutageLeavesTheLineOnline() throws {

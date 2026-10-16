@@ -5,7 +5,7 @@ public enum SnapshotWANState: String, Codable {
     case online
     case offline
     case disabled
-    /// The line is up but the gateway is running on the backup connection.
+    /// The line is enabled and up, but the gateway uses another line.
     case standby
 
     /// Chinese text for the app.
@@ -101,7 +101,7 @@ public struct StatusSnapshot: Codable, Equatable {
     public var wan1: WANSnapshot? { wanInterfaces.first { $0.id == "WAN1" } }
     public var wan2: WANSnapshot? { wanInterfaces.first { $0.id == "WAN2" } }
 
-    /// The WAN interface that is offline and still has an open outage.
+    /// The WAN interface that still has an open outage in the local log.
     public var currentOutageWAN: WANSnapshot? {
         wanInterfaces.first { $0.outageStartedAt != nil }
     }
@@ -126,11 +126,14 @@ public enum StatusSnapshotBuilder {
         let recent = events.filter { $0.timestamp >= windowStart && $0.timestamp <= now }
         let outages = OutagePairer.outages(in: events)
 
-        let wanInterfaces = (gatewayStatus?.wanInterfaces ?? []).map { wan in
+        let lines = gatewayStatus?.wanInterfaces ?? []
+        let states = WANLineRules.states(of: lines)
+
+        let wanInterfaces = lines.enumerated().map { index, wan in
             WANSnapshot(
                 id: wan.id,
-                ispName: ispName(forWAN: wan.id, in: events),
-                state: snapshotState(of: wan, at: now, outages: outages),
+                ispName: WANLineRules.ispName(forWAN: wan.id, in: events),
+                state: states[index],
                 outageStartedAt: OutagePairer.ongoingOutage(forWAN: wan.id, in: outages)?.start
             )
         }
@@ -149,8 +152,8 @@ public enum StatusSnapshotBuilder {
 
     /// The last five monitored entries, newest first.
     ///
-    /// `title` is the gateway title with placeholders filled, for example
-    /// `WAN1 Internet Down`; the event name is in `event`.
+    /// `title` is the Chinese event name, for example `互联网中断`; the event
+    /// itself is in `event`. The gateway title stays in `MonitoredLogEvent`.
     public static func summaries(of events: [MonitoredLogEvent]) -> [LogSummary] {
         events
             .sorted { $0.timestamp > $1.timestamp }
@@ -160,42 +163,9 @@ public enum StatusSnapshotBuilder {
                     id: event.id,
                     event: event.event,
                     severity: event.severity,
-                    title: event.title,
+                    title: event.event.displayName,
                     timestamp: event.timestamp
                 )
             }
-    }
-
-    /// Gateway state mapped to the status file, with 备用 for a line the gateway
-    /// reports as up while it is running on the backup connection.
-    ///
-    /// The backup flag comes from the log: a 互联网中断 entry of that line that
-    /// has no restore yet, while the gateway still reports the line as up.
-    private static func snapshotState(
-        of wan: WANStatus,
-        at now: Date,
-        outages: [Outage]
-    ) -> SnapshotWANState {
-        switch wan.state {
-        case .disabled:
-            return .disabled
-        case .offline:
-            return .offline
-        case .online:
-            guard let ongoing = OutagePairer.ongoingOutage(forWAN: wan.id, in: outages) else {
-                return .online
-            }
-            // The line came back on the backup connection while the primary
-            // outage is still open.
-            return ongoing.start <= now ? .standby : .online
-        }
-    }
-
-    /// Provider name of the newest WAN event of that line.
-    private static func ispName(forWAN wanID: String, in events: [MonitoredLogEvent]) -> String? {
-        events
-            .filter { ($0.wanID == wanID) && ($0.ispName?.isEmpty == false) }
-            .max { $0.timestamp < $1.timestamp }?
-            .ispName
     }
 }

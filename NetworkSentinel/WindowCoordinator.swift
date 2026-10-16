@@ -18,8 +18,10 @@ final class WindowCoordinator: NSObject, NSWindowDelegate {
 
     /// Settings of the app, used by the content of both windows.
     let configuration: AppConfiguration
-    /// The monitoring engine of the app, used by 设置.
+    /// The monitoring engine of the app, used by 设置 and the 线路标签.
     let monitor: MonitorService
+    /// The page the 主窗口 shows; 「设置…」 of the 菜单栏弹出面板 sets it.
+    let mainWindowState = MainWindowState()
     /// Window state of the app; weak, because the app state owns this object.
     weak var state: AppState?
 
@@ -79,10 +81,20 @@ final class WindowCoordinator: NSObject, NSWindowDelegate {
     /// Shows the 主窗口, creating it the first time.
     ///
     /// Closing the 主窗口 does not quit the app; the next call reuses the window.
-    func showMainWindow() {
+    ///
+    /// - Parameter page: the page to select before showing the window; `nil`
+    ///   leaves the page as it is. 「设置…」 of the 菜单栏弹出面板 asks for 设置.
+    func showMainWindow(selecting page: SidebarItem? = nil) {
+        if let page {
+            mainWindowState.selection = page
+        }
         if mainWindow == nil {
             mainWindow = makeWindow(
-                content: MainWindow(configuration: configuration, monitor: monitor),
+                content: MainWindow(
+                    configuration: configuration,
+                    monitor: monitor,
+                    windowState: mainWindowState
+                ),
                 contentSize: Self.mainWindowSize,
                 minimumContentSize: Self.mainWindowMinimumSize,
                 isFixedSize: false

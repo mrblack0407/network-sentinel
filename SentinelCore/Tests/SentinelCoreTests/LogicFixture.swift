@@ -155,12 +155,16 @@ enum LogicFixture {
     // MARK: - Gateway
 
     /// A gateway with WAN1 (or WAN1 + WAN2) for the status file tests.
-    static func gatewayStatus(wan2: WANState? = nil) -> GatewayStatus {
+    ///
+    /// - Parameters:
+    ///   - wan1: state of the first line, 在线 by default.
+    ///   - wan2: state of the second line; `nil` leaves the line unassigned.
+    static func gatewayStatus(wan1: WANState = .online, wan2: WANState? = nil) -> GatewayStatus {
         var interfaces = [
             WANStatus(
                 id: "WAN1",
                 interfaceName: "eth9",
-                state: .online,
+                state: wan1,
                 ipAddress: "10.20.0.1",
                 portIndex: 10,
                 media: "GE",

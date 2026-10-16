@@ -33,10 +33,13 @@ struct NetworkSentinelApp: App {
 
     var body: some Scene {
         MenuBarExtra(isInserted: menuBarIconInserted) {
-            MenuBarPanel(state: state, configuration: state.configuration)
+            MenuBarPanel(
+                state: state,
+                configuration: state.configuration,
+                monitor: state.monitor
+            )
         } label: {
-            Image("MenuBarIcon")
-                .accessibilityLabel("Network Sentinel")
+            MenuBarIconLabel(configuration: state.configuration, monitor: state.monitor)
         }
         .menuBarExtraStyle(.window)
     }

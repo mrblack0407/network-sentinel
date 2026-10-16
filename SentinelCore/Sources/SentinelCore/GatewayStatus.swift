@@ -79,16 +79,21 @@ public struct GatewayDevice: Decodable, Equatable {
         )
     }
 
+    /// One WAN interface of the `stat/device` answer.
+    ///
+    /// The live `up` flag of the interface decides 在线 and 离线; the
+    /// `last_wan_status` field is only a fallback for an answer that carries no
+    /// `up` flag, because it is the status of an earlier query.
     private func wanStatus(id: String, statusKey: String, interface: WANInterface?) -> WANStatus? {
         guard let interface else { return nil }
 
         let state: WANState
         if interface.enable == false {
             state = .disabled
-        } else if let raw = lastWANStatus?[statusKey]?.trimmingCharacters(in: .whitespaces).lowercased() {
-            state = (raw == "online") ? .online : .offline
         } else if let up = interface.up {
             state = up ? .online : .offline
+        } else if let raw = lastWANStatus?[statusKey]?.trimmingCharacters(in: .whitespaces).lowercased() {
+            state = (raw == "online") ? .online : .offline
         } else {
             state = .offline
         }

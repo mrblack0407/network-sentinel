@@ -60,16 +60,36 @@ final class GatewayStatusTests: XCTestCase {
         XCTAssertEqual(WANState.disabled.displayName, "未启用")
     }
 
-    func testOfflineWAN() throws {
-        let device = try GatewayDevice.json([
+    func testTheLiveUpFlagDecidesOnlineAndOffline() throws {
+        // `last_wan_status` is the status of an earlier query, so the live `up`
+        // flag of the interface wins whenever the answer carries one.
+        let upButStaleOffline = try GatewayDevice.json([
             "name": "Gateway",
             "type": "uxg",
             "last_wan_status": ["WAN": "offline"],
             "wan1": ["enable": true, "up": true],
         ])
+        let downButStaleOnline = try GatewayDevice.json([
+            "name": "Gateway",
+            "type": "uxg",
+            "last_wan_status": ["WAN": "online"],
+            "wan1": ["enable": true, "up": false],
+        ])
+
+        XCTAssertEqual(upButStaleOffline.status.wan1?.state, .online)
+        XCTAssertEqual(downButStaleOnline.status.wan1?.state, .offline)
+        XCTAssertEqual(WANState.offline.displayName, "离线")
+    }
+
+    func testLastWANStatusIsTheFallbackWithoutAnUpFlag() throws {
+        let device = try GatewayDevice.json([
+            "name": "Gateway",
+            "type": "uxg",
+            "last_wan_status": ["WAN": "offline"],
+            "wan1": ["enable": true],
+        ])
 
         XCTAssertEqual(device.status.wan1?.state, .offline)
-        XCTAssertEqual(WANState.offline.displayName, "离线")
     }
 
     func testMissingLastWANStatusFallsBackToUp() throws {
