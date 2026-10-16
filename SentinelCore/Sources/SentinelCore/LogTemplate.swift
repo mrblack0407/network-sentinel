@@ -24,7 +24,8 @@ public struct LogParameter: Equatable {
 }
 
 extension LogParameter: Decodable {
-    private enum CodingKeys: String, CodingKey {
+    /// Keys of the object form; the same keys are written back.
+    enum CodingKeys: String, CodingKey {
         case id
         case name
     }
@@ -42,6 +43,18 @@ extension LogParameter: Decodable {
         }
 
         self.init(id: id, name: name)
+    }
+}
+
+extension LogParameter: Encodable {
+    /// Writes what decoding keeps: `id` and `name`.
+    ///
+    /// The local monitoring log stores the whole gateway entry, and that is the
+    /// only writer; the gateway response itself is never re-encoded.
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encodeIfPresent(id, forKey: .id)
+        try container.encodeIfPresent(name, forKey: .name)
     }
 }
 

@@ -164,6 +164,32 @@ extension SystemLogEntry {
     }
 }
 
+extension SystemLogEntry: Encodable {
+    /// Writes back what decoding kept, with the gateway field names.
+    ///
+    /// The only writer is the local monitoring log, which stores the whole entry
+    /// so the 主窗口 can show the same text as the UniFi log page. The gateway
+    /// response itself is never re-encoded, and no field here is ever an API Key.
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+
+        try container.encode(id, forKey: .id)
+        try container.encode(timestampMilliseconds, forKey: .timestamp)
+        try container.encode(category, forKey: .category)
+        try container.encodeIfPresent(subcategory, forKey: .subcategory)
+        try container.encode(key, forKey: .key)
+        try container.encodeIfPresent(severity, forKey: .severity)
+        try container.encode(titleRaw, forKey: .titleRaw)
+        try container.encode(messageRaw, forKey: .messageRaw)
+        try container.encode(parameters, forKey: .parameters)
+        try container.encodeIfPresent(status, forKey: .status)
+        try container.encodeIfPresent(target, forKey: .target)
+        try container.encodeIfPresent(type, forKey: .type)
+        try container.encodeIfPresent(eventName, forKey: .eventName)
+        try container.encode(showOnDashboard, forKey: .showOnDashboard)
+    }
+}
+
 /// One side of a detected threat: a client or a raw IP address.
 public struct ThreatEndpoint: Equatable {
     public let value: String
@@ -177,8 +203,7 @@ public struct ThreatEndpoint: Equatable {
 }
 
 /// A monitored log entry with the fields the alert rules need.
-public struct MonitoredLogEvent: Equatable, Identifiable {
-    public let id: String
+public struct MonitoredLogEvent: Equatable, Identifiable {    public let id: String
     public let event: MonitoredEvent
     public let timestamp: Date
     public let severity: LogSeverity?

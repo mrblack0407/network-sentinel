@@ -4,6 +4,8 @@ import SwiftUI
 /// 主窗口: the sidebar of 「概览」「全部日志」「设置」 and the page it selects.
 struct MainWindow: View {
     @ObservedObject var configuration: AppConfiguration
+    /// The monitoring engine, for the status line of 设置.
+    @ObservedObject var monitor: MonitorService
 
     @State private var selection: SidebarItem = .overview
 
@@ -29,7 +31,7 @@ struct MainWindow: View {
         case .logs:
             PlaceholderPage(title: "全部日志")
         case .settings:
-            SettingsPage(configuration: configuration)
+            SettingsPage(configuration: configuration, monitor: monitor)
         }
     }
 }

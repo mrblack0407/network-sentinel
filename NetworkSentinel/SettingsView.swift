@@ -4,6 +4,8 @@ import SwiftUI
 /// 设置: colored group titles, one card per setting, saved on every change.
 struct SettingsPage: View {
     @ObservedObject var configuration: AppConfiguration
+    /// The monitoring engine: the 连接 card shows its real state.
+    @ObservedObject var monitor: MonitorService
 
     @StateObject private var launchAtLogin = LaunchAtLogin()
     @State private var connectionTest: ConnectionTestState = .idle
@@ -60,28 +62,32 @@ struct SettingsPage: View {
 
     // MARK: - UniFi 网关
 
+    /// The card refreshes every second so 「N 秒前查过」 stays true without the
+    /// engine publishing a value every tick.
     private var connectionCard: some View {
-        SettingsCard(
-            title: "连接",
-            description: connectionDescription,
-            statusTone: connectionStatusTone,
-            statusText: connectionStatusText,
-            control: Button("测试连接") {
-                reTest()
-            }
-            .disabled(!canReTest),
-            accessory: Button {
-                isShowingConnectionSheet = true
-            } label: {
-                Text("•••")
-                    .font(.system(size: 12))
-                    .foregroundStyle(.secondary)
-                    .padding(.horizontal, 4)
-            }
-            .buttonStyle(.plain)
-            .help("连接设置")
-            .accessibilityLabel("连接设置")
-        )
+        TimelineView(.periodic(from: .now, by: 1)) { context in
+            SettingsCard(
+                title: "连接",
+                description: connectionDescription,
+                statusTone: connectionStatusTone(at: context.date),
+                statusText: connectionStatusText(at: context.date),
+                control: Button("测试连接") {
+                    reTest()
+                }
+                .disabled(!canReTest),
+                accessory: Button {
+                    isShowingConnectionSheet = true
+                } label: {
+                    Text("•••")
+                        .font(.system(size: 12))
+                        .foregroundStyle(.secondary)
+                        .padding(.horizontal, 4)
+                }
+                .buttonStyle(.plain)
+                .help("连接设置")
+                .accessibilityLabel("连接设置")
+            )
+        }
     }
 
     private var connectionDescription: String {
@@ -91,24 +97,29 @@ struct SettingsPage: View {
         return "\(address)\nAPI Key 存在钥匙串里"
     }
 
-    private var connectionStatusTone: StatusTone {
+    /// The card shows what 测试连接 is doing while it runs, and the real state of
+    /// the engine the rest of the time.
+    private func connectionStatusTone(at now: Date) -> StatusTone {
         switch connectionTest {
         case .testing: return .neutral
         case .success: return .ok
         case .failure: return .failure
-        case .idle: return configuration.isConfigured ? .ok : .warn
+        case .idle:
+            guard configuration.isConfigured else { return .warn }
+            guard monitor.isRunning else { return .neutral }
+            return monitor.monitorStatusTone(at: now)
         }
     }
 
-    private var connectionStatusText: String {
+    private func connectionStatusText(at now: Date) -> String {
         switch connectionTest {
         case .testing: return "正在测试连接…"
         case .success(let gatewayName): return "已连上 \(gatewayName)，能读到网络和威胁日志"
         case .failure(let reason, _): return reason
         case .idle:
-            return configuration.isConfigured
-                ? "已连上，能读到网络和威胁日志"
-                : "还没连上 UniFi 网关"
+            guard configuration.isConfigured else { return "还没连上 UniFi 网关" }
+            guard monitor.isRunning else { return "监控没在运行" }
+            return monitor.monitorStatusText(at: now)
         }
     }
 

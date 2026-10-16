@@ -18,6 +18,8 @@ final class WindowCoordinator: NSObject, NSWindowDelegate {
 
     /// Settings of the app, used by the content of both windows.
     let configuration: AppConfiguration
+    /// The monitoring engine of the app, used by 设置.
+    let monitor: MonitorService
     /// Window state of the app; weak, because the app state owns this object.
     weak var state: AppState?
 
@@ -28,8 +30,9 @@ final class WindowCoordinator: NSObject, NSWindowDelegate {
     /// `true` once 「开始使用」 ran: closing that window then keeps the app alive.
     private var isFirstLaunchFinished = false
 
-    init(configuration: AppConfiguration) {
+    init(configuration: AppConfiguration, monitor: MonitorService) {
         self.configuration = configuration
+        self.monitor = monitor
         super.init()
     }
 
@@ -79,7 +82,7 @@ final class WindowCoordinator: NSObject, NSWindowDelegate {
     func showMainWindow() {
         if mainWindow == nil {
             mainWindow = makeWindow(
-                content: MainWindow(configuration: configuration),
+                content: MainWindow(configuration: configuration, monitor: monitor),
                 contentSize: Self.mainWindowSize,
                 minimumContentSize: Self.mainWindowMinimumSize,
                 isFixedSize: false

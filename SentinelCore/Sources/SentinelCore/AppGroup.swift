@@ -16,7 +16,19 @@ public enum AppGroup {
     ///
     /// Returns `nil` when the process has no entitlement for the group, for example
     /// in unit tests or when the app is not signed with the matching entitlements.
+    ///
+    /// On macOS `containerURL(forSecurityApplicationGroupIdentifier:)` returns a
+    /// path even without the entitlement, and a sandboxed app then cannot write
+    /// there. So the directory only counts when it exists or can be created.
     public static var containerURL: URL? {
-        FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: identifier)
+        guard let url = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: identifier) else {
+            return nil
+        }
+        do {
+            try FileManager.default.createDirectory(at: url, withIntermediateDirectories: true)
+        } catch {
+            return nil
+        }
+        return FileManager.default.isWritableFile(atPath: url.path) ? url : nil
     }
 }

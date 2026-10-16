@@ -10,6 +10,11 @@ public enum GatewayConnectionState: String, Codable {
     case connected
     case reconnecting
     case apiKeyRejected
+    /// The gateway presented a certificate that is not the pinned one.
+    ///
+    /// Not a plain network failure: the app answers it with 「测试连接」 instead
+    /// of waiting, so it has its own state.
+    case certificateChanged
 
     /// Chinese text for the app.
     public var displayName: String {
@@ -17,7 +22,16 @@ public enum GatewayConnectionState: String, Codable {
         case .connected: return "已连接"
         case .reconnecting: return "网关连不上"
         case .apiKeyRejected: return "API Key 无效"
+        case .certificateChanged: return "证书变了"
         }
+    }
+
+    /// `true` while the gateway itself answers on the network.
+    ///
+    /// A rejected API Key and a changed certificate are answers: the gateway is
+    /// reachable, and only the 状态文件 cares about the difference.
+    public var isGatewayReachable: Bool {
+        self != .reconnecting && self != .certificateChanged
     }
 }
 
@@ -68,11 +82,27 @@ public struct GatewayReachability: Codable, Equatable {
         self.stateDidChange = false
     }
 
+    /// Builds a value with a state that was already reached, for a caller that
+    /// restores the state from a file instead of folding probes in.
+    public init(
+        consecutiveFailureCount: Int,
+        state: GatewayConnectionState,
+        failureThreshold: Int = GatewayReachability.defaultFailureThreshold
+    ) {
+        self.failureThreshold = max(1, failureThreshold)
+        self.consecutiveFailureCount = max(0, consecutiveFailureCount)
+        self.state = state
+        self.stateDidChange = false
+    }
+
     /// `true` while the app treats the gateway as unreachable.
     public var isGatewayUnreachable: Bool { state == .reconnecting }
 
     /// `true` when the API Key was rejected.
     public var isAPIKeyRejected: Bool { state == .apiKeyRejected }
+
+    /// `true` when the gateway presented a changed certificate.
+    public var isCertificateChanged: Bool { state == .certificateChanged }
 
     /// Folds one query result in. Returns `true` when the state changed.
     @discardableResult
@@ -113,6 +143,18 @@ public struct GatewayReachability: Codable, Equatable {
         }
         // Anything that is not a `SentinelAPIError` came from the transport.
         return record(GatewayProbe.failure(.network(URLError(.unknown))))
+    }
+
+    /// Folds a certificate change in. Returns `true` when the state changed.
+    ///
+    /// The failure counter of the network is kept: the gateway itself is
+    /// reachable, its certificate is not the pinned one.
+    @discardableResult
+    public mutating func recordCertificateChanged() -> Bool {
+        let previous = state
+        state = .certificateChanged
+        stateDidChange = state != previous
+        return stateDidChange
     }
 
     /// Forgets the counter and goes back to 已连接, for a settings change.

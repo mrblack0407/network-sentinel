@@ -12,6 +12,8 @@ final class AppState: ObservableObject {
     let configuration: AppConfiguration
     /// The two windows of the app.
     let windows: WindowCoordinator
+    /// The monitoring engine: it queries the gateway while the app runs.
+    let monitor: MonitorService
 
     /// `true` while the menu bar icon is inserted.
     @Published var showsMenuBarIcon: Bool
@@ -20,10 +22,17 @@ final class AppState: ObservableObject {
         self.configuration = configuration
         // An unconfigured app shows the 首次启动窗口 only: no menu bar icon.
         self.showsMenuBarIcon = configuration.isConfigured
-        self.windows = WindowCoordinator(configuration: configuration)
+        let monitor = MonitorService(configuration: configuration)
+        self.monitor = monitor
+        self.windows = WindowCoordinator(configuration: configuration, monitor: monitor)
         windows.state = self
+        // A notification tap opens the 主窗口.
+        monitor.windows = windows
 
-        if !configuration.isConfigured {
+        if configuration.isConfigured {
+            // A configured app starts monitoring right away.
+            monitor.start()
+        } else {
             // `AppDelegate` shows the 首次启动窗口 as well. The two paths cover the
             // order of the launch sequence; showing the window twice is harmless
             // because the second call only brings it to the front.
@@ -33,11 +42,12 @@ final class AppState: ObservableObject {
         }
     }
 
-    /// The user finished the 首次启动窗口: the menu bar icon appears and the
-    /// 主窗口 opens on 「概览」.
+    /// The user finished the 首次启动窗口: the menu bar icon appears, the
+    /// 主窗口 opens on 「概览」 and the engine starts.
     func finishFirstLaunch() {
         showsMenuBarIcon = true
         windows.showMainWindow()
+        monitor.start()
     }
 }
 
@@ -53,9 +63,14 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     func applicationDidFinishLaunching(_ notification: Notification) {
         guard let state = Self.appState else { return }
 
-        // A configured app is a menu bar app: it starts with the icon alone and
-        // opens the 主窗口 only on 「打开主窗口」.
+        // A configured app is a menu bar app: it starts with the icon alone,
+        // opens the 主窗口 only on 「打开主窗口」 and queries in the background.
         guard !state.configuration.isConfigured else { return }
         state.windows.showFirstLaunchWindow()
+    }
+
+    /// 退出: the engine stops before the process goes away.
+    func applicationWillTerminate(_ notification: Notification) {
+        Self.appState?.monitor.stop()
     }
 }
