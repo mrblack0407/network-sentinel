@@ -15,7 +15,7 @@
 
 ## 使用要求
 
-- macOS 13 或更新版本
+- macOS 13 或更新版本，只支持 Apple 芯片（M 系列）的 Mac
 - UniFi 网关和一个 UniFi API Key（在 UniFi 网页左侧边栏「Integrations → Create New API Key」生成）
 
 ## 编译

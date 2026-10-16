@@ -15,7 +15,7 @@ A macOS menu bar app for UniFi: it reads your UniFi gateway's system log with an
 
 ## Requirements
 
-- macOS 13 or later
+- macOS 13 or later, on a Mac with Apple silicon (M-series) only
 - A UniFi gateway and a UniFi API Key (UniFi web UI → **Integrations** → **Create New API Key**)
 
 ## Build
