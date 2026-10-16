@@ -12,5 +12,8 @@ build/
 # macOS
 .DS_Store
 
+# Local scratch (probe scripts, build logs)
+.tmp/
+
 # Local API test output (contains real IPs and MACs)
 unifi-api-test/
