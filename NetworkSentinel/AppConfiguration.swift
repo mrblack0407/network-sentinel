@@ -7,6 +7,9 @@ import SentinelCore
 /// normalized address, the site, the gateway name, the pinned certificate and
 /// the monitoring settings live in `UserDefaults`. No API Key ever reaches
 /// `UserDefaults`, a log line or the text of a view.
+///
+/// The Bark Key is a secret as well: it lives under the keychain account
+/// `BarkConfiguration.keychainAccount` and is read once, then kept in memory.
 @MainActor
 final class AppConfiguration: ObservableObject {
     /// `UserDefaults` keys, one per stored value.
@@ -17,6 +20,8 @@ final class AppConfiguration: ObservableObject {
         static let pinnedCertificateHost = "pinnedCertificateHost"
         static let pinnedCertificateSHA256 = "pinnedCertificateSHA256"
         static let monitorSettings = "monitorSettings"
+        static let barkEnabled = "barkEnabled"
+        static let barkServerAddress = "barkServerAddress"
     }
 
     private let defaults: UserDefaults
@@ -32,6 +37,27 @@ final class AppConfiguration: ObservableObject {
     @Published private(set) var pinnedCertificate: PinnedCertificate?
     /// `true` when the keychain holds an API Key for the configured address.
     @Published private(set) var hasAPIKey: Bool = false
+
+    /// `true` when every system notification also goes to Bark. Off by default.
+    @Published var barkEnabled: Bool {
+        didSet { defaults.set(barkEnabled, forKey: DefaultsKey.barkEnabled) }
+    }
+
+    /// Bark server address, the public one until the user types another.
+    ///
+    /// Stored as the user typed it: the address is normalized when a push is
+    /// built, so a half-typed address never blocks the field.
+    @Published var barkServerAddress: String {
+        didSet { defaults.set(barkServerAddress, forKey: DefaultsKey.barkServerAddress) }
+    }
+
+    /// `true` when the keychain holds a Bark Key.
+    @Published private(set) var hasBarkKey: Bool = false
+
+    /// The Bark Key, read from the keychain at most once.
+    private var cachedBarkKey: String?
+    /// `true` once the keychain was asked for the Bark Key.
+    private var isBarkKeyLoaded = false
 
     /// What the app monitors and when it notifies. Every change is saved at
     /// once: there is no 「保存」 button.
@@ -55,7 +81,13 @@ final class AppConfiguration: ObservableObject {
         self.siteReference = defaults.string(forKey: DefaultsKey.siteReference)
         self.gatewayName = defaults.string(forKey: DefaultsKey.gatewayName)
         self.pinnedCertificate = Self.loadPinnedCertificate(from: defaults)
+        self.barkEnabled = defaults.bool(forKey: DefaultsKey.barkEnabled)
+        let storedBarkServer = defaults.string(forKey: DefaultsKey.barkServerAddress) ?? ""
+        self.barkServerAddress = storedBarkServer.isEmpty
+            ? BarkConfiguration.defaultServerAddress
+            : storedBarkServer
         refreshAPIKeyPresence()
+        loadBarkKeyIfNeeded()
     }
 
     // MARK: - API Key
@@ -67,6 +99,67 @@ final class AppConfiguration: ObservableObject {
     func apiKey() throws -> String? {
         guard let gatewayAddress else { return nil }
         return try keyStore.apiKey(for: gatewayAddress)
+    }
+
+    // MARK: - Bark
+
+    /// The Bark Key, from the keychain the first time and from memory after.
+    ///
+    /// The keychain may ask for a confirmation on every read, so a push must not
+    /// read it again and again; the cache is dropped when the Key changes.
+    func barkKey() -> String? {
+        loadBarkKeyIfNeeded()
+        return cachedBarkKey
+    }
+
+    /// The Bark settings as `BarkClient` takes them.
+    ///
+    /// - Throws: `BarkConfigurationError` with Chinese text: 「请输入 Bark Key」
+    ///   while no Key is saved, 「服务器地址格式不对」 for a server that cannot
+    ///   be a Bark server.
+    func barkConfiguration() throws -> BarkConfiguration {
+        guard let key = barkKey() else { throw BarkConfigurationError.missingKey }
+        return try BarkConfiguration(serverAddress: barkServerAddress, deviceKey: key)
+    }
+
+    /// Parses what the user typed and saves the Bark Key to the keychain.
+    ///
+    /// The input may be the Key alone or a whole push link; a link also sets the
+    /// server address. The Key never reaches `UserDefaults`.
+    ///
+    /// - Returns: the parsed configuration, for the message of the 通知 page.
+    @discardableResult
+    func saveBarkKey(_ input: String) throws -> BarkConfiguration {
+        let configuration = try BarkConfiguration.parse(
+            input: input,
+            defaultServerAddress: barkServerAddress
+        )
+        try keyStore.save(configuration.deviceKey, forAccount: BarkConfiguration.keychainAccount)
+
+        cachedBarkKey = configuration.deviceKey
+        isBarkKeyLoaded = true
+        hasBarkKey = true
+        barkServerAddress = configuration.serverAddress
+        return configuration
+    }
+
+    /// Removes the Bark Key from the keychain. The switch and the server stay.
+    func removeBarkKey() throws {
+        _ = try keyStore.removeAPIKey(forAccount: BarkConfiguration.keychainAccount)
+        cachedBarkKey = nil
+        isBarkKeyLoaded = true
+        hasBarkKey = false
+    }
+
+    /// Asks the keychain for the Bark Key once and remembers the answer.
+    private func loadBarkKeyIfNeeded() {
+        guard !isBarkKeyLoaded else { return }
+        isBarkKeyLoaded = true
+
+        let key: String? = (try? keyStore.apiKey(forAccount: BarkConfiguration.keychainAccount)) ?? nil
+        let trimmed = key?.trimmingCharacters(in: .whitespacesAndNewlines)
+        cachedBarkKey = trimmed?.isEmpty == false ? trimmed : nil
+        hasBarkKey = cachedBarkKey != nil
     }
 
     // MARK: - Saving

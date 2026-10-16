@@ -42,7 +42,7 @@ struct MainWindow: View {
         case .logs:
             LogsView(monitor: monitor)
         case .notifications:
-            NotificationsPage(configuration: configuration)
+            NotificationsPage(configuration: configuration, monitor: monitor)
         case .settings:
             SettingsPage(configuration: configuration, monitor: monitor)
         }

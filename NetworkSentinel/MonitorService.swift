@@ -81,6 +81,11 @@ final class MonitorService: ObservableObject {
     @Published private(set) var lastErrorDescription: String?
     /// `true` while a round is running.
     @Published private(set) var isQuerying = false
+    /// What the last Bark push did, `nil` while Bark never ran.
+    ///
+    /// The 通知 page shows the time of the last success, or the Chinese reason
+    /// of the last failure. A failed push never fails a query round.
+    @Published private(set) var lastBarkResult: BarkResult?
 
     /// The API Key of the running configuration; see `cachedAPIKey(for:)`.
     private var apiKeyCache: (address: String, key: String)?
@@ -95,6 +100,8 @@ final class MonitorService: ObservableObject {
     private let configuration: AppConfiguration
     private let logStore: MonitorLogStore
     private let sender: UserNotificationSending
+    /// Session of the Bark pushes. `URLSession.shared` in the app, a stub in tests.
+    private let barkSession: URLSession
 
     // MARK: - Engine state
 
@@ -118,11 +125,13 @@ final class MonitorService: ObservableObject {
     init(
         configuration: AppConfiguration,
         sender: UserNotificationSending? = nil,
-        logStore: MonitorLogStore = MonitorService.makeLogStore()
+        logStore: MonitorLogStore = MonitorService.makeLogStore(),
+        barkSession: URLSession = .shared
     ) {
         self.configuration = configuration
         self.logStore = logStore
         self.sender = sender ?? SystemNotificationSender()
+        self.barkSession = barkSession
 
         seenLogIDs = logStore.loadSeenLogIDs()
         readState = logStore.loadReadState()
@@ -452,6 +461,54 @@ final class MonitorService: ObservableObject {
 
     private func send(_ kind: NotificationKind) async {
         await sender.send(title: kind.title, body: kind.body)
+        // Bark goes out whatever the system permission says, and a failed push
+        // never touches the notification above.
+        await sendBark(title: kind.title, body: kind.body, level: kind.barkLevel)
+    }
+
+    // MARK: - Bark
+
+    /// Pushes the same text to the phone when the user turned Bark on.
+    ///
+    /// The Key is read from the cached configuration, so no push asks the
+    /// keychain again. Every failure lands in `lastBarkResult` and stops there:
+    /// a phone that cannot be reached must not fail the query round.
+    private func sendBark(title: String, body: String, level: BarkLevel) async {
+        guard configuration.barkEnabled else { return }
+
+        do {
+            let client = BarkClient(configuration: try configuration.barkConfiguration(), session: barkSession)
+            try await client.send(title: title, body: body, level: level)
+            lastBarkResult = .success(at: Date())
+        } catch {
+            lastBarkResult = .failure(Self.chineseDescription(error), at: Date())
+        }
+    }
+
+    /// Sends the test push of the 通知 page with the current settings.
+    ///
+    /// The test ignores the Bark switch — the user pressed the button on purpose
+    /// — but it needs a saved Key and a usable server address.
+    ///
+    /// - Returns: the time of a successful push, or the Chinese reason of a
+    ///   failure. The result is also published as `lastBarkResult`.
+    @discardableResult
+    func sendBarkTest() async -> BarkResult {
+        do {
+            let client = BarkClient(configuration: try configuration.barkConfiguration(), session: barkSession)
+            try await client.send(
+                title: "Network Sentinel 测试推送",
+                body: "Bark 推送已连通，断网和威胁通知会同步发到这台设备。",
+                level: .active
+            )
+            let result = BarkResult.success(at: Date())
+            lastBarkResult = result
+            return result
+        } catch {
+            let result = BarkResult.failure(Self.chineseDescription(error), at: Date())
+            lastBarkResult = result
+            return result
+        }
     }
 
     // MARK: - Published state

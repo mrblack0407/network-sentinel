@@ -12,6 +12,15 @@ import UserNotifications
 /// notification stays in `MonitorService` and `SentinelCore`.
 struct NotificationsPage: View {
     @ObservedObject var configuration: AppConfiguration
+    /// The engine, for the Bark test push and the result of the last push.
+    @ObservedObject var monitor: MonitorService
+
+    /// What the user types into the Bark Key field; cleared once it is saved.
+    @State private var barkKeyText = ""
+    @State private var isBarkKeyRevealed = false
+    /// Result of 「保存」 or 「发送测试」 on this page, shown under the buttons.
+    @State private var barkMessage: (tone: StatusTone, text: String)?
+    @State private var isSendingBarkTest = false
 
     /// Authorization the system reports for this app.
     @State private var authorization: UNAuthorizationStatus = .notDetermined
@@ -37,6 +46,12 @@ struct NotificationsPage: View {
                         notificationThresholdCard
                         alwaysNotifyOnRestoreCard
                         mergeSameKindCard
+                    }
+
+                    GroupHeader(title: "Bark 推送", color: SentinelColor.groupGeneral)
+                    LazyVGrid(columns: SettingsGridLayout.twoColumns, alignment: .leading, spacing: SentinelMetrics.cardSpacing) {
+                        barkSwitchCard
+                        barkKeyCard
                     }
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -166,4 +181,152 @@ struct NotificationsPage: View {
             .accessibilityLabel("同类事件合并")
         )
     }
+
+    // MARK: - Bark 推送
+
+    /// 「Bark 推送」: the switch and the state of the last push.
+    private var barkSwitchCard: some View {
+        let status = barkStatus
+        return SettingsCard(
+            title: "Bark 推送",
+            description: "把同样的通知同步推到装了 Bark 的 iPhone。网关连不上和「非常高」的事件用时效性通知，专注模式下也能收到。",
+            statusTone: status.tone,
+            statusText: status.text,
+            control: Toggle("", isOn: $configuration.barkEnabled)
+                .labelsHidden()
+                .toggleStyle(.switch)
+                .controlSize(.small)
+                .disabled(!configuration.hasBarkKey)
+                .accessibilityLabel("Bark 推送")
+        )
+    }
+
+    private var barkStatus: (tone: StatusTone, text: String) {
+        guard configuration.hasBarkKey else { return (.neutral, "还没填 Bark Key") }
+        guard configuration.barkEnabled else { return (.neutral, "已关闭") }
+        if let result = monitor.lastBarkResult {
+            if result.succeeded {
+                return (.ok, "已开启，上次推送 \(Self.barkTimeFormatter.string(from: result.date))")
+            }
+            return (.failure, "上次推送失败：\(result.failureReason ?? "原因不明")")
+        }
+        return (.ok, "已开启")
+    }
+
+    /// 「Bark Key」: the key, the server and the actions.
+    private var barkKeyCard: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            Text("Bark Key")
+                .font(.system(size: SentinelMetrics.cardTitleFontSize, weight: .semibold))
+
+            VStack(alignment: .leading, spacing: 6) {
+                Text(configuration.hasBarkKey ? "Key 已存在钥匙串里，粘贴新的可替换" : "在 Bark App 首页复制推送链接或 Key")
+                    .font(.system(size: SentinelMetrics.cardBodyFontSize))
+                    .foregroundStyle(.secondary)
+                ConnectionFieldBox(isError: barkMessage?.tone == .failure) {
+                    HStack(spacing: 8) {
+                        Group {
+                            if isBarkKeyRevealed {
+                                TextField("粘贴 Bark Key 或推送链接", text: $barkKeyText)
+                            } else {
+                                SecureField("粘贴 Bark Key 或推送链接", text: $barkKeyText)
+                            }
+                        }
+                        .textFieldStyle(.plain)
+                        .font(.system(size: SentinelMetrics.inputFontSize, design: .monospaced))
+
+                        Button(isBarkKeyRevealed ? "隐藏" : "显示") { isBarkKeyRevealed.toggle() }
+                            .buttonStyle(.plain)
+                            .font(.system(size: SentinelMetrics.cardBodyFontSize))
+                            .foregroundStyle(Color.accentColor)
+                            .accessibilityLabel(isBarkKeyRevealed ? "隐藏 Bark Key" : "显示 Bark Key")
+                    }
+                }
+                .accessibilityLabel("Bark Key")
+            }
+
+            VStack(alignment: .leading, spacing: 6) {
+                Text("服务器（用自建服务器时才改）")
+                    .font(.system(size: SentinelMetrics.cardBodyFontSize))
+                    .foregroundStyle(.secondary)
+                ConnectionFieldBox(isError: false) {
+                    TextField(BarkConfiguration.defaultServerAddress, text: $configuration.barkServerAddress)
+                        .textFieldStyle(.plain)
+                        .font(.system(size: SentinelMetrics.inputFontSize, design: .monospaced))
+                }
+                .accessibilityLabel("Bark 服务器地址")
+            }
+
+            HStack(spacing: 8) {
+                if let message = barkMessage {
+                    Circle()
+                        .fill(message.tone.color)
+                        .frame(width: SentinelMetrics.statusLineDotSize, height: SentinelMetrics.statusLineDotSize)
+                    Text(message.text)
+                        .font(.system(size: SentinelMetrics.cardBodyFontSize))
+                        .foregroundStyle(.secondary)
+                        .lineLimit(2)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+                Spacer(minLength: 8)
+                if configuration.hasBarkKey {
+                    ToolbarButton(title: "删除 Key", accessibilityLabel: "删除 Bark Key") { removeBarkKey() }
+                    ToolbarButton(
+                        title: isSendingBarkTest ? "发送中…" : "发送测试",
+                        accessibilityLabel: "发送一条 Bark 测试推送"
+                    ) { sendBarkTest() }
+                    .disabled(isSendingBarkTest)
+                }
+                ToolbarButton(title: "保存", accessibilityLabel: "保存 Bark Key") { saveBarkKey() }
+                    .disabled(barkKeyText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+            }
+        }
+        .padding(SentinelMetrics.settingsCardPadding)
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+        .background(SentinelColor.card, in: RoundedRectangle(cornerRadius: SentinelMetrics.cardCornerRadius))
+        .overlay(
+            RoundedRectangle(cornerRadius: SentinelMetrics.cardCornerRadius)
+                .stroke(SentinelColor.border, lineWidth: 1)
+        )
+    }
+
+    private func saveBarkKey() {
+        do {
+            _ = try configuration.saveBarkKey(barkKeyText)
+            barkKeyText = ""
+            isBarkKeyRevealed = false
+            configuration.barkEnabled = true
+            barkMessage = (.ok, "已保存，可以点「发送测试」试一下")
+        } catch {
+            barkMessage = (.failure, error.localizedDescription)
+        }
+    }
+
+    private func removeBarkKey() {
+        do {
+            try configuration.removeBarkKey()
+            configuration.barkEnabled = false
+            barkMessage = (.neutral, "已删除 Bark Key")
+        } catch {
+            barkMessage = (.failure, error.localizedDescription)
+        }
+    }
+
+    private func sendBarkTest() {
+        isSendingBarkTest = true
+        Task {
+            let result = await monitor.sendBarkTest()
+            isSendingBarkTest = false
+            barkMessage = result.succeeded
+                ? (.ok, "测试推送已发出，看看手机收到没有")
+                : (.failure, result.failureReason ?? "发送失败")
+        }
+    }
+
+    private static let barkTimeFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: "zh_Hans_CN")
+        formatter.dateFormat = "M/d H:mm"
+        return formatter
+    }()
 }

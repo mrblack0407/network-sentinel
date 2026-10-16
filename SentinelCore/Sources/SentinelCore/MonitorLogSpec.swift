@@ -138,11 +138,17 @@ public enum MonitorLogSpec {
         public let body: String
         /// Number of new entries the summary covers.
         public let count: Int
+        /// 严重性 of the most severe entry the summary covers.
+        ///
+        /// The 严重性 decides the Bark level of the push. An unknown one counts
+        /// as 低, exactly like the notification threshold.
+        public let severity: LogSeverity
 
-        public init(title: String, body: String, count: Int) {
+        public init(title: String, body: String, count: Int, severity: LogSeverity = .low) {
             self.title = title
             self.body = body
             self.count = count
+            self.severity = severity
         }
     }
 
@@ -181,7 +187,8 @@ public enum MonitorLogSpec {
         return WakeSummary(
             title: "睡眠期间有 \(sorted.count) 条新日志",
             body: body,
-            count: sorted.count
+            count: sorted.count,
+            severity: NotificationSettings.effectiveSeverity(mostSevere.severity)
         )
     }
 
