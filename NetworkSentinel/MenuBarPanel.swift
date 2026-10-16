@@ -194,14 +194,7 @@ struct MenuBarPanel: View {
 
             // Date and time are two right-aligned columns, so rows line up
             // whatever the number of digits in the month, day or hour.
-            Group {
-                Text(Self.dateFormatter.string(from: event.timestamp))
-                    .frame(width: 44, alignment: .trailing)
-                Text(Self.clockFormatter.string(from: event.timestamp))
-                    .frame(width: 64, alignment: .trailing)
-                    .padding(.leading, 4)
-            }
-            .foregroundStyle(.secondary)
+            LogTimestampColumns(date: event.timestamp)
         }
         .font(.system(size: 12, design: .monospaced))
         .monospacedDigit()
@@ -210,29 +203,9 @@ struct MenuBarPanel: View {
         .accessibilityLabel(Self.readOut(of: event))
     }
 
-    /// `10/16` in the local time zone.
-    private static let dateFormatter: DateFormatter = {
-        let formatter = DateFormatter()
-        formatter.locale = Locale(identifier: "zh_Hans_CN")
-        formatter.dateFormat = "M/d"
-        return formatter
-    }()
-
-    /// `9:44:20` in the local time zone.
-    private static let clockFormatter: DateFormatter = {
-        let formatter = DateFormatter()
-        formatter.locale = Locale(identifier: "zh_Hans_CN")
-        formatter.dateFormat = "H:mm:ss"
-        return formatter
-    }()
-
-    private static func timeText(_ date: Date) -> String {
-        "\(dateFormatter.string(from: date)) \(clockFormatter.string(from: date))"
-    }
-
     /// One event in one sentence, for a screen reader.
     private static func readOut(of event: MonitoredLogEvent) -> String {
-        "\(event.severity?.displayName ?? "严重性未知")，\(event.event.displayName)，\(timeText(event.timestamp))"
+        "\(event.severity?.displayName ?? "严重性未知")，\(event.event.displayName)，\(LogTimestampText.stamp(event.timestamp))"
     }
 
     // MARK: - Footer

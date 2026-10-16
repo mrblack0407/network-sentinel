@@ -253,6 +253,313 @@ enum SettingsGridLayout {
     }
 }
 
+/// Date and time texts of a log entry, in the formats the app uses everywhere.
+///
+/// The 菜单栏弹出面板, 概览 and 全部日志 share these, so a row never shows two
+/// different spellings of the same moment. All of them are in the local time
+/// zone.
+enum LogTimestampText {
+    /// `10/16`.
+    static func date(_ date: Date) -> String {
+        dateFormatter.string(from: date)
+    }
+
+    /// `9:44:20`.
+    static func clock(_ date: Date) -> String {
+        clockFormatter.string(from: date)
+    }
+
+    /// `10/16 9:44:20`.
+    static func stamp(_ moment: Date) -> String {
+        "\(date(moment)) \(clock(moment))"
+    }
+
+    /// `9:44`, for the tick labels of the 过去 24 小时 色条.
+    static func shortClock(_ date: Date) -> String {
+        shortClockFormatter.string(from: date)
+    }
+
+    /// `昨天 10:45`, the left tick of the 色条.
+    static func yesterdayClock(_ date: Date) -> String {
+        "昨天 \(shortClock(date))"
+    }
+
+    private static let dateFormatter = makeFormatter("M/d")
+    private static let clockFormatter = makeFormatter("H:mm:ss")
+    private static let shortClockFormatter = makeFormatter("H:mm")
+
+    private static func makeFormatter(_ format: String) -> DateFormatter {
+        let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: "zh_Hans_CN")
+        formatter.dateFormat = format
+        return formatter
+    }
+}
+
+/// The date and the time of one log entry in two right-aligned columns.
+///
+/// Two columns keep the rows of a list in line whatever the number of digits in
+/// the month, the day or the hour.
+struct LogTimestampColumns: View {
+    let date: Date
+
+    var body: some View {
+        HStack(spacing: 4) {
+            Text(LogTimestampText.date(date))
+                .frame(width: 44, alignment: .trailing)
+            Text(LogTimestampText.clock(date))
+                .frame(width: 64, alignment: .trailing)
+        }
+        .font(.system(size: 12, design: .monospaced))
+        .monospacedDigit()
+        .foregroundStyle(.secondary)
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel("时间 \(LogTimestampText.stamp(date))")
+    }
+}
+
+/// A card of 概览 and 全部日志: material, hairline border and a 20 pt corner
+/// radius, like the cards of 设置.
+struct SentinelCard<Content: View>: View {
+    /// `false` for a card that keeps its own height inside a scroll view.
+    private let fillsHeight: Bool
+    private let content: Content
+
+    init(fillsHeight: Bool = true, @ViewBuilder content: () -> Content) {
+        self.fillsHeight = fillsHeight
+        self.content = content()
+    }
+
+    var body: some View {
+        content
+            .frame(maxWidth: .infinity, alignment: .topLeading)
+            .frame(maxHeight: fillsHeight ? .infinity : nil, alignment: .topLeading)
+            .padding(EdgeInsets(top: 16, leading: 18, bottom: 14, trailing: 18))
+            .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 20))
+            .overlay(
+                RoundedRectangle(cornerRadius: 20)
+                    .stroke(SentinelColor.border, lineWidth: 1)
+            )
+    }
+}
+
+/// The small label at the top of a card, for example 「WAN1 · CHINA TELECOM」.
+struct CardLabel: View {
+    let text: String
+
+    var body: some View {
+        Text(text)
+            .font(.system(size: 11, weight: .semibold))
+            .foregroundStyle(.secondary)
+            .lineLimit(1)
+            .truncationMode(.tail)
+    }
+}
+
+/// The big state of a card: 在线, 断网中, 备用, 未启用 or a count.
+struct BigStat: View {
+    let text: String
+    /// Small unit behind the number, for example 「条」.
+    var unit: String?
+    /// Color of the state; the counts keep the primary color.
+    var color: Color = .primary
+
+    init(text: String, unit: String? = nil, color: Color = .primary) {
+        self.text = text
+        self.unit = unit
+        self.color = color
+    }
+
+    var body: some View {
+        HStack(alignment: .firstTextBaseline, spacing: 3) {
+            Text(text)
+                .font(.system(size: 30, weight: .bold))
+                .foregroundStyle(color)
+            if let unit {
+                Text(unit)
+                    .font(.system(size: 13, weight: .semibold))
+                    .foregroundStyle(color)
+            }
+        }
+        .lineLimit(1)
+        .minimumScaleFactor(0.6)
+    }
+}
+
+/// One column of the three statistics at the bottom of a 概览 card.
+struct SubStatistic: Identifiable {
+    let id: String
+    let value: String
+    /// Small unit behind the value, for example 「次」.
+    let unit: String?
+    let caption: String
+
+    init(id: String, value: String, unit: String? = nil, caption: String) {
+        self.id = id
+        self.value = value
+        self.unit = unit
+        self.caption = caption
+    }
+}
+
+/// Three small statistics side by side, separated by hairlines.
+struct SubStatistics: View {
+    let items: [SubStatistic]
+
+    var body: some View {
+        HStack(alignment: .top, spacing: 0) {
+            ForEach(items) { item in
+                if item.id != items.first?.id {
+                    Divider()
+                }
+                VStack(alignment: .leading, spacing: 1) {
+                    HStack(alignment: .firstTextBaseline, spacing: 2) {
+                        Text(item.value)
+                            .font(.system(size: 18, weight: .bold))
+                            .monospacedDigit()
+                        if let unit = item.unit {
+                            Text(unit)
+                                .font(.system(size: 11))
+                                .foregroundStyle(.secondary)
+                        }
+                    }
+                    Text(item.caption)
+                        .font(.system(size: 11))
+                        .foregroundStyle(.secondary)
+                        .lineLimit(1)
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.leading, item.id == items.first?.id ? 0 : 10)
+                .accessibilityElement(children: .combine)
+                .accessibilityLabel("\(item.caption) \(item.value)\(item.unit ?? "")")
+            }
+        }
+        .padding(.top, 6)
+    }
+}
+
+/// The 过去 24 小时 色条 of a 概览 线路卡片: 48 cells of half an hour.
+///
+/// 正常 is a short pale green bar, 临时中断 and 断网 are tall and colored, and
+/// the last cell, 「现在」, is brighter.
+struct OutageStripView: View {
+    let strip: OutageStrip
+
+    /// Height of the whole strip, so every cell aligns on one line.
+    private static let stripHeight: CGFloat = 22
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 3) {
+            HStack(alignment: .center, spacing: 2) {
+                ForEach(strip.cells) { cell in
+                    RoundedRectangle(cornerRadius: 6)
+                        .fill(color(of: cell))
+                        .frame(height: height(of: cell))
+                        .shadow(color: glow(of: cell), radius: 4)
+                }
+            }
+            .frame(height: Self.stripHeight)
+
+            HStack(spacing: 0) {
+                Text(LogTimestampText.yesterdayClock(strip.start))
+                Spacer(minLength: 8)
+                Text(LogTimestampText.shortClock(middleDate))
+                Spacer(minLength: 8)
+                Text("现在")
+            }
+            .font(.system(size: 10, design: .monospaced))
+            .foregroundStyle(.secondary)
+        }
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(strip.accessibilityText)
+    }
+
+    /// Start of the middle cell, the 「HH:mm」 tick of the strip.
+    private var middleDate: Date {
+        let index = strip.cells.count / 2
+        guard strip.cells.indices.contains(index) else { return strip.start }
+        return strip.cells[index].start
+    }
+
+    /// 中断 red, 临时中断 yellow, 正常 pale green.
+    private func color(of cell: OutageStripCell) -> Color {
+        switch cell.state {
+        case .normal:
+            return SentinelColor.severity(.low).opacity(cell.isCurrent ? 1 : 0.45)
+        case .temporary:
+            return SentinelColor.severity(.medium)
+        case .down:
+            return SentinelColor.severity(.veryHigh)
+        }
+    }
+
+    /// A problem cell is taller than a quiet one, 「现在」 a little taller again.
+    private func height(of cell: OutageStripCell) -> CGFloat {
+        guard cell.state == .normal else { return Self.stripHeight }
+        return cell.isCurrent ? 16 : 12
+    }
+
+    /// The soft halo of a problem cell and of 「现在」.
+    private func glow(of cell: OutageStripCell) -> Color {
+        guard cell.state != .normal || cell.isCurrent else { return .clear }
+        return color(of: cell).opacity(0.5)
+    }
+}
+
+/// One page number of the pager of 全部日志: the current page is filled blue.
+struct PagerButton: View {
+    let title: String
+    let isCurrent: Bool
+    let isEnabled: Bool
+    let accessibilityLabel: String
+    let action: () -> Void
+
+    var body: some View {
+        Button(action: action) {
+            Text(title)
+                .font(.system(size: 12))
+                .monospacedDigit()
+                .lineLimit(1)
+                .frame(minWidth: 22)
+                .padding(.horizontal, 6)
+                .padding(.vertical, 3)
+                .background(
+                    RoundedRectangle(cornerRadius: 6)
+                        .fill(isCurrent ? Color.accentColor : Color.clear)
+                )
+                .foregroundStyle(isCurrent ? Color.white : Color.primary)
+                .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
+        .disabled(!isEnabled)
+        .opacity(isEnabled ? 1 : 0.35)
+        .accessibilityLabel(accessibilityLabel)
+        .accessibilityAddTraits(isCurrent ? [.isSelected] : [])
+    }
+}
+
+/// A small bordered button of a page toolbar, for example 「导出 CSV」.
+struct ToolbarButton: View {
+    let title: String
+    let accessibilityLabel: String
+    let action: () -> Void
+
+    var body: some View {
+        Button(action: action) {
+            Text(title)
+                .font(.system(size: 12))
+                .lineLimit(1)
+                .padding(.horizontal, 14)
+                .padding(.vertical, 3)
+                .background(RoundedRectangle(cornerRadius: 9).fill(Color.primary.opacity(0.06)))
+                .overlay(RoundedRectangle(cornerRadius: 9).stroke(SentinelColor.border, lineWidth: 1))
+                .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
+        .accessibilityLabel(accessibilityLabel)
+    }
+}
+
 /// A status dot with the soft halo of the mockup.
 ///
 /// The halo is drawn behind the dot and grows outside its layout frame, so a row

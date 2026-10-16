@@ -35,9 +35,9 @@ struct MainWindow: View {
     private var page: some View {
         switch windowState.selection {
         case .overview:
-            PlaceholderPage(title: "概览")
+            OverviewView(configuration: configuration, monitor: monitor, windowState: windowState)
         case .logs:
-            PlaceholderPage(title: "全部日志")
+            LogsView(monitor: monitor)
         case .settings:
             SettingsPage(configuration: configuration, monitor: monitor)
         }
@@ -213,29 +213,5 @@ struct GitHubRow: View {
         .buttonStyle(.plain)
         .help("在 GitHub 上查看源代码")
         .accessibilityLabel("在 GitHub 上查看源代码")
-    }
-}
-
-/// A page that is not built yet. 概览 and 全部日志 arrive in step 5.
-struct PlaceholderPage: View {
-    let title: String
-
-    var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Text(title)
-                .font(.system(size: 20, weight: .semibold))
-                .accessibilityAddTraits(.isHeader)
-
-            Spacer(minLength: 0)
-
-            Text("第 5 步做")
-                .font(.system(size: 13))
-                .foregroundStyle(.secondary)
-                .frame(maxWidth: .infinity)
-
-            Spacer(minLength: 0)
-        }
-        .padding(EdgeInsets(top: 16, leading: 22, bottom: 24, trailing: 22))
-        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
     }
 }
