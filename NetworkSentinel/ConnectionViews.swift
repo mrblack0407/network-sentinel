@@ -103,12 +103,12 @@ struct ConnectionFieldBox<Content: View>: View {
 
     var body: some View {
         content
-            .padding(.horizontal, 12)
-            .padding(.vertical, 8)
-            .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 10))
+            .padding(.horizontal, SentinelMetrics.inputHorizontalPadding)
+            .padding(.vertical, SentinelMetrics.inputVerticalPadding)
+            .background(.regularMaterial, in: RoundedRectangle(cornerRadius: SentinelMetrics.inputCornerRadius))
             .overlay(
-                RoundedRectangle(cornerRadius: 10)
-                    .stroke(isError ? SentinelColor.failure : SentinelColor.border, lineWidth: 1)
+                RoundedRectangle(cornerRadius: SentinelMetrics.inputCornerRadius)
+                    .stroke(isError ? SentinelColor.failure : SentinelColor.controlBorder, lineWidth: 1)
             )
     }
 }
@@ -121,13 +121,13 @@ struct ConnectionAddressField: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
             Text("UniFi 网关地址")
-                .font(.system(size: 12))
+                .font(.system(size: SentinelMetrics.cardBodyFontSize))
                 .foregroundStyle(.secondary)
 
             ConnectionFieldBox(isError: isError) {
                 TextField("例如 https://192.168.1.1", text: $text)
                     .textFieldStyle(.plain)
-                    .font(.system(size: 13, design: .monospaced))
+                    .font(.system(size: SentinelMetrics.inputFontSize, design: .monospaced))
             }
             .accessibilityLabel("UniFi 网关地址")
         }
@@ -145,7 +145,7 @@ struct ConnectionAPIKeyField: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
             Text("API Key")
-                .font(.system(size: 12))
+                .font(.system(size: SentinelMetrics.cardBodyFontSize))
                 .foregroundStyle(.secondary)
 
             ConnectionFieldBox(isError: isError) {
@@ -153,18 +153,18 @@ struct ConnectionAPIKeyField: View {
                     if isRevealed {
                         TextField("粘贴 API Key", text: $text)
                             .textFieldStyle(.plain)
-                            .font(.system(size: 13, design: .monospaced))
+                            .font(.system(size: SentinelMetrics.inputFontSize, design: .monospaced))
                     } else {
                         SecureField("粘贴 API Key", text: $text)
                             .textFieldStyle(.plain)
-                            .font(.system(size: 13, design: .monospaced))
+                            .font(.system(size: SentinelMetrics.inputFontSize, design: .monospaced))
                     }
 
                     Button(isRevealed ? "隐藏" : "显示") {
                         isRevealed.toggle()
                     }
                     .buttonStyle(.plain)
-                    .font(.system(size: 12))
+                    .font(.system(size: SentinelMetrics.cardBodyFontSize))
                     .foregroundStyle(Color.accentColor)
                     .accessibilityLabel(isRevealed ? "隐藏 API Key" : "显示 API Key")
                 }
@@ -173,7 +173,7 @@ struct ConnectionAPIKeyField: View {
 
             if showsHint {
                 Text("在 UniFi 网页左侧边栏点「Integrations → Create New API Key」生成")
-                    .font(.system(size: 11))
+                    .font(.system(size: SentinelMetrics.footnoteFontSize))
                     .foregroundStyle(.secondary)
                     .fixedSize(horizontal: false, vertical: true)
             }
@@ -195,11 +195,11 @@ struct ConnectionStatusRow: View {
             } else {
                 Circle()
                     .fill(state.tone.color)
-                    .frame(width: 7, height: 7)
+                    .frame(width: SentinelMetrics.statusLineDotSize, height: SentinelMetrics.statusLineDotSize)
             }
 
             Text(state.message)
-                .font(.system(size: 12))
+                .font(.system(size: SentinelMetrics.cardBodyFontSize))
                 .foregroundStyle(.secondary)
                 .fixedSize(horizontal: false, vertical: true)
         }

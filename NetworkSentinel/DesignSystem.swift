@@ -13,6 +13,201 @@ enum AppInfo {
     static let repositoryURL = URL(string: "https://github.com/mrblack0407/network-sentinel")!
 }
 
+/// Sizes of the 主窗口 and the 菜单栏弹出面板, taken from the CSS of
+/// `Design/Mockups.html`.
+///
+/// One CSS pixel of the mockup is one point here, so a view and the mockup can
+/// be compared without a scale factor. Every size of the interface lives here;
+/// a view never writes a number of its own.
+enum SentinelMetrics {
+    // MARK: - Text
+
+    /// Body text of a page (`.app`).
+    static let bodyFontSize: CGFloat = 13
+    /// Page title (`.mainhead h3`).
+    static let pageTitleFontSize: CGFloat = 28
+    /// Tracking of the page title (`letter-spacing: -.01em`).
+    static let pageTitleTracking: CGFloat = -0.28
+    /// Small statistics row: value (`.hstats b`).
+    static let statisticValueFontSize: CGFloat = 15
+    /// Small statistics row: label (`.hstats span`).
+    static let statisticLabelFontSize: CGFloat = 12
+    /// Colored group title (`.gh`).
+    static let groupHeaderFontSize: CGFloat = 14
+    /// Space above a group title (`.gh`, `padding-top`).
+    static let groupHeaderTopPadding: CGFloat = 6
+
+    // MARK: - Cards
+
+    /// Title of a card (`.fch b`).
+    static let cardTitleFontSize: CGFloat = 14
+    /// Description of a settings card (`.fc p`).
+    static let cardBodyFontSize: CGFloat = 12
+    /// Small label at the top of a card (`.cl`).
+    static let cardLabelFontSize: CGFloat = 11
+    /// Letter spacing of that label (`.cl`, `letter-spacing: .04em`).
+    static let cardLabelTracking: CGFloat = 0.44
+    /// Big state of a card (`.big`).
+    static let bigNumberFontSize: CGFloat = 30
+    /// Unit behind the big state (`.big small`).
+    static let bigNumberUnitFontSize: CGFloat = 13
+    /// Number of the three small statistics (`.subs b`).
+    static let subNumberFontSize: CGFloat = 18
+    /// Caption of the three small statistics (`.subs span`).
+    static let subCaptionFontSize: CGFloat = 11
+    /// Muted line of a card (`.hint`).
+    static let hintFontSize: CGFloat = 12
+    /// Monospaced timestamp of a list row (`.lr em`, `.wan em`).
+    static let timestampFontSize: CGFloat = 12
+    /// Small footnote under an input field (`.fh`).
+    static let footnoteFontSize: CGFloat = 11
+    /// Text typed into an input field (`.inp`).
+    static let inputFontSize: CGFloat = 13
+    /// Title of the 连接设置窗口 (`.shh b`).
+    static let sheetTitleFontSize: CGFloat = 17
+    /// Title of a page of the 首次启动窗口 (`.wtitle b`).
+    static let welcomeTitleFontSize: CGFloat = 20
+    /// Description of a page of the 首次启动窗口 (`.wdesc`).
+    static let welcomeBodyFontSize: CGFloat = 12.5
+
+    /// Corner radius of a card (`.sc`, `.fc`).
+    static let cardCornerRadius: CGFloat = 20
+    /// Space between two cards (`.cgrid`, `.fgrid`).
+    static let cardSpacing: CGFloat = 14
+    /// Space between the rows inside a card (`.sc` gap).
+    static let cardContentSpacing: CGFloat = 8
+    /// Padding of a card of 概览 and 全部日志 (`.sc`).
+    static let cardPadding = EdgeInsets(top: 16, leading: 18, bottom: 16, trailing: 18)
+    /// Padding of a settings card (`.fc`, bottom is 14).
+    static let settingsCardPadding = EdgeInsets(top: 16, leading: 18, bottom: 14, trailing: 18)
+    /// Space between the rows of a settings card (`.fc` gap).
+    static let settingsCardSpacing: CGFloat = 6
+    /// Padding of the table card of 全部日志 (`.tbl`).
+    static let tableCardPadding = EdgeInsets(top: 6, leading: 8, bottom: 6, trailing: 8)
+    /// The three small statistics (`.subs`), separated by hairlines.
+    static let subStatisticsTopPadding: CGFloat = 6
+    static let subStatisticsInnerPadding: CGFloat = 10
+
+    // MARK: - Lists
+
+    /// Corner radius of a grouped list (`.sc.tight`).
+    static let tightGroupCornerRadius: CGFloat = 14
+    /// Padding above and below the rows of a grouped list (`.sc.tight`).
+    static let tightGroupVerticalPadding: CGFloat = 4
+    /// Padding of one row of a grouped list (`.sc.tight .lr`).
+    static let tightRowPadding = EdgeInsets(top: 7, leading: 12, bottom: 7, trailing: 12)
+    /// Padding of one 最近事件 row (`.lr`).
+    static let listRowPadding = EdgeInsets(top: 8, leading: 2, bottom: 8, trailing: 2)
+    /// Padding of one row of the 全部日志 table (`.desk table td`).
+    static let tableRowPadding = EdgeInsets(top: 9, leading: 10, bottom: 9, trailing: 10)
+    /// Header of the 全部日志 table (`th`).
+    static let tableHeaderFontSize: CGFloat = 12
+    /// Letter spacing of that header (`th`, `letter-spacing: .04em`).
+    static let tableHeaderTracking: CGFloat = 0.48
+    /// Rows of the 全部日志 table (`.tbl table`).
+    static let tableFontSize: CGFloat = 12.5
+    /// Width of the 严重性 column of a list row (`.lr` first column).
+    static let severityColumnWidth: CGFloat = 34
+    /// Width of the 事件 column of a 最近事件 row (`.lr` second column).
+    static let eventNameColumnWidth: CGFloat = 120
+    /// Width of the 严重性 column of the 全部日志 table.
+    static let logsSeverityColumnWidth: CGFloat = 40
+    /// Width of the 事件 column of the 全部日志 table.
+    static let logsEventNameColumnWidth: CGFloat = 130
+    /// Width of the 日期 and 时间 columns of a row.
+    static let dateColumnWidth: CGFloat = 44
+    static let timeColumnWidth: CGFloat = 64
+
+    // MARK: - 过去 24 小时 色条
+
+    /// Cell size and spacing of the 色条 (`.strip`).
+    static let stripHeight: CGFloat = 22
+    static let stripQuietHeight: CGFloat = 12
+    static let stripCurrentHeight: CGFloat = 16
+    static let stripCellSpacing: CGFloat = 3
+    static let stripCornerRadius: CGFloat = 6
+    /// Tick labels of the 色条 (`.stripx`).
+    static let stripTickFontSize: CGFloat = 10
+
+    // MARK: - Small controls
+
+    /// Chip (`.chip`): 30 秒查一次, 线路标签.
+    static let chipFontSize: CGFloat = 12
+    static let chipHorizontalPadding: CGFloat = 12
+    static let chipVerticalPadding: CGFloat = 3
+    /// Segmented control (`.pills`).
+    static let pillFontSize: CGFloat = 12
+    static let pillHorizontalPadding: CGFloat = 12
+    static let pillVerticalPadding: CGFloat = 2
+    static let pillTrackCornerRadius: CGFloat = 10
+    static let pillTrackPadding: CGFloat = 2
+    static let pillCornerRadius: CGFloat = 8
+    /// Bordered button of a page toolbar (`.pbtn`).
+    static let smallButtonFontSize: CGFloat = 12
+    static let smallButtonHorizontalPadding: CGFloat = 14
+    static let smallButtonVerticalPadding: CGFloat = 3
+    static let smallButtonCornerRadius: CGFloat = 9
+    /// Page number of the pager (`.pg`).
+    static let pagerButtonSize: CGFloat = 26
+    static let pagerButtonCornerRadius: CGFloat = 8
+    /// Status dot of a row (`.dot`).
+    static let statusDotSize: CGFloat = 10
+    /// Status dot of a status line (`.sd`).
+    static let statusLineDotSize: CGFloat = 7
+
+    // MARK: - 主窗口
+
+    /// Sidebar (`.app` first column, `.side`).
+    static let sidebarWidth: CGFloat = 200
+    static let sidebarPadding = EdgeInsets(top: 14, leading: 10, bottom: 14, trailing: 10)
+    static let sidebarSpacing: CGFloat = 3
+    static let sidebarRowPadding = EdgeInsets(top: 7, leading: 10, bottom: 7, trailing: 10)
+    static let sidebarRowSpacing: CGFloat = 10
+    static let sidebarRowCornerRadius: CGFloat = 10
+    static let sidebarIconSize: CGFloat = 16
+    /// Group title of the sidebar (`.sh`).
+    static let sidebarSectionFontSize: CGFloat = 12
+    static let sidebarSectionPadding = EdgeInsets(top: 12, leading: 10, bottom: 4, trailing: 10)
+    /// GitHub row (`.ghub`, `.gt`).
+    static let githubRowPadding: CGFloat = 8
+    static let githubRowSpacing: CGFloat = 10
+    static let githubRowCornerRadius: CGFloat = 10
+    static let githubIconSize: CGFloat = 30
+    static let githubNameFontSize: CGFloat = 12
+    static let githubDetailFontSize: CGFloat = 11
+    /// Content column of a page (`.main`).
+    static let contentPadding = EdgeInsets(top: 14, leading: 8, bottom: 24, trailing: 22)
+    static let contentSpacing: CGFloat = 12
+
+    // MARK: - 连接设置窗口 and 首次启动窗口
+
+    /// Width and padding of the 连接设置窗口 (`.sheet`).
+    static let sheetWidth: CGFloat = 520
+    static let sheetPadding = EdgeInsets(top: 22, leading: 24, bottom: 18, trailing: 24)
+    /// Padding of a page of the 首次启动窗口 (`.welcome`).
+    static let welcomePadding = EdgeInsets(top: 16, leading: 28, bottom: 22, trailing: 28)
+    /// Input field (`.inp`).
+    static let inputCornerRadius: CGFloat = 10
+    static let inputHorizontalPadding: CGFloat = 12
+    static let inputVerticalPadding: CGFloat = 8
+
+    // MARK: - 菜单栏弹出面板
+
+    /// Panel (`.desk .pop`). The rounded frosted window itself is drawn by
+    /// `MenuBarExtra`, so only these numbers are set here.
+    static let panelWidth: CGFloat = 480
+    static let panelPadding: CGFloat = 14
+    static let panelSpacing: CGFloat = 10
+    /// Gateway name of the panel (`.gwrow b`).
+    static let panelTitleFontSize: CGFloat = 15
+    /// One event of the panel (`.pop .lr`).
+    static let panelRowFontSize: CGFloat = 13
+    /// Width of the `WAN1` column of a line row (`.wan` second column).
+    static let panelLineIDColumnWidth: CGFloat = 44
+    /// Space above the footer links (`.pop .foot`).
+    static let panelFooterTopPadding: CGFloat = 10
+}
+
 /// Colors shared by the windows.
 ///
 /// The severity colors come from the system palette, so the app follows the
@@ -28,21 +223,26 @@ enum SentinelColor {
     /// Nothing known yet, for example 还没测试连接.
     static let neutral = Color(nsColor: .secondaryLabelColor)
 
-    /// 「UniFi 网关」 group title.
+    /// 「UniFi 网关」 group title (`#d55cf0`).
     static let groupGateway = Color(red: 0.835, green: 0.361, blue: 0.941)
-    /// 「监控事件」 group title.
+    /// 「监控事件」 group title (`#8e8cf8`).
     static let groupEvents = Color(red: 0.557, green: 0.549, blue: 0.973)
-    /// 「通知」 group title.
+    /// 「通知」 group title (`#4fa3ff`).
     static let groupNotifications = Color(red: 0.310, green: 0.639, blue: 1.000)
-    /// 「通用」 group title.
+    /// 「通用」 group title (`#4fd1c5`).
     static let groupGeneral = Color(red: 0.310, green: 0.820, blue: 0.773)
 
     /// Hairline around a card or an input field.
     static let border = Color.primary.opacity(0.09)
+    /// Hairline around a small bordered button (`.pbtn`) and an input (`.inp`),
+    /// a little stronger than the one of a card.
+    static let controlBorder = Color.primary.opacity(0.14)
     /// Background of a selected sidebar row: light gray, never the accent color.
     static let selection = Color.primary.opacity(0.09)
     /// A bar of a severity bar the entry did not reach.
     static let severityOff = Color.primary.opacity(0.16)
+    /// Background of a card, a chip and a grouped list.
+    static let card = Color.primary.opacity(0.05)
 
     /// Color of one severity: 低 green, 中 yellow, 高 orange, 非常高 red.
     ///
@@ -102,24 +302,24 @@ enum StatusTone {
     }
 }
 
-/// A colored group title above a grid of cards.
+/// A colored group title above a grid of cards (`.gh`).
 struct GroupHeader: View {
     let title: String
     let color: Color
 
     var body: some View {
         Text(title)
-            .font(.system(size: 14, weight: .semibold))
+            .font(.system(size: SentinelMetrics.groupHeaderFontSize, weight: .semibold))
             .foregroundStyle(color)
-            .padding(.top, 6)
+            .padding(.top, SentinelMetrics.groupHeaderTopPadding)
             .accessibilityAddTraits(.isHeader)
     }
 }
 
 /// One settings card: title and control on one line, description, status line.
 ///
-/// The card uses a material background with a hairline border and a 20 pt
-/// corner radius, like the mockup.
+/// The card has the padding, the 20 pt corner radius and the hairline border of
+/// `.fc` of the mockup.
 struct SettingsCard<Control: View, Accessory: View>: View {
     let title: String
     let description: String
@@ -129,7 +329,7 @@ struct SettingsCard<Control: View, Accessory: View>: View {
     let accessory: Accessory
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 6) {
+        VStack(alignment: .leading, spacing: SentinelMetrics.settingsCardSpacing) {
             // A narrow column stacks the control under the title, so the
             // segmented control is never squeezed.
             ViewThatFits(in: .horizontal) {
@@ -145,7 +345,7 @@ struct SettingsCard<Control: View, Accessory: View>: View {
             }
 
             Text(description)
-                .font(.system(size: 12))
+                .font(.system(size: SentinelMetrics.cardBodyFontSize))
                 .foregroundStyle(.secondary)
                 .fixedSize(horizontal: false, vertical: true)
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
@@ -153,9 +353,9 @@ struct SettingsCard<Control: View, Accessory: View>: View {
             HStack(spacing: 7) {
                 Circle()
                     .fill(statusTone.color)
-                    .frame(width: 7, height: 7)
+                    .frame(width: SentinelMetrics.statusLineDotSize, height: SentinelMetrics.statusLineDotSize)
                 Text(statusText)
-                    .font(.system(size: 12))
+                    .font(.system(size: SentinelMetrics.cardBodyFontSize))
                     .foregroundStyle(.secondary)
                     .lineLimit(2)
                     .fixedSize(horizontal: false, vertical: true)
@@ -166,19 +366,19 @@ struct SettingsCard<Control: View, Accessory: View>: View {
             .accessibilityElement(children: .combine)
             .accessibilityLabel("\(title)：\(statusText)")
         }
-        .padding(EdgeInsets(top: 16, leading: 18, bottom: 14, trailing: 18))
+        .padding(SentinelMetrics.settingsCardPadding)
         .frame(maxWidth: .infinity, minHeight: 128, maxHeight: .infinity, alignment: .topLeading)
-        .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 20))
+        .background(.regularMaterial, in: RoundedRectangle(cornerRadius: SentinelMetrics.cardCornerRadius))
         .overlay(
-            RoundedRectangle(cornerRadius: 20)
+            RoundedRectangle(cornerRadius: SentinelMetrics.cardCornerRadius)
                 .stroke(SentinelColor.border, lineWidth: 1)
         )
     }
 
-    /// Card title, shared by both layouts of the header.
+    /// Card title, shared by both layouts of the header (`.fch b`).
     private var titleLabel: some View {
         Text(title)
-            .font(.system(size: 14, weight: .semibold))
+            .font(.system(size: SentinelMetrics.cardTitleFontSize, weight: .semibold))
             .fixedSize(horizontal: false, vertical: true)
     }
 }
@@ -196,8 +396,8 @@ extension SettingsCard where Accessory == EmptyView {
     }
 }
 
-/// Small segmented control: the selection is white on the accent color, the
-/// other options are transparent on a faint track.
+/// Small segmented control (`.pills`): the selection is white on the accent
+/// color, the other options are transparent on a faint track.
 struct SegmentedPills<Value: Hashable>: View {
     struct Option: Identifiable {
         let value: Value
@@ -218,12 +418,12 @@ struct SegmentedPills<Value: Hashable>: View {
                     onSelect(option.value)
                 } label: {
                     Text(option.title)
-                        .font(.system(size: 12))
+                        .font(.system(size: SentinelMetrics.pillFontSize))
                         .lineLimit(1)
-                        .padding(.horizontal, 10)
-                        .padding(.vertical, 3)
+                        .padding(.horizontal, SentinelMetrics.pillHorizontalPadding)
+                        .padding(.vertical, SentinelMetrics.pillVerticalPadding)
                         .background(
-                            RoundedRectangle(cornerRadius: 6)
+                            RoundedRectangle(cornerRadius: SentinelMetrics.pillCornerRadius)
                                 .fill(isSelected ? Color.accentColor : Color.clear)
                         )
                         .foregroundStyle(isSelected ? Color.white : Color.primary)
@@ -234,22 +434,40 @@ struct SegmentedPills<Value: Hashable>: View {
                 .accessibilityAddTraits(isSelected ? [.isSelected] : [])
             }
         }
-        .padding(2)
+        .padding(SentinelMetrics.pillTrackPadding)
         .background(
-            RoundedRectangle(cornerRadius: 8)
-                .fill(Color.primary.opacity(0.06))
+            RoundedRectangle(cornerRadius: SentinelMetrics.pillTrackCornerRadius)
+                .fill(SentinelColor.card)
+        )
+        .overlay(
+            RoundedRectangle(cornerRadius: SentinelMetrics.pillTrackCornerRadius)
+                .stroke(SentinelColor.border, lineWidth: 1)
         )
     }
 }
 
-/// Grid columns of the settings page: three columns, two on a narrow window.
+/// Grid columns of the pages that lay their cards out in a grid.
 enum SettingsGridLayout {
     /// Width below which the cards drop to two columns.
     static let threeColumnMinimumWidth: CGFloat = 620
 
+    /// Three columns, two on a narrow window.
     static func columns(forWidth width: CGFloat) -> [GridItem] {
         let count = width >= threeColumnMinimumWidth ? 3 : 2
-        return Array(repeating: GridItem(.flexible(), spacing: 14), count: count)
+        return Array(repeating: GridItem(.flexible(), spacing: SentinelMetrics.cardSpacing), count: count)
+    }
+
+    /// One column per card, at most three, so two cards share the whole row
+    /// instead of leaving the third column empty.
+    ///
+    /// Used by the 概览 card row: a gateway without WAN2 shows two cards, and
+    /// they are as wide as the 最近事件 card below them.
+    static func cardColumns(cardCount: Int, width: CGFloat) -> [GridItem] {
+        var count = max(1, min(cardCount, 3))
+        if width < threeColumnMinimumWidth {
+            count = min(count, 2)
+        }
+        return Array(repeating: GridItem(.flexible(), spacing: SentinelMetrics.cardSpacing), count: count)
     }
 }
 
@@ -306,11 +524,11 @@ struct LogTimestampColumns: View {
     var body: some View {
         HStack(spacing: 4) {
             Text(LogTimestampText.date(date))
-                .frame(width: 44, alignment: .trailing)
+                .frame(width: SentinelMetrics.dateColumnWidth, alignment: .trailing)
             Text(LogTimestampText.clock(date))
-                .frame(width: 64, alignment: .trailing)
+                .frame(width: SentinelMetrics.timeColumnWidth, alignment: .trailing)
         }
-        .font(.system(size: 12, design: .monospaced))
+        .font(.system(size: SentinelMetrics.timestampFontSize, design: .monospaced))
         .monospacedDigit()
         .foregroundStyle(.secondary)
         .accessibilityElement(children: .ignore)
@@ -318,15 +536,22 @@ struct LogTimestampColumns: View {
     }
 }
 
-/// A card of 概览 and 全部日志: material, hairline border and a 20 pt corner
-/// radius, like the cards of 设置.
+/// A card of 概览 and 全部日志 (`.sc`): material, hairline border and a 20 pt
+/// corner radius, like the cards of 设置.
 struct SentinelCard<Content: View>: View {
     /// `false` for a card that keeps its own height inside a scroll view.
     private let fillsHeight: Bool
+    /// Padding of the card; the table of 全部日志 passes `.tbl`.
+    private let padding: EdgeInsets
     private let content: Content
 
-    init(fillsHeight: Bool = true, @ViewBuilder content: () -> Content) {
+    init(
+        fillsHeight: Bool = true,
+        padding: EdgeInsets = SentinelMetrics.cardPadding,
+        @ViewBuilder content: () -> Content
+    ) {
         self.fillsHeight = fillsHeight
+        self.padding = padding
         self.content = content()
     }
 
@@ -334,29 +559,30 @@ struct SentinelCard<Content: View>: View {
         content
             .frame(maxWidth: .infinity, alignment: .topLeading)
             .frame(maxHeight: fillsHeight ? .infinity : nil, alignment: .topLeading)
-            .padding(EdgeInsets(top: 16, leading: 18, bottom: 14, trailing: 18))
-            .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 20))
+            .padding(padding)
+            .background(.regularMaterial, in: RoundedRectangle(cornerRadius: SentinelMetrics.cardCornerRadius))
             .overlay(
-                RoundedRectangle(cornerRadius: 20)
+                RoundedRectangle(cornerRadius: SentinelMetrics.cardCornerRadius)
                     .stroke(SentinelColor.border, lineWidth: 1)
             )
     }
 }
 
-/// The small label at the top of a card, for example 「WAN1 · CHINA TELECOM」.
+/// The small label at the top of a card (`.cl`), for example 「WAN1 · CHINA TELECOM」.
 struct CardLabel: View {
     let text: String
 
     var body: some View {
         Text(text)
-            .font(.system(size: 11, weight: .semibold))
+            .font(.system(size: SentinelMetrics.cardLabelFontSize, weight: .semibold))
+            .tracking(SentinelMetrics.cardLabelTracking)
             .foregroundStyle(.secondary)
             .lineLimit(1)
             .truncationMode(.tail)
     }
 }
 
-/// The big state of a card: 在线, 断网中, 备用, 未启用 or a count.
+/// The big state of a card (`.big`): 在线, 断网中, 备用, 未启用 or a count.
 struct BigStat: View {
     let text: String
     /// Small unit behind the number, for example 「条」.
@@ -373,11 +599,11 @@ struct BigStat: View {
     var body: some View {
         HStack(alignment: .firstTextBaseline, spacing: 3) {
             Text(text)
-                .font(.system(size: 30, weight: .bold))
+                .font(.system(size: SentinelMetrics.bigNumberFontSize, weight: .bold))
                 .foregroundStyle(color)
             if let unit {
                 Text(unit)
-                    .font(.system(size: 13, weight: .semibold))
+                    .font(.system(size: SentinelMetrics.bigNumberUnitFontSize, weight: .semibold))
                     .foregroundStyle(color)
             }
         }
@@ -386,7 +612,7 @@ struct BigStat: View {
     }
 }
 
-/// One column of the three statistics at the bottom of a 概览 card.
+/// One column of the three statistics at the bottom of a 概览 card (`.subs div`).
 struct SubStatistic: Identifiable {
     let id: String
     let value: String
@@ -402,7 +628,7 @@ struct SubStatistic: Identifiable {
     }
 }
 
-/// Three small statistics side by side, separated by hairlines.
+/// Three small statistics side by side, separated by hairlines (`.subs`).
 struct SubStatistics: View {
     let items: [SubStatistic]
 
@@ -415,50 +641,47 @@ struct SubStatistics: View {
                 VStack(alignment: .leading, spacing: 1) {
                     HStack(alignment: .firstTextBaseline, spacing: 2) {
                         Text(item.value)
-                            .font(.system(size: 18, weight: .bold))
+                            .font(.system(size: SentinelMetrics.subNumberFontSize, weight: .bold))
                             .monospacedDigit()
                         if let unit = item.unit {
                             Text(unit)
-                                .font(.system(size: 11))
+                                .font(.system(size: SentinelMetrics.subCaptionFontSize))
                                 .foregroundStyle(.secondary)
                         }
                     }
                     Text(item.caption)
-                        .font(.system(size: 11))
+                        .font(.system(size: SentinelMetrics.subCaptionFontSize))
                         .foregroundStyle(.secondary)
                         .lineLimit(1)
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(.leading, item.id == items.first?.id ? 0 : 10)
+                .padding(.leading, item.id == items.first?.id ? 0 : SentinelMetrics.subStatisticsInnerPadding)
                 .accessibilityElement(children: .combine)
                 .accessibilityLabel("\(item.caption) \(item.value)\(item.unit ?? "")")
             }
         }
-        .padding(.top, 6)
+        .padding(.top, SentinelMetrics.subStatisticsTopPadding)
     }
 }
 
-/// The 过去 24 小时 色条 of a 概览 线路卡片: 48 cells of half an hour.
+/// The 过去 24 小时 色条 of a 概览 线路卡片: 48 cells of half an hour (`.strip`).
 ///
 /// 正常 is a short pale green bar, 临时中断 and 断网 are tall and colored, and
 /// the last cell, 「现在」, is brighter.
 struct OutageStripView: View {
     let strip: OutageStrip
 
-    /// Height of the whole strip, so every cell aligns on one line.
-    private static let stripHeight: CGFloat = 22
-
     var body: some View {
         VStack(alignment: .leading, spacing: 3) {
-            HStack(alignment: .center, spacing: 2) {
+            HStack(alignment: .center, spacing: SentinelMetrics.stripCellSpacing) {
                 ForEach(strip.cells) { cell in
-                    RoundedRectangle(cornerRadius: 6)
+                    RoundedRectangle(cornerRadius: SentinelMetrics.stripCornerRadius)
                         .fill(color(of: cell))
                         .frame(height: height(of: cell))
                         .shadow(color: glow(of: cell), radius: 4)
                 }
             }
-            .frame(height: Self.stripHeight)
+            .frame(height: SentinelMetrics.stripHeight)
 
             HStack(spacing: 0) {
                 Text(LogTimestampText.yesterdayClock(strip.start))
@@ -467,7 +690,7 @@ struct OutageStripView: View {
                 Spacer(minLength: 8)
                 Text("现在")
             }
-            .font(.system(size: 10, design: .monospaced))
+            .font(.system(size: SentinelMetrics.stripTickFontSize, design: .monospaced))
             .foregroundStyle(.secondary)
         }
         .accessibilityElement(children: .ignore)
@@ -495,8 +718,8 @@ struct OutageStripView: View {
 
     /// A problem cell is taller than a quiet one, 「现在」 a little taller again.
     private func height(of cell: OutageStripCell) -> CGFloat {
-        guard cell.state == .normal else { return Self.stripHeight }
-        return cell.isCurrent ? 16 : 12
+        guard cell.state == .normal else { return SentinelMetrics.stripHeight }
+        return cell.isCurrent ? SentinelMetrics.stripCurrentHeight : SentinelMetrics.stripQuietHeight
     }
 
     /// The soft halo of a problem cell and of 「现在」.
@@ -506,7 +729,7 @@ struct OutageStripView: View {
     }
 }
 
-/// One page number of the pager of 全部日志: the current page is filled blue.
+/// One page number of the pager of 全部日志 (`.pg`): the current page is blue.
 struct PagerButton: View {
     let title: String
     let isCurrent: Bool
@@ -517,14 +740,13 @@ struct PagerButton: View {
     var body: some View {
         Button(action: action) {
             Text(title)
-                .font(.system(size: 12))
+                .font(.system(size: SentinelMetrics.smallButtonFontSize))
                 .monospacedDigit()
                 .lineLimit(1)
-                .frame(minWidth: 22)
+                .frame(minWidth: SentinelMetrics.pagerButtonSize, minHeight: SentinelMetrics.pagerButtonSize)
                 .padding(.horizontal, 6)
-                .padding(.vertical, 3)
                 .background(
-                    RoundedRectangle(cornerRadius: 6)
+                    RoundedRectangle(cornerRadius: SentinelMetrics.pagerButtonCornerRadius)
                         .fill(isCurrent ? Color.accentColor : Color.clear)
                 )
                 .foregroundStyle(isCurrent ? Color.white : Color.primary)
@@ -538,7 +760,7 @@ struct PagerButton: View {
     }
 }
 
-/// A small bordered button of a page toolbar, for example 「导出 CSV」.
+/// A small bordered button of a page toolbar (`.pbtn`), for example 「导出 CSV」.
 struct ToolbarButton: View {
     let title: String
     let accessibilityLabel: String
@@ -547,12 +769,18 @@ struct ToolbarButton: View {
     var body: some View {
         Button(action: action) {
             Text(title)
-                .font(.system(size: 12))
+                .font(.system(size: SentinelMetrics.smallButtonFontSize))
                 .lineLimit(1)
-                .padding(.horizontal, 14)
-                .padding(.vertical, 3)
-                .background(RoundedRectangle(cornerRadius: 9).fill(Color.primary.opacity(0.06)))
-                .overlay(RoundedRectangle(cornerRadius: 9).stroke(SentinelColor.border, lineWidth: 1))
+                .padding(.horizontal, SentinelMetrics.smallButtonHorizontalPadding)
+                .padding(.vertical, SentinelMetrics.smallButtonVerticalPadding)
+                .background(
+                    RoundedRectangle(cornerRadius: SentinelMetrics.smallButtonCornerRadius)
+                        .fill(SentinelColor.card)
+                )
+                .overlay(
+                    RoundedRectangle(cornerRadius: SentinelMetrics.smallButtonCornerRadius)
+                        .stroke(SentinelColor.controlBorder, lineWidth: 1)
+                )
                 .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
@@ -560,14 +788,14 @@ struct ToolbarButton: View {
     }
 }
 
-/// A status dot with the soft halo of the mockup.
+/// A status dot with the soft halo of the mockup (`.dot`).
 ///
 /// The halo is drawn behind the dot and grows outside its layout frame, so a row
 /// of dots keeps the spacing the mockup shows.
 struct GlowDot: View {
     let tone: StatusTone
     /// Diameter of the solid dot; the halo adds 8 pt around it.
-    var size: CGFloat = 10
+    var size: CGFloat = SentinelMetrics.statusDotSize
 
     var body: some View {
         Circle()
@@ -582,7 +810,7 @@ struct GlowDot: View {
     }
 }
 
-/// The four small bars that show the severity of one log entry.
+/// The four small bars that show the severity of one log entry (`.sev`).
 ///
 /// Every bar up to the rank of the entry is filled with the severity color, the
 /// rest stay gray. A severity this version does not know fills no bar at all.
@@ -608,7 +836,7 @@ struct SeverityBar: View {
     private var filledBars: Int { severity?.rank ?? 0 }
 }
 
-/// One 线路标签 of the 主窗口: a small dot and a short text.
+/// One 线路标签 of the 主窗口 (`.chip`): a small dot and a short text.
 struct StatusChip: View {
     let tone: StatusTone
     let text: String
@@ -618,14 +846,14 @@ struct StatusChip: View {
         HStack(spacing: 7) {
             Circle()
                 .fill(tone.color)
-                .frame(width: 7, height: 7)
+                .frame(width: SentinelMetrics.statusLineDotSize, height: SentinelMetrics.statusLineDotSize)
             Text(text)
-                .font(.system(size: 12))
+                .font(.system(size: SentinelMetrics.chipFontSize))
                 .lineLimit(1)
         }
-        .padding(.horizontal, 12)
-        .padding(.vertical, 3)
-        .background(Capsule().fill(Color.primary.opacity(0.05)))
+        .padding(.horizontal, SentinelMetrics.chipHorizontalPadding)
+        .padding(.vertical, SentinelMetrics.chipVerticalPadding)
+        .background(Capsule().fill(SentinelColor.card))
         .overlay(Capsule().stroke(SentinelColor.border, lineWidth: 1))
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(accessibilityLabel)

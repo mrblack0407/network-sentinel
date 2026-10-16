@@ -23,10 +23,8 @@ struct LogsView: View {
     /// Rows of one page.
     private static let pageSize = LogPagination.defaultPageSize
     /// Widths of the fixed columns, so the header and the rows line up.
-    private static let severityWidth: CGFloat = 40
-    private static let eventNameWidth: CGFloat = 130
-    private static let dateWidth: CGFloat = 44
-    private static let timeWidth: CGFloat = 64
+    private static let severityWidth = SentinelMetrics.logsSeverityColumnWidth
+    private static let eventNameWidth = SentinelMetrics.logsEventNameColumnWidth
 
     var body: some View {
         // The 时间 filter counts from 「现在」, so the table follows the clock
@@ -49,12 +47,11 @@ struct LogsView: View {
             currentPage: currentPage
         )
 
-        return VStack(alignment: .leading, spacing: 12) {
+        return VStack(alignment: .leading, spacing: SentinelMetrics.contentSpacing) {
             header(entries)
             table(pagination.page(of: entries))
             pager(pagination)
         }
-        .padding(EdgeInsets(top: 16, leading: 22, bottom: 18, trailing: 22))
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
         // A changed filter always starts at the first page.
         .onChange(of: timeRange) { _ in currentPage = 1 }
@@ -92,7 +89,8 @@ struct LogsView: View {
 
     private var titleLabel: some View {
         Text("全部日志")
-            .font(.system(size: 20, weight: .semibold))
+            .font(.system(size: SentinelMetrics.pageTitleFontSize, weight: .bold))
+            .tracking(SentinelMetrics.pageTitleTracking)
             .accessibilityAddTraits(.isHeader)
     }
 
@@ -134,7 +132,7 @@ struct LogsView: View {
     // MARK: - Table
 
     private func table(_ rows: [MonitoredLogEvent]) -> some View {
-        SentinelCard {
+        SentinelCard(padding: SentinelMetrics.tableCardPadding) {
             VStack(alignment: .leading, spacing: 0) {
                 tableHeader
 
@@ -168,19 +166,20 @@ struct LogsView: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
             HStack(spacing: 4) {
                 Text("日期")
-                    .frame(width: Self.dateWidth, alignment: .trailing)
+                    .frame(width: SentinelMetrics.dateColumnWidth, alignment: .trailing)
                 Text("时间")
-                    .frame(width: Self.timeWidth, alignment: .trailing)
+                    .frame(width: SentinelMetrics.timeColumnWidth, alignment: .trailing)
             }
         }
-        .font(.system(size: 11, weight: .semibold))
+        .font(.system(size: SentinelMetrics.tableHeaderFontSize, weight: .semibold))
+        .tracking(SentinelMetrics.tableHeaderTracking)
         .foregroundStyle(.secondary)
-        .padding(.bottom, 6)
+        .padding(SentinelMetrics.tableRowPadding)
     }
 
     private var emptyMessage: some View {
         Text("这段时间没有符合条件的日志")
-            .font(.system(size: 13))
+            .font(.system(size: SentinelMetrics.bodyFontSize))
             .foregroundStyle(.secondary)
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .accessibilityLabel("这段时间没有符合条件的日志")
@@ -192,12 +191,12 @@ struct LogsView: View {
                 .frame(width: Self.severityWidth, alignment: .leading)
 
             Text(event.event.displayName)
-                .font(.system(size: 12.5))
+                .font(.system(size: SentinelMetrics.tableFontSize))
                 .lineLimit(1)
                 .frame(width: Self.eventNameWidth, alignment: .leading)
 
             Text(NotificationPlanner().notificationBody(for: event))
-                .font(.system(size: 12.5))
+                .font(.system(size: SentinelMetrics.tableFontSize))
                 .foregroundStyle(.secondary)
                 .lineLimit(1)
                 .truncationMode(.tail)
@@ -205,7 +204,7 @@ struct LogsView: View {
 
             LogTimestampColumns(date: event.timestamp)
         }
-        .padding(.vertical, 7)
+        .padding(SentinelMetrics.tableRowPadding)
         .accessibilityElement(children: .combine)
         .accessibilityLabel(Self.readOut(of: event))
     }
@@ -215,13 +214,13 @@ struct LogsView: View {
     private func pager(_ pagination: LogPagination) -> some View {
         HStack(spacing: 10) {
             Text(pagination.rangeText)
-                .font(.system(size: 12, design: .monospaced))
+                .font(.system(size: SentinelMetrics.hintFontSize, design: .monospaced))
                 .foregroundStyle(.secondary)
                 .accessibilityLabel(pagination.rangeText)
 
             Spacer(minLength: 12)
 
-            HStack(spacing: 2) {
+            HStack(spacing: 4) {
                 PagerButton(
                     title: "‹",
                     isCurrent: false,
@@ -244,7 +243,7 @@ struct LogsView: View {
                         }
                     case .ellipsis:
                         Text("…")
-                            .font(.system(size: 12))
+                            .font(.system(size: SentinelMetrics.hintFontSize))
                             .foregroundStyle(.secondary)
                             .frame(minWidth: 12)
                             .accessibilityHidden(true)

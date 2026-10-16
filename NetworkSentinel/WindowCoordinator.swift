@@ -12,9 +12,10 @@ final class WindowCoordinator: NSObject, NSWindowDelegate {
     /// Size of the 首次启动窗口.
     static let firstLaunchSize = NSSize(width: 520, height: 440)
     /// Smallest content size of the 主窗口.
-    static let mainWindowMinimumSize = NSSize(width: 900, height: 600)
-    /// Content size the 主窗口 opens with.
-    static let mainWindowSize = NSSize(width: 1040, height: 700)
+    static let mainWindowMinimumSize = NSSize(width: 980, height: 640)
+    /// Content size the 主窗口 opens with: wide enough for the three columns of
+    /// 设置 and 通知.
+    static let mainWindowSize = NSSize(width: 1180, height: 780)
 
     /// Settings of the app, used by the content of both windows.
     let configuration: AppConfiguration

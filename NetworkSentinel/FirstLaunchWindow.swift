@@ -33,7 +33,7 @@ struct FirstLaunchWindow: View {
                 connectPage
             }
         }
-        .padding(EdgeInsets(top: 16, leading: 28, bottom: 22, trailing: 28))
+        .padding(SentinelMetrics.welcomePadding)
         .frame(width: WindowCoordinator.firstLaunchSize.width, height: WindowCoordinator.firstLaunchSize.height)
     }
 
@@ -48,14 +48,14 @@ struct FirstLaunchWindow: View {
 
             VStack(spacing: 2) {
                 Text("欢迎使用 Network Sentinel")
-                    .font(.system(size: 20, weight: .semibold))
+                    .font(.system(size: SentinelMetrics.welcomeTitleFontSize, weight: .semibold))
                 Text("for UniFi")
                     .font(.system(size: 11, design: .monospaced))
                     .foregroundStyle(.secondary)
             }
 
             Text("先连上你的 UniFi 网关，才能开始监控断网和威胁日志。")
-                .font(.system(size: 12.5))
+                .font(.system(size: SentinelMetrics.welcomeBodyFontSize))
                 .foregroundStyle(.secondary)
                 .multilineTextAlignment(.center)
                 .fixedSize(horizontal: false, vertical: true)
@@ -88,7 +88,7 @@ struct FirstLaunchWindow: View {
     private var connectPage: some View {
         VStack(alignment: .leading, spacing: 14) {
             Text("连接 UniFi 网关")
-                .font(.system(size: 20, weight: .semibold))
+                .font(.system(size: SentinelMetrics.welcomeTitleFontSize, weight: .semibold))
                 .frame(maxWidth: .infinity, alignment: .center)
 
             ConnectionAddressField(text: $addressText, isError: state.field == .address)

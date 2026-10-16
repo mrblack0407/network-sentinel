@@ -40,10 +40,10 @@ struct ConnectionSettingsSheet: View {
         VStack(alignment: .leading, spacing: 14) {
             VStack(alignment: .leading, spacing: 4) {
                 Text("连接 UniFi 网关")
-                    .font(.system(size: 17, weight: .semibold))
+                    .font(.system(size: SentinelMetrics.sheetTitleFontSize, weight: .semibold))
                     .accessibilityAddTraits(.isHeader)
                 Text("在 UniFi 网页左侧边栏点「Integrations → Create New API Key」生成，复制过来。")
-                    .font(.system(size: 12))
+                    .font(.system(size: SentinelMetrics.cardBodyFontSize))
                     .foregroundStyle(.secondary)
                     .fixedSize(horizontal: false, vertical: true)
             }
@@ -80,8 +80,8 @@ struct ConnectionSettingsSheet: View {
             }
             .padding(.top, 4)
         }
-        .padding(EdgeInsets(top: 22, leading: 24, bottom: 18, trailing: 24))
-        .frame(width: 520)
+        .padding(SentinelMetrics.sheetPadding)
+        .frame(width: SentinelMetrics.sheetWidth)
     }
 
     // MARK: - State

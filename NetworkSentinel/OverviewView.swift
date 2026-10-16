@@ -18,8 +18,6 @@ struct OverviewView: View {
 
     /// Events the 最近事件 card lists at most.
     private static let eventLimit = 10
-    /// Width of the 事件 column of a 最近事件 row, so the descriptions line up.
-    private static let eventNameWidth: CGFloat = 118
 
     var body: some View {
         // 「已断开 3 分」 and the strip count from 「现在」, so the page follows
@@ -45,9 +43,10 @@ struct OverviewView: View {
         )
 
         return ScrollView {
-            VStack(alignment: .leading, spacing: 14) {
+            VStack(alignment: .leading, spacing: SentinelMetrics.contentSpacing) {
                 Text("概览")
-                    .font(.system(size: 20, weight: .semibold))
+                    .font(.system(size: SentinelMetrics.pageTitleFontSize, weight: .bold))
+                    .tracking(SentinelMetrics.pageTitleTracking)
                     .accessibilityAddTraits(.isHeader)
 
                 if let reason = status.connectionReason {
@@ -63,7 +62,6 @@ struct OverviewView: View {
                     cards(status, now: now, width: width)
                 }
             }
-            .padding(EdgeInsets(top: 16, leading: 22, bottom: 24, trailing: 22))
             .frame(maxWidth: .infinity, alignment: .leading)
         }
     }
@@ -72,12 +70,12 @@ struct OverviewView: View {
     private func connectionBanner(_ reason: String) -> some View {
         HStack(alignment: .firstTextBaseline, spacing: 10) {
             Image(systemName: "exclamationmark.triangle.fill")
-                .font(.system(size: 12))
+                .font(.system(size: SentinelMetrics.hintFontSize))
                 .foregroundStyle(SentinelColor.failure)
                 .accessibilityHidden(true)
 
             Text(reason)
-                .font(.system(size: 12.5))
+                .font(.system(size: SentinelMetrics.bodyFontSize))
                 .foregroundStyle(SentinelColor.failure)
                 .fixedSize(horizontal: false, vertical: true)
                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -99,9 +97,9 @@ struct OverviewView: View {
         .accessibilityElement(children: .contain)
     }
 
-    /// 网关, 查询间隔 and 上次查询.
+    /// 网关, 查询间隔 and 上次查询 (`.hstats`).
     private func gatewayInfo(_ status: MenuBarStatus) -> some View {
-        HStack(alignment: .top, spacing: 12) {
+        HStack(alignment: .top, spacing: SentinelMetrics.contentSpacing) {
             infoColumn(title: "网关", value: status.gatewayName.isEmpty ? "—" : status.gatewayName)
             infoColumn(title: "查询间隔", value: "\(status.queryIntervalSeconds) 秒")
             infoColumn(
@@ -114,10 +112,10 @@ struct OverviewView: View {
     private func infoColumn(title: String, value: String) -> some View {
         VStack(alignment: .leading, spacing: 1) {
             Text(title)
-                .font(.system(size: 12))
+                .font(.system(size: SentinelMetrics.statisticLabelFontSize))
                 .foregroundStyle(.secondary)
             Text(value)
-                .font(.system(size: 15, weight: .semibold))
+                .font(.system(size: SentinelMetrics.statisticValueFontSize, weight: .semibold))
                 .lineLimit(1)
                 .truncationMode(.middle)
                 .help(value)
@@ -133,7 +131,7 @@ struct OverviewView: View {
             ProgressView()
                 .controlSize(.small)
             Text("正在读取 UniFi 网关的日志…")
-                .font(.system(size: 13))
+                .font(.system(size: SentinelMetrics.bodyFontSize))
                 .foregroundStyle(.secondary)
         }
         .frame(maxWidth: .infinity)
@@ -147,15 +145,20 @@ struct OverviewView: View {
     @ViewBuilder
     private func cards(_ status: MenuBarStatus, now: Date, width: CGFloat) -> some View {
         let outages = OutagePairer.outages(in: monitor.events)
+        // One column per card: a gateway without WAN2 shows the 线路卡片 and the
+        // 威胁卡片 alone, sharing the row instead of leaving a column empty.
+        let columns = SettingsGridLayout.cardColumns(cardCount: status.lines.count + 1, width: width)
 
-        LazyVGrid(columns: SettingsGridLayout.columns(forWidth: width), alignment: .leading, spacing: 14) {
-            ForEach(status.lines) { line in
-                lineCard(line, outages: outages, now: now)
+        VStack(alignment: .leading, spacing: SentinelMetrics.cardSpacing) {
+            LazyVGrid(columns: columns, alignment: .leading, spacing: SentinelMetrics.cardSpacing) {
+                ForEach(status.lines) { line in
+                    lineCard(line, outages: outages, now: now)
+                }
+                threatCard(now: now)
             }
-            threatCard(now: now)
-        }
 
-        recentEventsCard(status)
+            recentEventsCard(status)
+        }
     }
 
     /// 一条线路一张卡片: 状态, 「已恢复 1 分 25 秒」, 24 小时色条 and the 三栏统计.
@@ -173,13 +176,13 @@ struct OverviewView: View {
         )
 
         return SentinelCard {
-            VStack(alignment: .leading, spacing: 8) {
+            VStack(alignment: .leading, spacing: SentinelMetrics.cardContentSpacing) {
                 CardLabel(text: Self.lineLabel(line))
 
                 BigStat(text: Self.stateText(line.state), color: Self.stateColor(line.state))
 
                 Text(line.detailText(now: now))
-                    .font(.system(size: 12))
+                    .font(.system(size: SentinelMetrics.hintFontSize))
                     .foregroundStyle(.secondary)
                     .lineLimit(1)
 
@@ -199,21 +202,21 @@ struct OverviewView: View {
         let statistics = ThreatStatisticsBuilder.statistics(events: monitor.events, now: now)
 
         return SentinelCard {
-            VStack(alignment: .leading, spacing: 8) {
+            VStack(alignment: .leading, spacing: SentinelMetrics.cardContentSpacing) {
                 CardLabel(text: "检测到威胁 · 24 小时")
 
                 BigStat(text: "\(statistics.total)", unit: "条")
 
                 if statistics.total == 0 {
                     Text("近 24 小时没有威胁")
-                        .font(.system(size: 12))
+                        .font(.system(size: SentinelMetrics.hintFontSize))
                         .foregroundStyle(.secondary)
                         .lineLimit(1)
                 } else {
                     // The three columns carry the numbers; the line keeps the
                     // card the same shape as the 线路卡片 next to it.
                     Text("UniFi 入侵防护记下的尝试")
-                        .font(.system(size: 12))
+                        .font(.system(size: SentinelMetrics.hintFontSize))
                         .foregroundStyle(.secondary)
                         .lineLimit(1)
                 }
@@ -236,8 +239,8 @@ struct OverviewView: View {
         )
 
         return SentinelCard(fillsHeight: false) {
-            VStack(alignment: .leading, spacing: 8) {
-                HStack(spacing: 10) {
+            VStack(alignment: .leading, spacing: SentinelMetrics.cardContentSpacing) {
+                HStack(spacing: 8) {
                     CardLabel(text: "最近事件")
                     Spacer(minLength: 8)
                     SegmentedPills(
@@ -252,7 +255,7 @@ struct OverviewView: View {
 
                 if events.isEmpty {
                     Text("近 24 小时没有监控事件")
-                        .font(.system(size: 12))
+                        .font(.system(size: SentinelMetrics.hintFontSize))
                         .foregroundStyle(.secondary)
                         .frame(maxWidth: .infinity, alignment: .center)
                         .padding(.vertical, 16)
@@ -273,14 +276,15 @@ struct OverviewView: View {
     private func recentEventRow(_ event: MonitoredLogEvent) -> some View {
         HStack(spacing: 12) {
             SeverityBar(severity: event.severity)
+                .frame(width: SentinelMetrics.severityColumnWidth, alignment: .leading)
 
             Text(event.event.displayName)
-                .font(.system(size: 12.5))
+                .font(.system(size: SentinelMetrics.bodyFontSize))
                 .lineLimit(1)
-                .frame(width: Self.eventNameWidth, alignment: .leading)
+                .frame(width: SentinelMetrics.eventNameColumnWidth, alignment: .leading)
 
             Text(NotificationPlanner().notificationBody(for: event))
-                .font(.system(size: 12.5))
+                .font(.system(size: SentinelMetrics.bodyFontSize))
                 .foregroundStyle(.secondary)
                 .lineLimit(1)
                 .truncationMode(.tail)
@@ -288,7 +292,7 @@ struct OverviewView: View {
 
             LogTimestampColumns(date: event.timestamp)
         }
-        .padding(.vertical, 6)
+        .padding(SentinelMetrics.listRowPadding)
         .accessibilityElement(children: .combine)
         .accessibilityLabel(Self.readOut(of: event))
     }

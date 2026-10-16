@@ -26,7 +26,7 @@ struct MenuBarPanel: View {
         )
         let events = Array(status.recentEvents.filter { filter.includes($0.event) }.prefix(Self.eventLimit))
 
-        VStack(alignment: .leading, spacing: 10) {
+        VStack(alignment: .leading, spacing: SentinelMetrics.panelSpacing) {
             header(status)
 
             if let reason = status.connectionReason {
@@ -41,7 +41,7 @@ struct MenuBarPanel: View {
 
             if events.isEmpty {
                 Text("近 24 小时没有监控事件")
-                    .font(.system(size: 12))
+                    .font(.system(size: SentinelMetrics.hintFontSize))
                     .foregroundStyle(.secondary)
                     .frame(maxWidth: .infinity, alignment: .center)
                     .padding(.vertical, 16)
@@ -53,8 +53,8 @@ struct MenuBarPanel: View {
 
             footer
         }
-        .padding(14)
-        .frame(width: 480, alignment: .leading)
+        .padding(SentinelMetrics.panelPadding)
+        .frame(width: SentinelMetrics.panelWidth, alignment: .leading)
     }
 
     /// Events the panel lists at most, as in the mockup.
@@ -62,22 +62,22 @@ struct MenuBarPanel: View {
 
     // MARK: - Header
 
-    /// Gateway name and the 「30 秒查一次」 chip.
+    /// Gateway name and the 「30 秒查一次」 chip (`.gwrow`, `.chip`).
     private func header(_ status: MenuBarStatus) -> some View {
         HStack(spacing: 10) {
             Text(status.gatewayName.isEmpty ? "Network Sentinel" : status.gatewayName)
-                .font(.system(size: 15, weight: .semibold))
+                .font(.system(size: SentinelMetrics.panelTitleFontSize, weight: .bold))
                 .lineLimit(1)
                 .accessibilityAddTraits(.isHeader)
 
             Spacer(minLength: 8)
 
             Text("\(status.queryIntervalSeconds) 秒查一次")
-                .font(.system(size: 11))
+                .font(.system(size: SentinelMetrics.chipFontSize))
                 .foregroundStyle(.secondary)
-                .padding(.horizontal, 8)
-                .padding(.vertical, 3)
-                .background(Capsule().fill(Color.primary.opacity(0.06)))
+                .padding(.horizontal, SentinelMetrics.chipHorizontalPadding)
+                .padding(.vertical, SentinelMetrics.chipVerticalPadding)
+                .background(Capsule().fill(SentinelColor.card))
                 .overlay(Capsule().stroke(SentinelColor.border, lineWidth: 1))
                 .accessibilityLabel("每 \(status.queryIntervalSeconds) 秒查一次")
         }
@@ -87,11 +87,11 @@ struct MenuBarPanel: View {
     private func connectionReason(_ reason: String) -> some View {
         HStack(alignment: .firstTextBaseline, spacing: 7) {
             Image(systemName: "exclamationmark.triangle.fill")
-                .font(.system(size: 11))
+                .font(.system(size: SentinelMetrics.hintFontSize))
                 .accessibilityHidden(true)
 
             Text(reason)
-                .font(.system(size: 12))
+                .font(.system(size: SentinelMetrics.hintFontSize))
                 .fixedSize(horizontal: false, vertical: true)
                 .frame(maxWidth: .infinity, alignment: .leading)
         }
@@ -102,7 +102,8 @@ struct MenuBarPanel: View {
 
     // MARK: - WAN lines
 
-    /// One row per WAN line the gateway reported.
+    /// One row per WAN line the gateway reported, in one grouped box
+    /// (`.sc.tight`): 14 pt corners, a hairline border and a line between rows.
     private func lineList(_ lines: [WANLineStatus], now: Date) -> some View {
         VStack(spacing: 0) {
             ForEach(Array(lines.enumerated()), id: \.element.id) { index, line in
@@ -112,35 +113,40 @@ struct MenuBarPanel: View {
                 lineRow(line, now: now)
             }
         }
-        .padding(.vertical, 4)
-        .background(RoundedRectangle(cornerRadius: 14).fill(Color.primary.opacity(0.05)))
-        .overlay(RoundedRectangle(cornerRadius: 14).stroke(SentinelColor.border, lineWidth: 1))
+        .padding(.vertical, SentinelMetrics.tightGroupVerticalPadding)
+        .background(
+            RoundedRectangle(cornerRadius: SentinelMetrics.tightGroupCornerRadius)
+                .fill(SentinelColor.card)
+        )
+        .overlay(
+            RoundedRectangle(cornerRadius: SentinelMetrics.tightGroupCornerRadius)
+                .stroke(SentinelColor.border, lineWidth: 1)
+        )
     }
 
+    /// One line (`.wan`): status dot, `WAN1`, the provider and the state on the right.
     private func lineRow(_ line: WANLineStatus, now: Date) -> some View {
         HStack(spacing: 10) {
             GlowDot(tone: line.state.tone)
 
             Text(line.id)
-                .font(.system(size: 12, design: .monospaced))
-                .frame(width: 42, alignment: .leading)
+                .font(.system(size: SentinelMetrics.timestampFontSize, design: .monospaced))
+                .frame(width: SentinelMetrics.panelLineIDColumnWidth, alignment: .leading)
 
             if let ispName = line.ispName, !ispName.isEmpty {
                 Text(ispName)
-                    .font(.system(size: 12))
-                    .foregroundStyle(.secondary)
+                    .font(.system(size: SentinelMetrics.panelRowFontSize))
                     .lineLimit(1)
             }
 
             Spacer(minLength: 8)
 
             Text(line.detailText(now: now))
-                .font(.system(size: 12))
+                .font(.system(size: SentinelMetrics.timestampFontSize))
                 .foregroundStyle(.secondary)
                 .lineLimit(1)
         }
-        .padding(.horizontal, 12)
-        .padding(.vertical, 7)
+        .padding(SentinelMetrics.tightRowPadding)
         .accessibilityElement(children: .combine)
         .accessibilityLabel(line.accessibilityText(now: now))
     }
@@ -148,7 +154,7 @@ struct MenuBarPanel: View {
     // MARK: - Filter and summary
 
     private func filterRow(_ status: MenuBarStatus) -> some View {
-        HStack(spacing: 10) {
+        HStack(spacing: 8) {
             SegmentedPills(
                 options: PanelEventFilter.allCases.map {
                     SegmentedPills<PanelEventFilter>.Option(value: $0, title: $0.title)
@@ -161,7 +167,7 @@ struct MenuBarPanel: View {
             Spacer(minLength: 8)
 
             Text("24 小时：中断 \(status.outageCount24h) 次 · 威胁 \(status.threatCount24h) 条")
-                .font(.system(size: 12))
+                .font(.system(size: SentinelMetrics.hintFontSize))
                 .foregroundStyle(.secondary)
                 .lineLimit(1)
                 .accessibilityLabel("近 24 小时中断 \(status.outageCount24h) 次，威胁 \(status.threatCount24h) 条")
@@ -170,6 +176,7 @@ struct MenuBarPanel: View {
 
     // MARK: - Events
 
+    /// The newest events of the filter, in the same grouped box as the lines.
     private func eventList(_ events: [MonitoredLogEvent]) -> some View {
         VStack(spacing: 0) {
             ForEach(Array(events.enumerated()), id: \.element.id) { index, event in
@@ -179,14 +186,24 @@ struct MenuBarPanel: View {
                 eventRow(event)
             }
         }
+        .padding(.vertical, SentinelMetrics.tightGroupVerticalPadding)
+        .background(
+            RoundedRectangle(cornerRadius: SentinelMetrics.tightGroupCornerRadius)
+                .fill(SentinelColor.card)
+        )
+        .overlay(
+            RoundedRectangle(cornerRadius: SentinelMetrics.tightGroupCornerRadius)
+                .stroke(SentinelColor.border, lineWidth: 1)
+        )
     }
 
     private func eventRow(_ event: MonitoredLogEvent) -> some View {
-        HStack(spacing: 8) {
+        HStack(spacing: 12) {
             SeverityBar(severity: event.severity)
+                .frame(width: SentinelMetrics.severityColumnWidth, alignment: .leading)
 
             Text(event.event.displayName)
-                .font(.system(size: 12.5))
+                .font(.system(size: SentinelMetrics.panelRowFontSize))
                 .lineLimit(1)
                 .truncationMode(.tail)
                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -196,9 +213,8 @@ struct MenuBarPanel: View {
             // whatever the number of digits in the month, day or hour.
             LogTimestampColumns(date: event.timestamp)
         }
-        .font(.system(size: 12, design: .monospaced))
         .monospacedDigit()
-        .padding(.vertical, 6)
+        .padding(SentinelMetrics.tightRowPadding)
         .accessibilityElement(children: .combine)
         .accessibilityLabel(Self.readOut(of: event))
     }
@@ -210,6 +226,7 @@ struct MenuBarPanel: View {
 
     // MARK: - Footer
 
+    /// The three links (`.foot`), evenly spread under a hairline.
     private var footer: some View {
         HStack(spacing: 12) {
             PanelFooterButton(title: "打开主窗口", accessibilityLabel: "打开主窗口") {
@@ -232,6 +249,7 @@ struct MenuBarPanel: View {
                 NSApp.terminate(nil)
             }
         }
+        .padding(.top, SentinelMetrics.panelFooterTopPadding)
     }
 }
 
@@ -274,7 +292,7 @@ struct PanelFooterButton: View {
     var body: some View {
         Button(action: action) {
             Text(title)
-                .font(.system(size: 12))
+                .font(.system(size: SentinelMetrics.smallButtonFontSize))
                 .foregroundStyle(Color.accentColor)
                 .padding(.vertical, 3)
                 .padding(.horizontal, 4)

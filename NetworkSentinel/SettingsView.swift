@@ -16,38 +16,31 @@ struct SettingsPage: View {
             let columns = SettingsGridLayout.columns(forWidth: proxy.size.width)
 
             ScrollView {
-                VStack(alignment: .leading, spacing: 14) {
+                VStack(alignment: .leading, spacing: SentinelMetrics.contentSpacing) {
                     Text("设置")
-                        .font(.system(size: 20, weight: .semibold))
+                        .font(.system(size: SentinelMetrics.pageTitleFontSize, weight: .bold))
+                        .tracking(SentinelMetrics.pageTitleTracking)
                         .accessibilityAddTraits(.isHeader)
 
                     GroupHeader(title: "UniFi 网关", color: SentinelColor.groupGateway)
-                    LazyVGrid(columns: columns, alignment: .leading, spacing: 14) {
+                    LazyVGrid(columns: columns, alignment: .leading, spacing: SentinelMetrics.cardSpacing) {
                         connectionCard
                         queryIntervalCard
                     }
 
                     GroupHeader(title: "监控事件", color: SentinelColor.groupEvents)
-                    LazyVGrid(columns: columns, alignment: .leading, spacing: 14) {
+                    LazyVGrid(columns: columns, alignment: .leading, spacing: SentinelMetrics.cardSpacing) {
                         ForEach(Self.displayedEvents, id: \.self) { event in
                             eventCard(event)
                         }
                     }
 
-                    GroupHeader(title: "通知", color: SentinelColor.groupNotifications)
-                    LazyVGrid(columns: columns, alignment: .leading, spacing: 14) {
-                        notificationThresholdCard
-                        alwaysNotifyOnRestoreCard
-                        mergeSameKindCard
-                    }
-
                     GroupHeader(title: "通用", color: SentinelColor.groupGeneral)
-                    LazyVGrid(columns: columns, alignment: .leading, spacing: 14) {
+                    LazyVGrid(columns: columns, alignment: .leading, spacing: SentinelMetrics.cardSpacing) {
                         launchAtLoginCard
                         logRetentionCard
                     }
                 }
-                .padding(EdgeInsets(top: 16, leading: 22, bottom: 24, trailing: 22))
                 .frame(maxWidth: .infinity, alignment: .leading)
             }
         }
@@ -79,7 +72,7 @@ struct SettingsPage: View {
                     isShowingConnectionSheet = true
                 } label: {
                     Text("•••")
-                        .font(.system(size: 12))
+                        .font(.system(size: SentinelMetrics.hintFontSize))
                         .foregroundStyle(.secondary)
                         .padding(.horizontal, 4)
                 }
@@ -214,71 +207,6 @@ struct SettingsPage: View {
         .packetLoss: "WAN 线路有丢包，但没有断网。",
         .highLatency: "WAN 线路延迟变高。",
     ]
-
-    // MARK: - 通知
-
-    private var notificationThresholdCard: some View {
-        SettingsCard(
-            title: "弹通知",
-            description: "选哪一级，就通知这一级及以上。",
-            statusTone: .ok,
-            statusText: Self.thresholdStatusText(for: configuration.monitorSettings.notifications.minimumSeverity),
-            control: SegmentedPills(
-                options: LogSeverity.allCases.map {
-                    SegmentedPills<LogSeverity>.Option(value: $0, title: $0.displayName)
-                },
-                selection: configuration.monitorSettings.notifications.minimumSeverity,
-                onSelect: { configuration.setMinimumSeverity($0) },
-                accessibilityLabel: "弹通知的严重性"
-            )
-        )
-    }
-
-    private static func thresholdStatusText(for minimum: LogSeverity) -> String {
-        let names = LogSeverity.allCases
-            .filter { $0 >= minimum }
-            .map { "「\($0.displayName)」" }
-        return names.joined(separator: names.count > 2 ? "" : "和") + "会弹通知"
-    }
-
-    private var alwaysNotifyOnRestoreCard: some View {
-        let isOn = configuration.monitorSettings.notifications.alwaysNotifyOnRestore
-
-        return SettingsCard(
-            title: "恢复时总是通知",
-            description: "线路恢复时不管严重性都弹一条，写明断了多久。",
-            statusTone: isOn ? .ok : .neutral,
-            statusText: isOn ? "已开启" : "已关闭",
-            control: Toggle("", isOn: Binding(
-                get: { configuration.monitorSettings.notifications.alwaysNotifyOnRestore },
-                set: { configuration.setAlwaysNotifyOnRestore($0) }
-            ))
-            .labelsHidden()
-            .toggleStyle(.switch)
-            .controlSize(.small)
-            .accessibilityLabel("恢复时总是通知")
-        )
-    }
-
-    private var mergeSameKindCard: some View {
-        let isOn = configuration.monitorSettings.notifications.mergeSameKind
-        let minutes = configuration.monitorSettings.notifications.mergeWindowSeconds / 60
-
-        return SettingsCard(
-            title: "同类事件合并",
-            description: "\(minutes) 分钟内同类的事件合成一条通知。",
-            statusTone: isOn ? .ok : .neutral,
-            statusText: isOn ? "已开启" : "已关闭",
-            control: Toggle("", isOn: Binding(
-                get: { configuration.monitorSettings.notifications.mergeSameKind },
-                set: { configuration.setMergeSameKind($0) }
-            ))
-            .labelsHidden()
-            .toggleStyle(.switch)
-            .controlSize(.small)
-            .accessibilityLabel("同类事件合并")
-        )
-    }
 
     // MARK: - 通用
 
