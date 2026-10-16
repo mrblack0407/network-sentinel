@@ -7,6 +7,8 @@ macOS menu bar app (for UniFi). Reads the UniFi gateway system log with an API K
 - Xcode is installed but not selected (`xcode-select` points at CommandLineTools). Prefix build commands with `DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer`, do not run `sudo xcode-select`.
 - `xcodegen generate` regenerates `NetworkSentinel.xcodeproj` (not committed).
 - Core logic lives in the Swift package `SentinelCore/`; test it with `swift test --package-path SentinelCore`.
+- App icon PNGs come from `Design/Icons/AppIcon-Dark.svg`: rerun `scripts/make-app-icon.sh` after changing it.
+- UI must match `Design/Mockups.html` (local only, not committed). Debug builds render every screen to PNG for comparison: run the app binary with `NS_SNAPSHOT_DIR=~/Library/Containers/com.mrblack0407.NetworkSentinel/Data/tmp/snap` (sandbox: the folder must be inside the container).
 
 ## Rules
 
