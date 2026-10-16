@@ -127,7 +127,7 @@ public struct LogPagination: Equatable {
     /// Entries on one page, as in the mockup.
     public static let defaultPageSize = 25
     /// Below this number of pages every page number is shown as it is.
-    public static let allPagesThreshold = 7
+    public static let allPagesThreshold = 9
 
     /// Entries the current filter found.
     public let totalCount: Int
@@ -170,35 +170,37 @@ public struct LogPagination: Equatable {
 
     /// The page numbers of the pager, with 「…」 where numbers are left out.
     ///
-    /// The first and the last page are always there, plus the pages around the
-    /// current one, so a log with hundreds of pages never draws a long row of
-    /// buttons.
+    /// Up to nine pages every number is shown. A longer log keeps the first two
+    /// and the last two pages and shows a block around the current one:
+    /// `1 2 3 4 5 … 9 10` near the start, `1 2 … 6 7 8 … 19 20` in the middle,
+    /// `1 2 … 16 17 18 19 20` near the end. The pager never grows with the log.
     public var pageItems: [LogPageItem] {
         guard pageCount > Self.allPagesThreshold else {
             return (1...pageCount).map { LogPageItem.page($0) }
         }
 
-        var numbers: Set<Int> = [1, pageCount, currentPage]
-        for delta in -1...1 {
-            numbers.insert(currentPage + delta)
-        }
-        // Near either end the window grows inwards, so the first pages of a long
-        // log are all reachable with one click.
+        let last = pageCount
+        let numbers: [Int]
         if currentPage <= 4 {
-            numbers.formUnion(2...5)
-        }
-        if currentPage >= pageCount - 3 {
-            numbers.formUnion((pageCount - 4)...(pageCount - 1))
+            numbers = Array(1...5) + [last - 1, last]
+        } else if currentPage >= last - 3 {
+            numbers = [1, 2] + Array((last - 4)...last)
+        } else {
+            numbers = [1, 2, currentPage - 1, currentPage, currentPage + 1, last - 1, last]
         }
 
-        let sorted = numbers.filter { $0 >= 1 && $0 <= pageCount }.sorted()
         var items: [LogPageItem] = []
-        for (offset, number) in sorted.enumerated() {
-            if offset > 0, number - sorted[offset - 1] > 1 {
+        for (offset, number) in numbers.enumerated() {
+            if offset > 0, number - numbers[offset - 1] > 1 {
                 items.append(.ellipsis(number))
             }
             items.append(.page(number))
         }
         return items
     }
+
+    /// 「«」 and 「‹」 work from page 2 on.
+    public var canGoBack: Bool { currentPage > 1 }
+    /// 「›」 and 「»」 work up to the page before the last one.
+    public var canGoForward: Bool { currentPage < pageCount }
 }

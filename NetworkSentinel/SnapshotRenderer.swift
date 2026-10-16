@@ -43,7 +43,7 @@ enum SnapshotRenderer {
             let windowState = MainWindowState()
             windowState.selection = page
             let view = MainWindow(configuration: configuration, monitor: monitor, windowState: windowState)
-            render(view, size: NSSize(width: 1312, height: page == .settings ? 1060 : 736),
+            render(view, size: NSSize(width: 1180, height: 920),
                    appearance: appearance, to: directory.appendingPathComponent("main-\(page.rawValue).png"))
         }
         return true

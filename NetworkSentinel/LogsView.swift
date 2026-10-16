@@ -21,7 +21,10 @@ struct LogsView: View {
     @State private var exportErrorMessage: String?
 
     /// Rows of one page.
-    private static let pageSize = LogPagination.defaultPageSize
+    /// Rows per page: as many as the default 主窗口 (1180 × 920) shows without
+    /// scrolling. 920 minus the chips, the title row, the table header, the
+    /// pager and the paddings (about 227 pt) leaves room for 17 rows of 39 pt.
+    private static let pageSize = 17
     /// Widths of the fixed columns, so the header and the rows line up.
     private static let severityWidth = SentinelMetrics.logsSeverityColumnWidth
     private static let eventNameWidth = SentinelMetrics.logsEventNameColumnWidth
@@ -225,9 +228,17 @@ struct LogsView: View {
 
             HStack(spacing: 4) {
                 PagerButton(
+                    title: "«",
+                    isCurrent: false,
+                    isEnabled: pagination.canGoBack,
+                    accessibilityLabel: "第一页"
+                ) {
+                    currentPage = 1
+                }
+                PagerButton(
                     title: "‹",
                     isCurrent: false,
-                    isEnabled: pagination.currentPage > 1,
+                    isEnabled: pagination.canGoBack,
                     accessibilityLabel: "上一页"
                 ) {
                     currentPage = max(1, pagination.currentPage - 1)
@@ -256,10 +267,18 @@ struct LogsView: View {
                 PagerButton(
                     title: "›",
                     isCurrent: false,
-                    isEnabled: pagination.currentPage < pagination.pageCount,
+                    isEnabled: pagination.canGoForward,
                     accessibilityLabel: "下一页"
                 ) {
                     currentPage = min(pagination.pageCount, pagination.currentPage + 1)
+                }
+                PagerButton(
+                    title: "»",
+                    isCurrent: false,
+                    isEnabled: pagination.canGoForward,
+                    accessibilityLabel: "最后一页"
+                ) {
+                    currentPage = pagination.pageCount
                 }
             }
         }

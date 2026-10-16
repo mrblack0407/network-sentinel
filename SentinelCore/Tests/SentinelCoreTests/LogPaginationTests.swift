@@ -71,44 +71,72 @@ final class LogPaginationTests: XCTestCase {
         )
     }
 
-    func testALongLogHidesTheMiddleBehindAnEllipsis() {
-        let pagination = LogPagination(totalCount: 1_000, currentPage: 20)
+    func testNinePagesShowEveryNumber() {
+        let pagination = LogPagination(totalCount: 9 * 25, currentPage: 5)
+        XCTAssertEqual(pagination.pageItems, (1...9).map { LogPageItem.page($0) })
+    }
 
-        XCTAssertEqual(pagination.pageCount, 40)
+    func testTheStartOfALongLogShowsTheFirstFiveAndTheLastTwo() {
+        for page in 1...4 {
+            XCTAssertEqual(
+                LogPagination(totalCount: 10 * 25, currentPage: page).pageItems,
+                [.page(1), .page(2), .page(3), .page(4), .page(5), .ellipsis(9), .page(9), .page(10)],
+                "page \(page)"
+            )
+        }
+    }
+
+    func testTheMiddleOfALongLogShowsTheCurrentBlock() {
         XCTAssertEqual(
-            pagination.pageItems,
-            [.page(1), .ellipsis(19), .page(19), .page(20), .page(21), .ellipsis(40), .page(40)]
+            LogPagination(totalCount: 20 * 25, currentPage: 7).pageItems,
+            [.page(1), .page(2), .ellipsis(6), .page(6), .page(7), .page(8), .ellipsis(19), .page(19), .page(20)]
+        )
+        // Page 5 has nothing hidden between 2 and its block except page 3.
+        XCTAssertEqual(
+            LogPagination(totalCount: 20 * 25, currentPage: 5).pageItems,
+            [.page(1), .page(2), .ellipsis(4), .page(4), .page(5), .page(6), .ellipsis(19), .page(19), .page(20)]
         )
     }
 
-    func testTheFirstPagesOfALongLogAreAllReachable() {
-        let pagination = LogPagination(totalCount: 1_000, currentPage: 1)
-
-        XCTAssertEqual(
-            pagination.pageItems,
-            [.page(1), .page(2), .page(3), .page(4), .page(5), .ellipsis(40), .page(40)]
-        )
+    func testTheEndOfALongLogShowsTheFirstTwoAndTheLastFive() {
+        for page in 17...20 {
+            XCTAssertEqual(
+                LogPagination(totalCount: 20 * 25, currentPage: page).pageItems,
+                [.page(1), .page(2), .ellipsis(16), .page(16), .page(17), .page(18), .page(19), .page(20)],
+                "page \(page)"
+            )
+        }
     }
 
-    func testTheLastPagesOfALongLogAreAllReachable() {
-        let pagination = LogPagination(totalCount: 1_000, currentPage: 40)
-
-        XCTAssertEqual(
-            pagination.pageItems,
-            [.page(1), .ellipsis(36), .page(36), .page(37), .page(38), .page(39), .page(40)]
-        )
-    }
-
-    func testEveryPageNumberAppearsOnce() {
+    func testEveryPageNumberAppearsOnceAndInOrder() {
         for page in 1...40 {
             let items = LogPagination(totalCount: 1_000, currentPage: page).pageItems
             let numbers = items.compactMap(\.pageNumber)
 
+            XCTAssertEqual(numbers, numbers.sorted(), "page \(page) is out of order")
             XCTAssertEqual(Set(numbers).count, numbers.count, "page \(page) repeats a number")
             XCTAssertTrue(numbers.contains(page), "page \(page) is missing from its own pager")
             XCTAssertEqual(numbers.first, 1)
             XCTAssertEqual(numbers.last, 40)
-            XCTAssertLessThanOrEqual(numbers.count, LogPagination.allPagesThreshold, "page \(page) draws too many buttons")
+            XCTAssertLessThanOrEqual(numbers.count, 7, "page \(page) draws too many buttons")
         }
+    }
+
+    func testTheArrowsStopAtBothEnds() {
+        let first = LogPagination(totalCount: 100, pageSize: 25, currentPage: 1)
+        XCTAssertFalse(first.canGoBack)
+        XCTAssertTrue(first.canGoForward)
+
+        let middle = LogPagination(totalCount: 100, pageSize: 25, currentPage: 2)
+        XCTAssertTrue(middle.canGoBack)
+        XCTAssertTrue(middle.canGoForward)
+
+        let last = LogPagination(totalCount: 100, pageSize: 25, currentPage: 4)
+        XCTAssertTrue(last.canGoBack)
+        XCTAssertFalse(last.canGoForward)
+
+        let single = LogPagination(totalCount: 10, pageSize: 25)
+        XCTAssertFalse(single.canGoBack)
+        XCTAssertFalse(single.canGoForward)
     }
 }
