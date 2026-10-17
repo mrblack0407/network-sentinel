@@ -19,7 +19,7 @@ The app is not notarized by Apple, so macOS blocks the first launch: open System
 
 ## Requirements
 
-- macOS 13 or later, on a Mac with Apple silicon (M-series) only
+- macOS 15 or later, on a Mac with Apple silicon (M-series) only
 - A UniFi gateway and a UniFi API Key (UniFi web UI → **Integrations** → **Create New API Key**)
 
 ## Keychain dialog

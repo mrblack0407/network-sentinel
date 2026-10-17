@@ -3,7 +3,7 @@ import SwiftUI
 
 /// 开机自启: registers and unregisters the app as a login item.
 ///
-/// `SMAppService.mainApp` is the only supported way to do this on macOS 13; the
+/// `SMAppService.mainApp` is the only supported way to do this since macOS 13; the
 /// registration can fail (an unsigned build, or a copy of the app that the
 /// system does not trust), and the failure text is what the settings page shows.
 @MainActor
