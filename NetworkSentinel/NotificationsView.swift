@@ -15,7 +15,8 @@ struct NotificationsPage: View {
     /// The engine, for the Bark test push and the result of the last push.
     @ObservedObject var monitor: MonitorService
 
-    /// What the user types into the Bark Key field; cleared once it is saved.
+    /// The Bark Key field: filled with the saved Key (shown as dots, 「显示」
+    /// reveals it), like the API Key of the 连接设置窗口.
     @State private var barkKeyText = ""
     @State private var isBarkKeyRevealed = false
     /// Result of 「保存」 or 「发送测试」 on this page, shown under the buttons.
@@ -60,6 +61,7 @@ struct NotificationsPage: View {
         // The user may change the permission in 系统设置 while the app runs, so
         // the card is refreshed whenever the app comes back to the front.
         .task { await refreshAuthorization() }
+        .onAppear { barkKeyText = configuration.barkKey() ?? "" }
         .onReceive(NotificationCenter.default.publisher(for: NSApplication.didBecomeActiveNotification)) { _ in
             Task { await refreshAuthorization() }
         }
@@ -232,7 +234,7 @@ struct NotificationsPage: View {
             }
 
             VStack(alignment: .leading, spacing: 6) {
-                Text(configuration.hasBarkKey ? "Key 已存在钥匙串里，粘贴新的可替换" : "在 Bark App 首页复制推送链接或 Key")
+                Text(configuration.hasBarkKey ? "Bark Key（存在钥匙串里）" : "Bark Key（在 Bark App 首页复制推送链接或 Key）")
                     .font(.system(size: SentinelMetrics.cardBodyFontSize))
                     .foregroundStyle(.secondary)
                 ConnectionFieldBox(isError: barkMessage?.tone == .failure) {
@@ -290,7 +292,7 @@ struct NotificationsPage: View {
                     .disabled(isSendingBarkTest)
                 }
                 ToolbarButton(title: "保存", accessibilityLabel: "保存 Bark Key") { saveBarkKey() }
-                    .disabled(barkKeyText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+                    .disabled(!isBarkKeyChanged)
             }
         }
         .padding(SentinelMetrics.settingsCardPadding)
@@ -302,10 +304,17 @@ struct NotificationsPage: View {
         )
     }
 
+    /// `true` when the field holds something new to save.
+    private var isBarkKeyChanged: Bool {
+        let typed = barkKeyText.trimmingCharacters(in: .whitespacesAndNewlines)
+        return !typed.isEmpty && typed != (configuration.barkKey() ?? "")
+    }
+
     private func saveBarkKey() {
         do {
             _ = try configuration.saveBarkKey(barkKeyText)
-            barkKeyText = ""
+            // A pasted push link is stored as its Key: show what was saved.
+            barkKeyText = configuration.barkKey() ?? ""
             isBarkKeyRevealed = false
             configuration.barkEnabled = true
             barkMessage = (.ok, "已保存，可以点「发送测试」试一下")
@@ -317,6 +326,7 @@ struct NotificationsPage: View {
     private func removeBarkKey() {
         do {
             try configuration.removeBarkKey()
+            barkKeyText = ""
             configuration.barkEnabled = false
             barkMessage = (.neutral, "已删除 Bark Key")
         } catch {
