@@ -8,12 +8,12 @@ public enum LogTimeRange: String, CaseIterable, Identifiable {
 
     public var id: String { rawValue }
 
-    /// Chinese name of the segmented control.
+    /// Name of the segmented control, in the current language.
     public var title: String {
         switch self {
-        case .day1: return "1 天"
-        case .day7: return "7 天"
-        case .day30: return "30 天"
+        case .day1: return T(.logRangeDay1)
+        case .day7: return T(.logRangeDay7)
+        case .day30: return T(.logRangeDay30)
         }
     }
 
@@ -40,12 +40,12 @@ public enum LogCategory: String, CaseIterable, Identifiable {
 
     public var id: String { rawValue }
 
-    /// Chinese name of the segmented control.
+    /// Name of the segmented control, in the current language.
     public var title: String {
         switch self {
-        case .all: return "全部"
-        case .network: return "网络"
-        case .threat: return "威胁"
+        case .all: return T(.logCategoryAll)
+        case .network: return T(.logCategoryNetwork)
+        case .threat: return T(.logCategoryThreat)
         }
     }
 
@@ -154,10 +154,10 @@ public struct LogPagination: Equatable {
 
     /// `第 1–25 条，共 126 条`, or `共 0 条` when the filter found nothing.
     public var rangeText: String {
-        guard totalCount > 0 else { return "共 0 条" }
+        guard totalCount > 0 else { return T(.logPagerEmpty) }
         let first = (currentPage - 1) * pageSize + 1
         let last = min(totalCount, currentPage * pageSize)
-        return "第 \(first)–\(last) 条，共 \(totalCount) 条"
+        return T(.logPagerRange, first, last, totalCount)
     }
 
     /// The entries of the current page, in the order they came in.

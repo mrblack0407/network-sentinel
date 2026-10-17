@@ -10,12 +10,18 @@ import SwiftUI
 final class LaunchAtLogin: ObservableObject {
     /// `true` while the app is registered as a login item.
     @Published private(set) var isEnabled: Bool
-    /// Why the last register or unregister failed.
+    /// Why the last register or unregister failed. The system's own text.
     @Published private(set) var errorMessage: String?
+    /// `true` while macOS still waits for the user to allow the login item.
+    ///
+    /// Kept as a flag rather than as a text, so the card follows a language
+    /// change without a new register attempt.
+    @Published private(set) var requiresApproval: Bool
 
     init() {
         isEnabled = Self.isRegistered()
-        errorMessage = Self.approvalMessage()
+        errorMessage = nil
+        requiresApproval = Self.needsApproval()
     }
 
     /// Registers or unregisters the app. A failure leaves the switch where the
@@ -33,9 +39,7 @@ final class LaunchAtLogin: ObservableObject {
         }
 
         isEnabled = Self.isRegistered()
-        if errorMessage == nil {
-            errorMessage = Self.approvalMessage()
-        }
+        requiresApproval = Self.needsApproval()
     }
 
     private static func isRegistered() -> Bool {
@@ -44,9 +48,7 @@ final class LaunchAtLogin: ObservableObject {
 
     /// macOS asks the user to allow the login item the first time; until then
     /// the app is registered but not enabled.
-    private static func approvalMessage() -> String? {
+    private static func needsApproval() -> Bool {
         SMAppService.mainApp.status == .requiresApproval
-            ? "需要在「系统设置 → 通用 → 登录项」里允许 Network Sentinel"
-            : nil
     }
 }

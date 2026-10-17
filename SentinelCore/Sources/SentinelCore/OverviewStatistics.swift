@@ -34,16 +34,16 @@ public struct WANLineStatistics: Equatable {
     )
 
     /// `25 秒`, for the 累计断网 column.
-    public var totalText: String { ChineseDuration.text(seconds: totalOutageSeconds) }
+    public var totalText: String { DurationText.text(seconds: totalOutageSeconds) }
 
     /// `24 秒`, or `—` when the window holds no outage.
     public var longestText: String {
-        longestOutageSeconds.map(ChineseDuration.text(seconds:)) ?? "—"
+        longestOutageSeconds.map(DurationText.text(seconds:)) ?? "—"
     }
 
     /// The three columns in one sentence, for a screen reader.
     public var accessibilityText: String {
-        "24 小时中断 \(outageCount) 次，累计断网 \(totalText)，最长一次 \(longestText)"
+        T(.statsLineReadOut, outageCount, totalText, longestText)
     }
 }
 
@@ -133,7 +133,7 @@ public struct ThreatStatistics: Equatable {
 
     /// The three columns in one sentence, for a screen reader.
     public var accessibilityText: String {
-        "24 小时威胁 \(total) 条，非常高 \(veryHigh) 条，高 \(high) 条，中及以下 \(mediumAndBelow) 条"
+        T(.statsThreatReadOut, total, veryHigh, high, mediumAndBelow)
     }
 }
 

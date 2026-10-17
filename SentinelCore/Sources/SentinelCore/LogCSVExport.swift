@@ -2,14 +2,22 @@ import Foundation
 
 /// Writes the current filter of the 日志 page as a CSV file.
 ///
-/// The columns are 时间, 事件, 严重性, 线路 and 描述. The 描述 is the Chinese text
-/// the notification body uses, so the file never carries the English
-/// `message_raw` of the gateway. The output starts with a UTF-8 byte order mark
-/// and quotes every field that holds a comma, a quote or a line break, so Excel
-/// opens the file with the Chinese text intact.
+/// The columns are 时间, 事件, 严重性, 线路 and 描述, in the language of the
+/// export. The 描述 is the text the notification body uses, so the file never
+/// carries the English `message_raw` of the gateway. The output starts with a
+/// UTF-8 byte order mark and quotes every field that holds a comma, a quote or a
+/// line break, so Excel opens the file with the text intact.
 public enum LogCSVExporter {
-    /// Column titles, in order.
-    public static let header = ["时间", "事件", "严重性", "线路", "描述"]
+    /// Column titles, in order, in the current language.
+    public static var header: [String] {
+        [
+            T(.csvHeaderTime),
+            T(.csvHeaderEvent),
+            T(.csvHeaderSeverity),
+            T(.csvHeaderLine),
+            T(.csvHeaderDescription),
+        ]
+    }
 
     /// Byte order mark of the file; Excel needs it to read UTF-8.
     public static let byteOrderMark = "\u{FEFF}"
@@ -50,13 +58,13 @@ public enum LogCSVExporter {
         [
             timestampText(event.timestamp, timeZone: timeZone),
             event.event.displayName,
-            event.severity?.displayName ?? "未知",
+            event.severity?.displayName ?? T(.commonUnknown),
             event.wanID ?? "",
             description(of: event),
         ]
     }
 
-    /// The Chinese description of one entry.
+    /// The description of one entry, in the current language.
     ///
     /// Reuses the notification body, so the table, the notification and the file
     /// never tell different stories.
@@ -80,7 +88,7 @@ public enum LogCSVExporter {
         formatter.locale = Locale(identifier: "en_US_POSIX")
         formatter.timeZone = timeZone
         formatter.dateFormat = "yyyyMMdd"
-        return "NetworkSentinel-日志-\(formatter.string(from: date)).csv"
+        return T(.csvFileName, formatter.string(from: date))
     }
 
     /// One CSV field: quoted and doubled when it holds a comma, a quote or a

@@ -77,14 +77,27 @@ final class MonitorService: ObservableObject {
     @Published private(set) var connectionState: GatewayConnectionState = .connected
     /// When the last round finished, `nil` before the first one.
     @Published private(set) var lastQueryAt: Date?
-    /// Chinese text of the last failure, `nil` while everything works.
-    @Published private(set) var lastErrorDescription: String?
+    /// The last failure, `nil` while everything works.
+    ///
+    /// The error is kept as it came in, not as a finished text: every line that
+    /// shows it asks for the text of the current language.
+    @Published private(set) var lastError: Error?
+
+    /// Text of the last failure in the current language, `nil` while everything
+    /// works.
+    var lastErrorDescription: String? {
+        guard let lastError else { return nil }
+        if let apiError = lastError as? SentinelAPIError {
+            return apiError.errorDescription
+        }
+        return lastError.localizedDescription
+    }
     /// `true` while a round is running.
     @Published private(set) var isQuerying = false
     /// What the last Bark push did, `nil` while Bark never ran.
     ///
-    /// The 通知 page shows the time of the last success, or the Chinese reason
-    /// of the last failure. A failed push never fails a query round.
+    /// The 通知 page shows the time of the last success, or the reason of the
+    /// last failure. A failed push never fails a query round.
     @Published private(set) var lastBarkResult: BarkResult?
 
     /// The API Key of the running configuration; see `cachedAPIKey(for:)`.
@@ -317,7 +330,7 @@ final class MonitorService: ObservableObject {
         }
 
         let reportedError = statusError ?? logError
-        lastErrorDescription = reportedError.map(Self.chineseDescription)
+        lastError = reportedError
         if let gatewayStatus {
             self.gatewayStatus = gatewayStatus
         }
@@ -453,7 +466,7 @@ final class MonitorService: ObservableObject {
             previous: previous,
             current: current,
             address: address,
-            errorDescription: error.map(Self.chineseDescription)
+            errorDescription: error.map(Self.text(for:))
         )
         guard let kind else { return }
         await send(kind)
@@ -481,7 +494,7 @@ final class MonitorService: ObservableObject {
             try await client.send(title: title, body: body, level: level, sound: configuration.barkSound)
             lastBarkResult = .success(at: Date())
         } catch {
-            lastBarkResult = .failure(Self.chineseDescription(error), at: Date())
+            lastBarkResult = .failure(Self.text(for: error), at: Date())
         }
     }
 
@@ -490,15 +503,15 @@ final class MonitorService: ObservableObject {
     /// The test ignores the Bark switch — the user pressed the button on purpose
     /// — but it needs a saved Key and a usable server address.
     ///
-    /// - Returns: the time of a successful push, or the Chinese reason of a
-    ///   failure. The result is also published as `lastBarkResult`.
+    /// - Returns: the time of a successful push, or the reason of a failure.
+    ///   The result is also published as `lastBarkResult`.
     @discardableResult
     func sendBarkTest() async -> BarkResult {
         do {
             let client = BarkClient(configuration: try configuration.barkConfiguration(), session: barkSession)
             try await client.send(
-                title: "Network Sentinel 测试推送",
-                body: "Bark 推送已连通，断网和威胁通知会同步发到这台设备。",
+                title: T(.notificationTestTitle),
+                body: T(.notificationTestBody),
                 level: .active,
                 sound: configuration.barkSound
             )
@@ -506,7 +519,7 @@ final class MonitorService: ObservableObject {
             lastBarkResult = result
             return result
         } catch {
-            let result = BarkResult.failure(Self.chineseDescription(error), at: Date())
+            let result = BarkResult.failure(Self.text(for: error), at: Date())
             lastBarkResult = result
             return result
         }
@@ -608,18 +621,18 @@ final class MonitorService: ObservableObject {
         return .network(URLError(.unknown))
     }
 
-    /// Chinese text of a failure, without request data.
-    private static func chineseDescription(_ error: Error) -> String {
+    /// Text of a failure in the current language, without request data.
+    private static func text(for error: Error) -> String {
         if let apiError = error as? SentinelAPIError {
-            return apiError.errorDescription ?? "查询失败"
+            return apiError.errorDescription ?? T(.errorQueryFailed)
         }
         return error.localizedDescription
     }
 
-    /// `15:04` for the wake summary body.
+    /// `15:04` for the wake summary body, in the language of the moment.
     private static func timeText(_ date: Date) -> String {
         let formatter = DateFormatter()
-        formatter.locale = Locale(identifier: "zh_Hans_CN")
+        formatter.locale = AppText.locale
         formatter.dateFormat = "HH:mm"
         return formatter.string(from: date)
     }

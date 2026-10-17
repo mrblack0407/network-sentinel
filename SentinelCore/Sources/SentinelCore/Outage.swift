@@ -52,15 +52,15 @@ public struct Outage: Equatable, Identifiable {
         return max(0, end.timeIntervalSince(start))
     }
 
-    /// Length rounded to whole seconds, for the Chinese duration text.
+    /// Length rounded to whole seconds, for the duration text.
     public var durationWholeSeconds: Int? {
         guard let duration else { return nil }
         return Int(duration.rounded())
     }
 
-    /// `DURATION` in its Chinese form, or `nil` while the outage is open.
+    /// `DURATION` as text, or `nil` while the outage is open.
     public var durationText: String? {
-        durationWholeSeconds.map(ChineseDuration.text(seconds:))
+        durationWholeSeconds.map(DurationText.text(seconds:))
     }
 
     /// `true` when the date falls inside this outage, open end included.

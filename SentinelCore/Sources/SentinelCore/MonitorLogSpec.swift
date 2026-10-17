@@ -181,11 +181,11 @@ public enum MonitorLogSpec {
         guard let mostSevere else { return nil }
 
         let remaining = sorted.count - 1
-        let body = "\(mostSevere.title)（\(timeText(mostSevere.timestamp))）"
-            + (remaining > 0 ? "\n另外 \(remaining) 条在主窗口看。" : "")
+        let body = T(.wakeEntry, mostSevere.title, timeText(mostSevere.timestamp))
+            + (remaining > 0 ? T(.wakeMore, remaining) : "")
 
         return WakeSummary(
-            title: "睡眠期间有 \(sorted.count) 条新日志",
+            title: T(.wakeTitle, sorted.count),
             body: body,
             count: sorted.count,
             severity: NotificationSettings.effectiveSeverity(mostSevere.severity)
@@ -221,19 +221,20 @@ public enum MonitorLogSpec {
         case certificateChanged
         case apiKeyRejected
 
-        /// Chinese text of the status line; `secondsAgo` is never negative.
+        /// Text of the status line, in the current language; `secondsAgo` is
+        /// never negative.
         public var text: String {
             switch self {
             case .connected(let secondsAgo):
-                return "已连上，\(max(0, secondsAgo)) 秒前查过"
+                return T(.monitorConnectedAgo, max(0, secondsAgo))
             case .notQueried:
-                return "已连上，还没查过"
+                return T(.monitorNotQueried)
             case .unreachable(let reason):
                 return reason
             case .certificateChanged:
-                return "UniFi 网关的证书变了，请在「连接」里重新测试连接"
+                return T(.monitorCertificateChanged)
             case .apiKeyRejected:
-                return "API Key 无效，请在「连接」里重新填"
+                return T(.monitorAPIKeyRejected)
             }
         }
     }
@@ -244,8 +245,8 @@ public enum MonitorLogSpec {
     ///   - state: state of the last query.
     ///   - lastQueryAt: when the last round finished, `nil` before the first one.
     ///   - now: the current time.
-    ///   - errorDescription: Chinese text of the last failure, used when the
-    ///     gateway is unreachable.
+    ///   - errorDescription: text of the last failure, used when the gateway is
+    ///     unreachable.
     public static func statusText(
         state: GatewayConnectionState,
         lastQueryAt: Date?,
@@ -256,7 +257,7 @@ public enum MonitorLogSpec {
         case .certificateChanged:
             return .certificateChanged
         case .reconnecting:
-            return .unreachable(reason: errorDescription ?? "网关连不上")
+            return .unreachable(reason: errorDescription ?? T(.connectionStateReconnecting))
         case .apiKeyRejected:
             return .apiKeyRejected
         case .connected:
@@ -282,8 +283,9 @@ public enum MonitorLogSpec {
             guard previous == .reconnecting || previous == .apiKeyRejected else { return nil }
             return .gatewayRestored
         case .reconnecting:
-            let reason = errorDescription.map { "：\($0)" } ?? ""
-            let target = address.map { "无法连接到 \($0)" } ?? "无法连接到 UniFi 网关"
+            let reason = errorDescription.map { T(.notificationReasonSuffix, $0) } ?? ""
+            let target = address.map { T(.notificationUnreachableTarget, $0) }
+                ?? T(.notificationUnreachableGateway)
             return .gatewayUnreachable(reason: target + reason)
         case .apiKeyRejected:
             return .apiKeyRejected
@@ -510,7 +512,7 @@ public enum NotificationKind: Equatable {
     /// The presented certificate is not the pinned one.
     case certificateChanged
 
-    /// Title of the notification.
+    /// Title of the notification, in the language of the moment it is sent.
     public var title: String {
         switch self {
         case .monitorEvent(let record):
@@ -518,13 +520,13 @@ public enum NotificationKind: Equatable {
         case .wakeSummary(let summary):
             return summary.title
         case .gatewayUnreachable:
-            return "UniFi 网关连不上"
+            return T(.notificationGatewayUnreachableTitle)
         case .gatewayRestored:
-            return "UniFi 网关已恢复连接"
+            return T(.notificationGatewayRestoredTitle)
         case .apiKeyRejected:
-            return "API Key 无效"
+            return T(.notificationAPIKeyRejectedTitle)
         case .certificateChanged:
-            return "UniFi 网关的证书变了"
+            return T(.notificationCertificateChangedTitle)
         }
     }
 
@@ -536,13 +538,13 @@ public enum NotificationKind: Equatable {
         case .wakeSummary(let summary):
             return summary.body
         case .gatewayUnreachable(let reason):
-            return "\(reason)\n请在「连接」里检查网关地址。"
+            return T(.notificationGatewayUnreachableBody, reason)
         case .gatewayRestored:
-            return "已经能读到 UniFi 网关的日志。"
+            return T(.notificationGatewayRestoredBody)
         case .apiKeyRejected:
-            return "网关拒绝了 API Key，请在「连接」里重新填。"
+            return T(.notificationAPIKeyRejectedBody)
         case .certificateChanged:
-            return "网关的证书和记录的不一样，请在「连接」里重新测试连接。"
+            return T(.notificationCertificateChangedBody)
         }
     }
 

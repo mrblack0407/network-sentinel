@@ -14,16 +14,17 @@ public enum MonitoredEvent: String, CaseIterable, Codable {
     case highLatency
     case threatDetected
 
-    /// Chinese display name for the app, matching the UniFi log page wording.
+    /// Display name for the app, matching the UniFi log page wording, in the
+    /// current language. The English names are the ones of the UniFi interface.
     public var displayName: String {
         switch self {
-        case .internetDown: return "互联网中断"
-        case .internetRestored: return "互联网已恢复"
-        case .internetDownMultipleTimes: return "多次互联网中断"
-        case .internetDownTemporary: return "临时互联网中断"
-        case .packetLoss: return "检测到丢包"
-        case .highLatency: return "检测到高延迟"
-        case .threatDetected: return "检测到威胁"
+        case .internetDown: return T(.eventInternetDown)
+        case .internetRestored: return T(.eventInternetRestored)
+        case .internetDownMultipleTimes: return T(.eventInternetDownMultipleTimes)
+        case .internetDownTemporary: return T(.eventInternetDownTemporary)
+        case .packetLoss: return T(.eventPacketLoss)
+        case .highLatency: return T(.eventHighLatency)
+        case .threatDetected: return T(.eventThreatDetected)
         }
     }
 

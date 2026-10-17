@@ -71,8 +71,16 @@ final class AppConfiguration: ObservableObject {
     }
 
     /// 设置 → 通用 → 语言.
+    ///
+    /// The app has one text table with a Chinese and an English version of every
+    /// text, and `AppText` is the source `SentinelCore` and the app both read. A
+    /// change is published and handed over at once, so every open window and
+    /// every later notification uses the new language without a restart.
     @Published var language: AppLanguage {
-        didSet { defaults.set(language.rawValue, forKey: DefaultsKey.language) }
+        didSet {
+            defaults.set(language.rawValue, forKey: DefaultsKey.language)
+            AppText.use(language)
+        }
     }
 
     /// The Bark Key, read from the keychain at most once.
@@ -104,7 +112,10 @@ final class AppConfiguration: ObservableObject {
         self.pinnedCertificate = Self.loadPinnedCertificate(from: defaults)
         self.barkEnabled = defaults.bool(forKey: DefaultsKey.barkEnabled)
         self.appearance = defaults.string(forKey: DefaultsKey.appearance).flatMap(AppAppearance.init(rawValue:)) ?? .system
-        self.language = defaults.string(forKey: DefaultsKey.language).flatMap(AppLanguage.init(rawValue:)) ?? .system
+        let storedLanguage = defaults.string(forKey: DefaultsKey.language).flatMap(AppLanguage.init(rawValue:)) ?? .system
+        self.language = storedLanguage
+        // The stored language is applied before the app reads its first text.
+        AppText.use(storedLanguage)
         self.barkSound = defaults.string(forKey: DefaultsKey.barkSound) ?? ""
         let storedBarkServer = defaults.string(forKey: DefaultsKey.barkServerAddress) ?? ""
         self.barkServerAddress = storedBarkServer.isEmpty
@@ -138,9 +149,9 @@ final class AppConfiguration: ObservableObject {
 
     /// The Bark settings as `BarkClient` takes them.
     ///
-    /// - Throws: `BarkConfigurationError` with Chinese text: 「请输入 Bark Key」
-    ///   while no Key is saved, 「服务器地址格式不对」 for a server that cannot
-    ///   be a Bark server.
+    /// - Throws: `BarkConfigurationError` with a text of the current language:
+    ///   「请输入 Bark Key」 while no Key is saved, 「服务器地址格式不对」 for a
+    ///   server that cannot be a Bark server.
     func barkConfiguration() throws -> BarkConfiguration {
         guard let key = barkKey() else { throw BarkConfigurationError.missingKey }
         return try BarkConfiguration(serverAddress: barkServerAddress, deviceKey: key)

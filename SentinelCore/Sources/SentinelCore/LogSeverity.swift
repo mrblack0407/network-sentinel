@@ -23,13 +23,13 @@ public enum LogSeverity: String, CaseIterable, Codable {
         }
     }
 
-    /// Chinese display name for the app, per the project glossary.
+    /// Display name for the app, per the project glossary, in the current language.
     public var displayName: String {
         switch self {
-        case .low: return "低"
-        case .medium: return "中"
-        case .high: return "高"
-        case .veryHigh: return "非常高"
+        case .low: return T(.severityLow)
+        case .medium: return T(.severityMedium)
+        case .high: return T(.severityHigh)
+        case .veryHigh: return T(.severityVeryHigh)
         }
     }
 

@@ -8,13 +8,13 @@ public enum SnapshotWANState: String, Codable {
     /// The line is enabled and up, but the gateway uses another line.
     case standby
 
-    /// Chinese text for the app.
+    /// Text for the app, in the current language.
     public var displayName: String {
         switch self {
-        case .online: return "在线"
-        case .offline: return "离线"
-        case .disabled: return "未启用"
-        case .standby: return "备用"
+        case .online: return T(.wanStateOnline)
+        case .offline: return T(.wanStateOffline)
+        case .disabled: return T(.wanStateDisabled)
+        case .standby: return T(.wanStateStandby)
         }
     }
 }

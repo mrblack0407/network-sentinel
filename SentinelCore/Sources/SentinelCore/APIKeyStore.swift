@@ -48,10 +48,10 @@ extension APIKeyStoreError: LocalizedError {
     public var errorDescription: String? {
         switch self {
         case .keychain(let status):
-            let message = SecCopyErrorMessageString(status, nil) as String? ?? "未知错误"
-            return "无法读写钥匙串（\(status)：\(message)）。"
+            let message = SecCopyErrorMessageString(status, nil) as String? ?? T(.keychainErrorUnknown)
+            return T(.keychainErrorReadWrite, Int(status), message)
         case .unreadableValue:
-            return "钥匙串里保存的 API Key 无法读取。"
+            return T(.keychainErrorUnreadableValue)
         }
     }
 }

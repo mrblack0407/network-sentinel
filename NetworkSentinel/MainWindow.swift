@@ -40,7 +40,7 @@ struct MainWindow: View {
         case .overview:
             OverviewView(configuration: configuration, monitor: monitor, windowState: windowState)
         case .logs:
-            LogsView(monitor: monitor)
+            LogsView(monitor: monitor, configuration: configuration)
         case .notifications:
             NotificationsPage(configuration: configuration, monitor: monitor)
         case .settings:
@@ -79,7 +79,11 @@ struct WANStatusChips: View {
             if status.isGatewayUnreachable {
                 // Without the gateway the line states of the last query would be
                 // a guess, so the chips say why they are missing.
-                StatusChip(tone: .neutral, text: "网关连不上", accessibilityLabel: "网关连不上")
+                StatusChip(
+                    tone: .neutral,
+                    text: T(.connectionStateReconnecting),
+                    accessibilityLabel: T(.connectionStateReconnecting)
+                )
             } else {
                 ForEach(status.lines) { line in
                     StatusChip(
@@ -105,10 +109,10 @@ enum SidebarItem: String, CaseIterable, Identifiable {
 
     var title: String {
         switch self {
-        case .overview: return "概览"
-        case .logs: return "日志"
-        case .notifications: return "通知"
-        case .settings: return "设置"
+        case .overview: return T(.pageOverview)
+        case .logs: return T(.pageLogs)
+        case .notifications: return T(.pageNotifications)
+        case .settings: return T(.pageSettings)
         }
     }
 
@@ -137,7 +141,7 @@ struct SidebarView: View {
                 SidebarRow(item: item, isSelected: selection == item) { selection = item }
             }
 
-            Text("配置")
+            Text(T(.sidebarConfiguration))
                 .font(.system(size: SentinelMetrics.sidebarSectionFontSize))
                 .foregroundStyle(.secondary)
                 .padding(SentinelMetrics.sidebarSectionPadding)
@@ -232,7 +236,7 @@ struct GitHubRow: View {
         }
         .buttonStyle(.plain)
         .onHover { isHovering = $0 }
-        .help("在 GitHub 上查看源代码")
-        .accessibilityLabel("在 GitHub 上查看源代码")
+        .help(T(.sidebarGitHubHelp))
+        .accessibilityLabel(T(.sidebarGitHubHelp))
     }
 }

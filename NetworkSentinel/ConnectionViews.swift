@@ -12,6 +12,28 @@ enum ConnectionField: Equatable {
     case none
 }
 
+/// Why the connection form shows a red status line.
+///
+/// The reason is kept as a case, not as a finished text: a language change
+/// rewrites the status line like every other text of the app.
+enum ConnectionFailureReason: Equatable {
+    /// 测试连接 refused the gateway or the API Key.
+    case connection(ConnectionTestError)
+    /// The keychain holds no API Key for the configured gateway.
+    case noStoredKey
+    /// A text that is already finished, for example the keychain's own error.
+    case text(String)
+
+    /// Text of the status line in the current language.
+    var message: String {
+        switch self {
+        case .connection(let error): return error.reason
+        case .noStoredKey: return T(.settingsConnectionNoKey)
+        case .text(let text): return text
+        }
+    }
+}
+
 /// What the connection form shows below its two fields.
 enum ConnectionTestState: Equatable {
     /// Nothing tested yet.
@@ -20,22 +42,22 @@ enum ConnectionTestState: Equatable {
     case testing
     /// The gateway answered everything.
     case success(gatewayName: String)
-    /// The gateway or the API Key refused; `reason` is Chinese text.
-    case failure(reason: String, field: ConnectionField)
+    /// The gateway or the API Key refused.
+    case failure(reason: ConnectionFailureReason, field: ConnectionField)
 
     /// Shown before the first test.
-    static let idleMessage = "填好后点「测试连接」"
+    static var idleMessage: String { T(.connectionIdle) }
 
     var message: String {
         switch self {
         case .idle:
             return Self.idleMessage
         case .testing:
-            return "正在测试连接…"
+            return T(.connectionTesting)
         case .success(let gatewayName):
-            return "已连上 \(gatewayName)，能读到网络和威胁日志"
+            return T(.connectionSuccess, gatewayName)
         case .failure(let reason, _):
-            return reason
+            return reason.message
         }
     }
 
@@ -70,9 +92,9 @@ extension ConnectionTestError {
         }
     }
 
-    /// Chinese text for the status line.
+    /// Text of the status line.
     var reason: String {
-        errorDescription ?? "测试连接失败"
+        errorDescription ?? T(.connectionFailed)
     }
 }
 
@@ -120,16 +142,16 @@ struct ConnectionAddressField: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
-            Text("UniFi 网关地址")
+            Text(T(.connectionAddress))
                 .font(.system(size: SentinelMetrics.cardBodyFontSize))
                 .foregroundStyle(.secondary)
 
             ConnectionFieldBox(isError: isError) {
-                TextField("例如 https://192.168.1.1", text: $text)
+                TextField(T(.connectionAddressPlaceholder), text: $text)
                     .textFieldStyle(.plain)
                     .font(.system(size: SentinelMetrics.inputFontSize, design: .monospaced))
             }
-            .accessibilityLabel("UniFi 网关地址")
+            .accessibilityLabel(T(.connectionAddress))
         }
     }
 }
@@ -151,28 +173,28 @@ struct ConnectionAPIKeyField: View {
             ConnectionFieldBox(isError: isError) {
                 HStack(spacing: 8) {
                     if isRevealed {
-                        TextField("粘贴 API Key", text: $text)
+                        TextField(T(.connectionAPIKeyPlaceholder), text: $text)
                             .textFieldStyle(.plain)
                             .font(.system(size: SentinelMetrics.inputFontSize, design: .monospaced))
                     } else {
-                        SecureField("粘贴 API Key", text: $text)
+                        SecureField(T(.connectionAPIKeyPlaceholder), text: $text)
                             .textFieldStyle(.plain)
                             .font(.system(size: SentinelMetrics.inputFontSize, design: .monospaced))
                     }
 
-                    Button(isRevealed ? "隐藏" : "显示") {
+                    Button(isRevealed ? T(.connectionHide) : T(.connectionShow)) {
                         isRevealed.toggle()
                     }
                     .buttonStyle(.plain)
                     .font(.system(size: SentinelMetrics.cardBodyFontSize))
                     .foregroundStyle(Color.accentColor)
-                    .accessibilityLabel(isRevealed ? "隐藏 API Key" : "显示 API Key")
+                    .accessibilityLabel(isRevealed ? T(.connectionHideAPIKey) : T(.connectionShowAPIKey))
                 }
             }
             .accessibilityLabel("API Key")
 
             if showsHint {
-                Text("在 UniFi 网页左侧边栏点「Integrations → Create New API Key」生成")
+                Text(T(.connectionAPIKeyHint))
                     .font(.system(size: SentinelMetrics.footnoteFontSize))
                     .foregroundStyle(.secondary)
                     .fixedSize(horizontal: false, vertical: true)
@@ -205,6 +227,6 @@ struct ConnectionStatusRow: View {
         }
         .frame(minHeight: 16, alignment: .leading)
         .accessibilityElement(children: .combine)
-        .accessibilityLabel("连接状态：\(state.message)")
+        .accessibilityLabel(T(.connectionStatusReadOut, state.message))
     }
 }

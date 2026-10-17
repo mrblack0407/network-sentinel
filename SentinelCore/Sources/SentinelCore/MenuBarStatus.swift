@@ -15,13 +15,13 @@ public enum MenuBarIndicatorState: String, CaseIterable {
     /// 网关连不上, API Key 无效 or 证书变了: a gray dot.
     case disconnected
 
-    /// Chinese name of the state, for the read-out of the icon.
+    /// Name of the state, for the read-out of the icon, in the current language.
     public var displayName: String {
         switch self {
-        case .quiet: return "近 24 小时没有中及以上的事件"
-        case .warning: return "近 24 小时有中或高的事件"
-        case .critical: return "近 24 小时有非常高的事件，或有线路正在断网"
-        case .disconnected: return "网关连不上，或 API Key、证书有问题"
+        case .quiet: return T(.indicatorQuiet)
+        case .warning: return T(.indicatorWarning)
+        case .critical: return T(.indicatorCritical)
+        case .disconnected: return T(.indicatorDisconnected)
         }
     }
 }
@@ -58,13 +58,13 @@ public struct WANLineStatus: Equatable, Identifiable {
     /// 菜单栏弹出面板 red. A 备用 line is up, the gateway only uses another line.
     public var isDown: Bool { state == .offline }
 
-    /// Short Chinese name, for the 主窗口 线路标签.
+    /// Short name, for the 主窗口 线路标签.
     public var displayName: String {
         switch state {
-        case .online: return "在线"
-        case .offline: return "已断开"
-        case .disabled: return "未启用"
-        case .standby: return "备用"
+        case .online: return T(.lineStateOnline)
+        case .offline: return T(.lineStateDown)
+        case .disabled: return T(.lineStateDisabled)
+        case .standby: return T(.lineStateStandby)
         }
     }
 
@@ -77,15 +77,15 @@ public struct WANLineStatus: Equatable, Identifiable {
     public func detailText(now: Date) -> String {
         switch state {
         case .online:
-            return "在线"
+            return T(.lineStateOnline)
         case .offline:
-            guard let outageStartedAt else { return "已断开" }
+            guard let outageStartedAt else { return T(.lineStateDown) }
             let seconds = Int(max(0, now.timeIntervalSince(outageStartedAt)).rounded(.down))
-            return "已断开 \(ChineseDuration.text(seconds: seconds))"
+            return T(.lineStateDownFor, DurationText.text(seconds: seconds))
         case .disabled:
-            return "未启用"
+            return T(.lineStateDisabled)
         case .standby:
-            return "备用"
+            return T(.lineStateStandby)
         }
     }
 
@@ -96,7 +96,7 @@ public struct WANLineStatus: Equatable, Identifiable {
             parts.append(ispName)
         }
         parts.append(detailText(now: now))
-        return parts.joined(separator: "，")
+        return parts.joined(separator: T(.commonListSeparator))
     }
 }
 
@@ -163,25 +163,25 @@ public struct MenuBarStatus: Equatable {
             parts.append(connectionState.displayName)
         }
         parts.append(contentsOf: severityPhrases)
-        let readOut = parts.joined(separator: "，")
-        return readOut.isEmpty ? "Network Sentinel" : "Network Sentinel：\(readOut)"
+        let readOut = parts.joined(separator: T(.commonListSeparator))
+        return readOut.isEmpty ? "Network Sentinel" : T(.menuBarReadOut, readOut)
     }
 
     /// The severity part of the read-out, per state of the dot.
     private var severityPhrases: [String] {
         switch indicator {
         case .quiet:
-            return ["近 24 小时没有中及以上的事件"]
+            return [T(.indicatorQuiet)]
         case .warning:
             guard let highestSeverity else { return [] }
-            return ["近 24 小时有\(highestSeverity.displayName)的事件"]
+            return [T(.menuBarSeverityPhrase, highestSeverity.displayName)]
         case .critical:
             var phrases: [String] = []
             if highestSeverity == .veryHigh {
-                phrases.append("近 24 小时有非常高的事件")
+                phrases.append(T(.menuBarVeryHighPhrase))
             }
             if lines.contains(where: { $0.isDown }) {
-                phrases.append("有线路正在断网")
+                phrases.append(T(.menuBarLineDownPhrase))
             }
             return phrases
         case .disconnected:

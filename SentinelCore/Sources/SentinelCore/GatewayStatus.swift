@@ -6,12 +6,12 @@ public enum WANState: String, Codable {
     case offline
     case disabled
 
-    /// Chinese display name for the app.
+    /// Display name for the app, in the current language.
     public var displayName: String {
         switch self {
-        case .online: return "在线"
-        case .offline: return "离线"
-        case .disabled: return "未启用"
+        case .online: return T(.wanStateOnline)
+        case .offline: return T(.wanStateOffline)
+        case .disabled: return T(.wanStateDisabled)
         }
     }
 }

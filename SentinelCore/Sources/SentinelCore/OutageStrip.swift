@@ -9,12 +9,12 @@ public enum OutageStripState: String, CaseIterable {
     /// 互联网中断, from a log entry or from a paired outage covering the cell.
     case down
 
-    /// Chinese name, for the tests and the read-out.
+    /// Name for the tests and the read-out, in the current language.
     public var displayName: String {
         switch self {
-        case .normal: return "正常"
-        case .temporary: return "临时中断"
-        case .down: return "中断"
+        case .normal: return T(.stripStateNormal)
+        case .temporary: return T(.stripStateTemporary)
+        case .down: return T(.stripStateDown)
         }
     }
 }
@@ -76,11 +76,11 @@ public struct OutageStrip: Equatable {
 
     /// Read-out of the strip, for example 「过去 24 小时中断 4 次」.
     public var accessibilityText: String {
-        var parts = ["过去 24 小时中断 \(outageCount) 次"]
+        var parts = [T(.stripOutageCount, outageCount)]
         if temporaryCount > 0 {
-            parts.append("临时中断 \(temporaryCount) 次")
+            parts.append(T(.stripTemporaryCount, temporaryCount))
         }
-        return parts.joined(separator: "，")
+        return parts.joined(separator: T(.commonListSeparator))
     }
 }
 

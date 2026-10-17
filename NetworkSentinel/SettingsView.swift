@@ -17,14 +17,14 @@ struct SettingsPage: View {
 
             ScrollView {
                 VStack(alignment: .leading, spacing: SentinelMetrics.contentSpacing) {
-                    Text("设置")
+                    Text(T(.pageSettings))
                         .font(.system(size: SentinelMetrics.pageTitleFontSize, weight: .bold))
                         .tracking(SentinelMetrics.pageTitleTracking)
                         .accessibilityAddTraits(.isHeader)
 
                     // Group order and title colors: 通用 pink, UniFi 网关 purple,
                     // 监控事件 teal — the colors follow the position, not the group.
-                    GroupHeader(title: "通用", color: SentinelColor.groupPink)
+                    GroupHeader(title: T(.settingsGroupGeneral), color: SentinelColor.groupPink)
                     LazyVGrid(columns: SettingsGridLayout.twoColumns, alignment: .leading, spacing: SentinelMetrics.cardSpacing) {
                         launchAtLoginCard
                         logRetentionCard
@@ -32,13 +32,13 @@ struct SettingsPage: View {
                         appearanceCard
                     }
 
-                    GroupHeader(title: "UniFi 网关", color: SentinelColor.groupPurple)
+                    GroupHeader(title: T(.settingsGroupGateway), color: SentinelColor.groupPurple)
                     LazyVGrid(columns: SettingsGridLayout.twoColumns, alignment: .leading, spacing: SentinelMetrics.cardSpacing) {
                         connectionCard
                         queryIntervalCard
                     }
 
-                    GroupHeader(title: "监控事件", color: SentinelColor.groupTeal)
+                    GroupHeader(title: T(.settingsGroupEvents), color: SentinelColor.groupTeal)
                     LazyVGrid(columns: columns, alignment: .leading, spacing: SentinelMetrics.cardSpacing) {
                         ForEach(Self.displayedEvents, id: \.self) { event in
                             eventCard(event)
@@ -64,11 +64,11 @@ struct SettingsPage: View {
     private var connectionCard: some View {
         TimelineView(.periodic(from: .now, by: 1)) { context in
             SettingsCard(
-                title: "连接",
+                title: T(.settingsConnection),
                 description: connectionDescription,
                 statusTone: connectionStatusTone(at: context.date),
                 statusText: connectionStatusText(at: context.date),
-                control: Button("测试连接") {
+                control: Button(T(.settingsConnectionTest)) {
                     reTest()
                 }
                 .disabled(!canReTest),
@@ -81,17 +81,17 @@ struct SettingsPage: View {
                         .padding(.horizontal, 4)
                 }
                 .buttonStyle(.plain)
-                .help("连接设置")
-                .accessibilityLabel("连接设置")
+                .help(T(.settingsConnectionSettings))
+                .accessibilityLabel(T(.settingsConnectionSettings))
             )
         }
     }
 
     private var connectionDescription: String {
         guard let address = configuration.gatewayAddress?.urlString else {
-            return "还没填 UniFi 网关地址"
+            return T(.settingsConnectionNoAddress)
         }
-        return "\(address)\nAPI Key 存在钥匙串里"
+        return T(.settingsConnectionAddress, address)
     }
 
     /// The card shows what 测试连接 is doing while it runs, and the real state of
@@ -110,12 +110,12 @@ struct SettingsPage: View {
 
     private func connectionStatusText(at now: Date) -> String {
         switch connectionTest {
-        case .testing: return "正在测试连接…"
-        case .success(let gatewayName): return "已连上 \(gatewayName)，能读到网络和威胁日志"
-        case .failure(let reason, _): return reason
+        case .testing: return T(.settingsConnectionTesting)
+        case .success(let gatewayName): return T(.settingsConnectionSuccess, gatewayName)
+        case .failure(let reason, _): return reason.message
         case .idle:
-            guard configuration.isConfigured else { return "还没连上 UniFi 网关" }
-            guard monitor.isRunning else { return "监控没在运行" }
+            guard configuration.isConfigured else { return T(.settingsConnectionNotConnected) }
+            guard monitor.isRunning else { return T(.settingsConnectionNotRunning) }
             return monitor.monitorStatusText(at: now)
         }
     }
@@ -129,7 +129,7 @@ struct SettingsPage: View {
     private func reTest() {
         guard let address = configuration.gatewayAddress else { return }
         guard let apiKey: String = (try? configuration.apiKey()) ?? nil, !apiKey.isEmpty else {
-            connectionTest = .failure(reason: "钥匙串里没有 API Key，请打开连接设置重新填", field: .apiKey)
+            connectionTest = .failure(reason: .noStoredKey, field: .apiKey)
             return
         }
 
@@ -140,24 +140,24 @@ struct SettingsPage: View {
                 try? configuration.saveConnection(result: result, apiKey: apiKey)
                 connectionTest = .success(gatewayName: result.gatewayName)
             case .failure(let error):
-                connectionTest = .failure(reason: error.reason, field: error.field)
+                connectionTest = .failure(reason: .connection(error), field: error.field)
             }
         }
     }
 
     private var queryIntervalCard: some View {
         SettingsCard(
-            title: "查询间隔",
-            description: "多久向网关查一次新日志。间隔越短通知越快。",
+            title: T(.settingsQueryInterval),
+            description: T(.settingsQueryIntervalDescription),
             statusTone: .ok,
-            statusText: "每 \(configuration.monitorSettings.queryIntervalSeconds) 秒查一次",
+            statusText: T(.settingsQueryIntervalStatus, configuration.monitorSettings.queryIntervalSeconds),
             control: SegmentedPills(
                 options: MonitorSettings.queryIntervalOptions.map {
-                    SegmentedPills<Int>.Option(value: $0, title: "\($0) 秒")
+                    SegmentedPills<Int>.Option(value: $0, title: T(.settingsQueryIntervalOption, $0))
                 },
                 selection: configuration.monitorSettings.queryIntervalSeconds,
                 onSelect: { configuration.setQueryInterval(seconds: $0) },
-                accessibilityLabel: "查询间隔"
+                accessibilityLabel: T(.settingsQueryInterval)
             )
         )
     }
@@ -169,14 +169,15 @@ struct SettingsPage: View {
 
         return SettingsCard(
             title: event.displayName,
-            description: Self.eventDescriptions[event] ?? "",
+            description: Self.eventDescription(event),
             statusTone: isMonitored ? .ok : .warn,
-            statusText: isMonitored ? "监控中" : "未监控",
+            statusText: isMonitored ? T(.settingsEventsMonitored) : T(.settingsEventsNotMonitored),
+            keepsControlBeside: true,
             control: Toggle("", isOn: monitoredBinding(event))
                 .labelsHidden()
                 .toggleStyle(.switch)
                 .controlSize(.small)
-                .accessibilityLabel("监控\(event.displayName)")
+                .accessibilityLabel(T(.settingsEventsToggle, event.displayName))
         )
     }
 
@@ -201,25 +202,28 @@ struct SettingsPage: View {
         .highLatency,
     ]
 
-    /// Descriptions of the event cards, taken from `Design/Mockups.html`.
-    private static let eventDescriptions: [MonitoredEvent: String] = [
-        .internetDown: "WAN 线路断开时记录。UniFi 一般标为非常高。",
-        .internetRestored: "断开的线路恢复时记录，并算出断了多久。",
-        .internetDownMultipleTimes: "同一条线路 24 小时内多次中断时，UniFi 发出的提醒。",
-        .threatDetected: "UniFi 的入侵防护发现可疑流量时记录。",
-        .internetDownTemporary: "断开后很快自己恢复的闪断。",
-        .packetLoss: "WAN 线路有丢包，但没有断网。",
-        .highLatency: "WAN 线路延迟变高。",
-    ]
+    /// Description of one event card, taken from `Design/Mockups.html`.
+    private static func eventDescription(_ event: MonitoredEvent) -> String {
+        switch event {
+        case .internetDown: return T(.settingsEventInternetDownDescription)
+        case .internetRestored: return T(.settingsEventInternetRestoredDescription)
+        case .internetDownMultipleTimes: return T(.settingsEventMultipleDescription)
+        case .threatDetected: return T(.settingsEventThreatDescription)
+        case .internetDownTemporary: return T(.settingsEventTemporaryDescription)
+        case .packetLoss: return T(.settingsEventPacketLossDescription)
+        case .highLatency: return T(.settingsEventHighLatencyDescription)
+        }
+    }
 
     // MARK: - 通用
 
     private var launchAtLoginCard: some View {
         SettingsCard(
-            title: "开机自启",
-            description: "登录 Mac 后自动在菜单栏运行。",
+            title: T(.settingsLaunch),
+            description: T(.settingsLaunchDescription),
             statusTone: launchAtLoginStatusTone,
             statusText: launchAtLoginStatusText,
+            keepsControlBeside: true,
             control: Toggle("", isOn: Binding(
                 get: { launchAtLogin.isEnabled },
                 set: { launchAtLogin.setEnabled($0) }
@@ -227,82 +231,88 @@ struct SettingsPage: View {
             .labelsHidden()
             .toggleStyle(.switch)
             .controlSize(.small)
-            .accessibilityLabel("开机自启")
+            .accessibilityLabel(T(.settingsLaunch))
         )
     }
 
     private var launchAtLoginStatusTone: StatusTone {
-        if launchAtLogin.errorMessage != nil { return .failure }
+        if launchAtLogin.errorMessage != nil || launchAtLogin.requiresApproval { return .failure }
         return launchAtLogin.isEnabled ? .ok : .neutral
     }
 
     private var launchAtLoginStatusText: String {
         if let errorMessage = launchAtLogin.errorMessage { return errorMessage }
-        return launchAtLogin.isEnabled ? "已开启" : "已关闭"
+        if launchAtLogin.requiresApproval { return T(.settingsLaunchApproval) }
+        return launchAtLogin.isEnabled ? T(.settingsOn) : T(.settingsOff)
     }
 
     private var logRetentionCard: some View {
         SettingsCard(
-            title: "日志保留",
-            description: "超过这个时间的日志自动删除。",
+            title: T(.settingsRetention),
+            description: T(.settingsRetentionDescription),
             statusTone: .ok,
-            statusText: "保留 \(configuration.monitorSettings.logRetentionDays) 天",
+            statusText: T(.settingsRetentionStatus, configuration.monitorSettings.logRetentionDays),
             control: SegmentedPills(
                 options: MonitorSettings.logRetentionOptions.map {
-                    SegmentedPills<Int>.Option(value: $0, title: "\($0) 天")
+                    SegmentedPills<Int>.Option(value: $0, title: T(.settingsRetentionOption, $0))
                 },
                 selection: configuration.monitorSettings.logRetentionDays,
                 onSelect: { configuration.setLogRetention(days: $0) },
-                accessibilityLabel: "日志保留"
+                accessibilityLabel: T(.settingsRetention)
             )
         )
     }
 
     private var languageCard: some View {
         SettingsCard(
-            title: "语言",
-            description: "界面、系统通知和 Bark 推送用的语言。",
+            title: T(.settingsLanguage),
+            description: T(.settingsLanguageDescription),
             statusTone: .ok,
-            statusText: configuration.language.resolved() == .chinese ? "当前：中文" : "当前：English",
+            statusText: T(
+                .settingsLanguageStatus,
+                configuration.language.resolved() == .chinese
+                    ? T(.settingsLanguageChinese)
+                    : T(.settingsLanguageEnglish)
+            ),
             control: SegmentedPills(
                 options: [
-                    .init(value: AppLanguage.system, title: "跟随系统"),
-                    .init(value: AppLanguage.chinese, title: "中文"),
-                    .init(value: AppLanguage.english, title: "English"),
+                    .init(value: AppLanguage.system, title: T(.settingsLanguageSystem)),
+                    .init(value: AppLanguage.chinese, title: T(.settingsLanguageChinese)),
+                    .init(value: AppLanguage.english, title: T(.settingsLanguageEnglish)),
                 ],
                 selection: configuration.language,
                 onSelect: { configuration.language = $0 },
-                accessibilityLabel: "语言"
+                accessibilityLabel: T(.settingsLanguage)
             )
         )
     }
 
     private var appearanceCard: some View {
         SettingsCard(
-            title: "外观",
-            description: "主窗口和菜单栏面板的颜色。",
+            title: T(.settingsAppearance),
+            description: T(.settingsAppearanceDescription),
             statusTone: .ok,
             statusText: Self.appearanceStatus(configuration.appearance),
             control: SegmentedPills(
                 options: [
-                    .init(value: AppAppearance.system, title: "跟随系统"),
-                    .init(value: AppAppearance.light, title: "浅色"),
-                    .init(value: AppAppearance.dark, title: "深色"),
+                    .init(value: AppAppearance.system, title: T(.settingsAppearanceSystem)),
+                    .init(value: AppAppearance.light, title: T(.settingsAppearanceLight)),
+                    .init(value: AppAppearance.dark, title: T(.settingsAppearanceDark)),
                 ],
                 selection: configuration.appearance,
                 onSelect: { configuration.appearance = $0 },
-                accessibilityLabel: "外观"
+                accessibilityLabel: T(.settingsAppearance)
             )
         )
     }
 
     private static func appearanceStatus(_ appearance: AppAppearance) -> String {
         switch appearance {
-        case .light: return "当前：浅色"
-        case .dark: return "当前：深色"
+        case .light: return T(.settingsAppearanceLightCurrent)
+        case .dark: return T(.settingsAppearanceDarkCurrent)
         case .system:
             let isDark = NSApplication.shared.effectiveAppearance.bestMatch(from: [.darkAqua, .aqua]) == .darkAqua
-            return isDark ? "当前：深色（跟随系统）" : "当前：浅色（跟随系统）"
+            return isDark ? T(.settingsAppearanceDarkSystem) : T(.settingsAppearanceLightSystem)
         }
     }
 }

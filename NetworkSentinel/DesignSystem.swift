@@ -112,10 +112,15 @@ enum SentinelMetrics {
     static let severityColumnWidth: CGFloat = 34
     /// Width of the 事件 column of a 最近事件 row (`.lr` second column).
     static let eventNameColumnWidth: CGFloat = 120
+    /// The 事件 column of 概览 in English, where names run up to
+    /// 「Temporary Internet Disconnection」.
+    static let eventNameColumnWidthEnglish: CGFloat = 215
     /// Width of the 严重性 column of the 日志 table.
     static let logsSeverityColumnWidth: CGFloat = 90
     /// Width of the 事件 column of the 日志 table.
     static let logsEventNameColumnWidth: CGFloat = 190
+    /// The 事件 column of 日志 in English.
+    static let logsEventNameColumnWidthEnglish: CGFloat = 215
     /// Width of the 日期 and 时间 columns of a row.
     static let dateColumnWidth: CGFloat = 44
     static let timeColumnWidth: CGFloat = 64
@@ -252,11 +257,14 @@ struct VisualEffectBackground: NSViewRepresentable {
 }
 
 /// The description column of a log list: the notification body without its
-/// closing 「。」, as the mockup lists it.
+/// closing full stop, as the mockup lists it.
 enum LogDescription {
     static func text(for event: MonitoredLogEvent) -> String {
         let body = NotificationPlanner().notificationBody(for: event)
-        return body.hasSuffix("。") ? String(body.dropLast()) : body
+        if body.hasSuffix("。") || body.hasSuffix(".") {
+            return String(body.dropLast())
+        }
+        return body
     }
 }
 
@@ -380,22 +388,33 @@ struct SettingsCard<Control: View, Accessory: View>: View {
     let description: String
     let statusTone: StatusTone
     let statusText: String
+    /// `true` for a small control such as a switch: it stays at the top right
+    /// and a long title wraps instead (English titles are longer).
+    var keepsControlBeside = false
     let control: Control
     let accessory: Accessory
 
     var body: some View {
         VStack(alignment: .leading, spacing: SentinelMetrics.settingsCardSpacing) {
-            // A narrow column stacks the control under the title, so the
-            // segmented control is never squeezed.
-            ViewThatFits(in: .horizontal) {
-                HStack(alignment: .firstTextBaseline, spacing: 10) {
+            if keepsControlBeside {
+                HStack(alignment: .top, spacing: 10) {
                     titleLabel
-                    Spacer(minLength: 8)
+                        .frame(maxWidth: .infinity, alignment: .leading)
                     control
                 }
-                VStack(alignment: .leading, spacing: 6) {
-                    titleLabel
-                    control
+            } else {
+                // A narrow column stacks the control under the title, so the
+                // segmented control is never squeezed.
+                ViewThatFits(in: .horizontal) {
+                    HStack(alignment: .firstTextBaseline, spacing: 10) {
+                        titleLabel
+                        Spacer(minLength: 8)
+                        control
+                    }
+                    VStack(alignment: .leading, spacing: 6) {
+                        titleLabel
+                        control
+                    }
                 }
             }
 
@@ -419,7 +438,7 @@ struct SettingsCard<Control: View, Accessory: View>: View {
             }
             .padding(.top, 2)
             .accessibilityElement(children: .combine)
-            .accessibilityLabel("\(title)：\(statusText)")
+            .accessibilityLabel(T(.commonLabelValue, title, statusText))
         }
         .padding(SentinelMetrics.settingsCardPadding)
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
@@ -439,12 +458,20 @@ struct SettingsCard<Control: View, Accessory: View>: View {
 }
 
 extension SettingsCard where Accessory == EmptyView {
-    init(title: String, description: String, statusTone: StatusTone, statusText: String, control: Control) {
+    init(
+        title: String,
+        description: String,
+        statusTone: StatusTone,
+        statusText: String,
+        keepsControlBeside: Bool = false,
+        control: Control
+    ) {
         self.init(
             title: title,
             description: description,
             statusTone: statusTone,
             statusText: statusText,
+            keepsControlBeside: keepsControlBeside,
             control: control,
             accessory: EmptyView()
         )
@@ -544,12 +571,12 @@ enum SettingsGridLayout {
 enum LogTimestampText {
     /// `10/16`.
     static func date(_ date: Date) -> String {
-        dateFormatter.string(from: date)
+        dateFormatter().string(from: date)
     }
 
     /// `9:44:20`.
     static func clock(_ date: Date) -> String {
-        clockFormatter.string(from: date)
+        clockFormatter().string(from: date)
     }
 
     /// `10/16 9:44:20`.
@@ -559,24 +586,34 @@ enum LogTimestampText {
 
     /// `9:44`, for the tick labels of the 过去 24 小时 色条.
     static func shortClock(_ date: Date) -> String {
-        shortClockFormatter.string(from: date)
+        shortClockFormatter().string(from: date)
     }
 
     /// `昨天 10:45`, the left tick of the 色条.
     static func yesterdayClock(_ date: Date) -> String {
-        "昨天 \(shortClock(date))"
+        T(.commonYesterday, shortClock(date))
     }
 
-    private static let dateFormatter = makeFormatter("M/d")
-    private static let clockFormatter = makeFormatter("H:mm:ss")
-    private static let shortClockFormatter = makeFormatter("H:mm")
+    private static func dateFormatter() -> DateFormatter { formatter("M/d") }
+    private static func clockFormatter() -> DateFormatter { formatter("H:mm:ss") }
+    private static func shortClockFormatter() -> DateFormatter { formatter("H:mm") }
 
-    private static func makeFormatter(_ format: String) -> DateFormatter {
+    /// One formatter per language and pattern, rebuilt when the language changes.
+    ///
+    /// The locale follows 设置 → 通用 → 语言: `zh_Hans_CN` or `en_US`.
+    private static func formatter(_ format: String) -> DateFormatter {
+        let key = "\(AppText.localeIdentifier)|\(format)"
+        if let cached = formatters[key] {
+            return cached
+        }
         let formatter = DateFormatter()
-        formatter.locale = Locale(identifier: "zh_Hans_CN")
+        formatter.locale = AppText.locale
         formatter.dateFormat = format
+        formatters[key] = formatter
         return formatter
     }
+
+    private static var formatters: [String: DateFormatter] = [:]
 }
 
 /// The date and the time of one log entry in two right-aligned columns.
@@ -597,7 +634,7 @@ struct LogTimestampColumns: View {
         .monospacedDigit()
         .foregroundStyle(.secondary)
         .accessibilityElement(children: .ignore)
-        .accessibilityLabel("时间 \(LogTimestampText.stamp(date))")
+        .accessibilityLabel(T(.logsTimeReadOut, LogTimestampText.stamp(date)))
     }
 }
 
@@ -753,7 +790,7 @@ struct OutageStripView: View {
                 Spacer(minLength: 8)
                 Text(LogTimestampText.shortClock(middleDate))
                 Spacer(minLength: 8)
-                Text("现在")
+                Text(T(.commonNow))
             }
             .font(.system(size: SentinelMetrics.stripTickFontSize, design: .monospaced))
             .foregroundStyle(.secondary)
@@ -899,7 +936,7 @@ struct SeverityBar: View {
             }
         }
         .accessibilityElement(children: .ignore)
-        .accessibilityLabel("严重性：\(severity?.displayName ?? "未知")")
+        .accessibilityLabel(T(.severityReadOut, severity?.displayName ?? T(.commonUnknown)))
     }
 
     private var filledBars: Int { severity?.rank ?? 0 }

@@ -37,25 +37,25 @@ extension SentinelAPIError: LocalizedError {
     public var errorDescription: String? {
         switch self {
         case .network:
-            return "无法连接到 UniFi 网关，请检查网关地址和网络。"
+            return T(.errorNetwork)
         case .unauthorized(let statusCode):
-            return "API Key 无效或没有权限（HTTP \(statusCode)）。"
+            return T(.errorUnauthorized, statusCode)
         case .notFound:
-            return "网关没有这个接口（HTTP 404），可能固件版本不支持。"
+            return T(.errorNotFound)
         case .invalidResponse(let statusCode):
-            return "网关返回了意外的状态码（HTTP \(statusCode)）。"
+            return T(.errorInvalidResponse, statusCode)
         case .decodingFailed(let detail):
-            return "无法解析网关返回的内容（\(detail)）。"
+            return T(.errorDecodingFailed, detail)
         case .gatewayDeviceNotFound:
-            return "网关状态里没有找到 UniFi 网关设备。"
+            return T(.errorGatewayDeviceNotFound)
         case .gatewayError(let message):
-            return "网关返回错误：\(message)"
+            return T(.errorGatewayError, message)
         case .tooManyPages(let limit):
-            return "日志页数超过安全上限（\(limit) 页），已停止读取。"
+            return T(.errorTooManyPages, limit)
         case .invalidURL:
-            return "网关地址无效。"
+            return T(.errorInvalidURL)
         case .certificateChanged:
-            return "UniFi 网关的证书变了，请在连接设置里重新测试连接。"
+            return T(.errorCertificateChanged)
         }
     }
 

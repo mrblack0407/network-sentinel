@@ -7,6 +7,10 @@ import SwiftUI
 /// quits, so the UI can be compared with `Design/Mockups.html` without screen
 /// recording. Run the app with the environment variable `NS_SNAPSHOT_DIR` set.
 ///
+/// `NS_SNAPSHOT_LANG=en` renders the English texts, anything else the Chinese
+/// ones; the language goes through the same `AppText` the app uses, so the
+/// pictures show exactly what the setting shows.
+///
 /// It never touches the keychain: the configuration uses an in-memory key store
 /// and a separate defaults suite, and the engine is not started.
 @MainActor
@@ -21,6 +25,10 @@ enum SnapshotRenderer {
         let defaults = UserDefaults(suiteName: "NetworkSentinel.snapshot")!
         defaults.removePersistentDomain(forName: "NetworkSentinel.snapshot")
         let configuration = AppConfiguration(defaults: defaults, keyStore: APIKeyStoreInMemory())
+        // `NS_SNAPSHOT_LANG=en` renders the English texts; Chinese is the default.
+        configuration.language = ProcessInfo.processInfo.environment["NS_SNAPSHOT_LANG"] == "en"
+            ? .english
+            : .chinese
         if let address = try? GatewayAddress("192.168.8.254"),
            let site = try? JSONDecoder().decode(Site.self, from: Data(#"{"id":"s","internalReference":"default","name":"Default"}"#.utf8)) {
             let result = ConnectionTestResult(

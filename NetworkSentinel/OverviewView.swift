@@ -44,7 +44,7 @@ struct OverviewView: View {
 
         return ScrollView {
             VStack(alignment: .leading, spacing: SentinelMetrics.contentSpacing) {
-                Text("概览")
+                Text(T(.pageOverview))
                     .font(.system(size: SentinelMetrics.pageTitleFontSize, weight: .bold))
                     .tracking(SentinelMetrics.pageTitleTracking)
                     .accessibilityAddTraits(.isHeader)
@@ -80,10 +80,10 @@ struct OverviewView: View {
                 .fixedSize(horizontal: false, vertical: true)
                 .frame(maxWidth: .infinity, alignment: .leading)
 
-            Button("去设置") {
+            Button(T(.overviewOpenSettings)) {
                 windowState.selection = .settings
             }
-            .accessibilityLabel("去设置")
+            .accessibilityLabel(T(.overviewOpenSettings))
         }
         .padding(EdgeInsets(top: 10, leading: 12, bottom: 10, trailing: 12))
         .background(
@@ -100,10 +100,10 @@ struct OverviewView: View {
     /// 网关, 查询间隔 and 上次查询 (`.hstats`).
     private func gatewayInfo(_ status: MenuBarStatus) -> some View {
         HStack(alignment: .top, spacing: SentinelMetrics.contentSpacing) {
-            infoColumn(title: "网关", value: status.gatewayName.isEmpty ? "—" : status.gatewayName)
-            infoColumn(title: "查询间隔", value: "\(status.queryIntervalSeconds) 秒")
+            infoColumn(title: T(.overviewGateway), value: status.gatewayName.isEmpty ? "—" : status.gatewayName)
+            infoColumn(title: T(.overviewQueryInterval), value: T(.overviewIntervalSeconds, status.queryIntervalSeconds))
             infoColumn(
-                title: "上次查询",
+                title: T(.overviewLastQuery),
                 value: monitor.lastQueryAt.map(LogTimestampText.clock) ?? "—"
             )
         }
@@ -122,7 +122,7 @@ struct OverviewView: View {
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .accessibilityElement(children: .combine)
-        .accessibilityLabel("\(title)：\(value)")
+        .accessibilityLabel(T(.commonLabelValue, title, value))
     }
 
     /// The page before the first round finished.
@@ -130,14 +130,14 @@ struct OverviewView: View {
         VStack(spacing: 10) {
             ProgressView()
                 .controlSize(.small)
-            Text("正在读取 UniFi 网关的日志…")
+            Text(T(.overviewLoading))
                 .font(.system(size: SentinelMetrics.bodyFontSize))
                 .foregroundStyle(.secondary)
         }
         .frame(maxWidth: .infinity)
         .padding(.vertical, 48)
         .accessibilityElement(children: .combine)
-        .accessibilityLabel("正在读取 UniFi 网关的日志")
+        .accessibilityLabel(T(.overviewLoadingReadOut))
     }
 
     // MARK: - Cards
@@ -189,9 +189,14 @@ struct OverviewView: View {
                 OutageStripView(strip: strip)
 
                 SubStatistics(items: [
-                    SubStatistic(id: "count", value: "\(statistics.outageCount)", unit: "次", caption: "24 小时中断"),
-                    SubStatistic(id: "total", value: statistics.totalText, caption: "累计断网"),
-                    SubStatistic(id: "longest", value: statistics.longestText, caption: "最长一次"),
+                    SubStatistic(
+                        id: "count",
+                        value: "\(statistics.outageCount)",
+                        unit: T(.commonUnitTimes),
+                        caption: T(.overviewSubOutages24h)
+                    ),
+                    SubStatistic(id: "total", value: statistics.totalText, caption: T(.overviewSubTotalOutage)),
+                    SubStatistic(id: "longest", value: statistics.longestText, caption: T(.overviewSubLongest)),
                 ])
             }
         }
@@ -203,28 +208,28 @@ struct OverviewView: View {
 
         return SentinelCard {
             VStack(alignment: .leading, spacing: SentinelMetrics.cardContentSpacing) {
-                CardLabel(text: "检测到威胁 · 24 小时")
+                CardLabel(text: T(.overviewThreatCardLabel))
 
-                BigStat(text: "\(statistics.total)", unit: "条")
+                BigStat(text: "\(statistics.total)", unit: T(.commonUnitItems))
 
                 if statistics.total == 0 {
-                    Text("近 24 小时没有威胁")
+                    Text(T(.overviewNoThreats))
                         .font(.system(size: SentinelMetrics.hintFontSize))
                         .foregroundStyle(.secondary)
                         .lineLimit(1)
                 } else {
                     // The three columns carry the numbers; the line keeps the
                     // card the same shape as the 线路卡片 next to it.
-                    Text("UniFi 入侵防护记下的尝试")
+                    Text(T(.overviewThreatHint))
                         .font(.system(size: SentinelMetrics.hintFontSize))
                         .foregroundStyle(.secondary)
                         .lineLimit(1)
                 }
 
                 SubStatistics(items: [
-                    SubStatistic(id: "very-high", value: "\(statistics.veryHigh)", caption: "非常高"),
-                    SubStatistic(id: "high", value: "\(statistics.high)", caption: "高"),
-                    SubStatistic(id: "medium", value: "\(statistics.mediumAndBelow)", caption: "中及以下"),
+                    SubStatistic(id: "very-high", value: "\(statistics.veryHigh)", caption: T(.overviewSubVeryHigh)),
+                    SubStatistic(id: "high", value: "\(statistics.high)", caption: T(.overviewSubHigh)),
+                    SubStatistic(id: "medium", value: "\(statistics.mediumAndBelow)", caption: T(.overviewSubMediumAndBelow)),
                 ])
             }
         }
@@ -241,7 +246,7 @@ struct OverviewView: View {
         return SentinelCard(fillsHeight: false) {
             VStack(alignment: .leading, spacing: SentinelMetrics.cardContentSpacing) {
                 HStack(spacing: 8) {
-                    CardLabel(text: "最近事件")
+                    CardLabel(text: T(.overviewRecentEvents))
                     Spacer(minLength: 8)
                     SegmentedPills(
                         options: PanelEventFilter.allCases.map {
@@ -249,12 +254,12 @@ struct OverviewView: View {
                         },
                         selection: eventFilter,
                         onSelect: { eventFilter = $0 },
-                        accessibilityLabel: "事件筛选"
+                        accessibilityLabel: T(.overviewEventFilter)
                     )
                 }
 
                 if events.isEmpty {
-                    Text("近 24 小时没有监控事件")
+                    Text(T(.overviewNoEvents))
                         .font(.system(size: SentinelMetrics.hintFontSize))
                         .foregroundStyle(.secondary)
                         .frame(maxWidth: .infinity, alignment: .center)
@@ -281,7 +286,7 @@ struct OverviewView: View {
             Text(event.event.displayName)
                 .font(.system(size: SentinelMetrics.bodyFontSize))
                 .lineLimit(1)
-                .frame(width: SentinelMetrics.eventNameColumnWidth, alignment: .leading)
+                .frame(width: AppText.language == .english ? SentinelMetrics.eventNameColumnWidthEnglish : SentinelMetrics.eventNameColumnWidth, alignment: .leading)
 
             Text(LogDescription.text(for: event))
                 .font(.system(size: SentinelMetrics.bodyFontSize))
@@ -312,10 +317,10 @@ struct OverviewView: View {
     /// down; 备用 and 未启用 are not a problem, so they keep the plain color.
     private static func stateText(_ state: SnapshotWANState) -> String {
         switch state {
-        case .online: return "在线"
-        case .offline: return "断网中"
-        case .standby: return "备用"
-        case .disabled: return "未启用"
+        case .online: return T(.overviewStateOnline)
+        case .offline: return T(.overviewStateDown)
+        case .standby: return T(.overviewStateStandby)
+        case .disabled: return T(.overviewStateDisabled)
         }
     }
 
@@ -329,9 +334,11 @@ struct OverviewView: View {
 
     /// One event in one sentence, for a screen reader.
     private static func readOut(of event: MonitoredLogEvent) -> String {
-        let severity = event.severity?.displayName ?? "严重性未知"
+        let severity = event.severity?.displayName ?? T(.commonUnknownSeverity)
+        let separator = T(.commonListSeparator)
         let description = LogDescription.text(for: event)
-        return "\(severity)，\(event.event.displayName)，\(description)，\(LogTimestampText.stamp(event.timestamp))"
+        return "\(severity)\(separator)\(event.event.displayName)\(separator)"
+            + "\(description)\(separator)\(LogTimestampText.stamp(event.timestamp))"
     }
 
     /// The line hint under the big state: how long a line has been down, blank

@@ -70,28 +70,28 @@ extension ConnectionTestError: LocalizedError {
     public var errorDescription: String? {
         switch self {
         case .emptyAddress:
-            return "请输入 UniFi 网关地址"
+            return T(.connectionErrorEmptyAddress)
         case .invalidAddress:
-            return "地址格式不对，请输入网关的 IP 地址或主机名，例如 192.168.8.254"
+            return T(.connectionErrorInvalidAddress)
         case .cannotConnect(let address):
-            return "连不上 UniFi 网关 \(address.urlString)，请检查地址和网络是否正常"
+            return T(.connectionErrorCannotConnect, address.urlString)
         case .unauthorized:
-            return "API Key 不对或没有权限读取日志"
+            return T(.connectionErrorUnauthorized)
         case .notSupported:
-            return "网关没有这个接口，固件版本可能不支持"
+            return T(.connectionErrorNotSupported)
         case .logNotSupported:
-            return "网关没有读取日志的接口，固件版本可能不支持"
+            return T(.connectionErrorLogNotSupported)
         case .unreadableResponse(let detail):
             // The detail names a field or a coding path, never a response body.
-            return "看不懂网关返回的内容（\(detail)）"
+            return T(.connectionErrorUnreadableResponse, detail)
         case .gatewayRejected(let message):
-            return "网关拒绝了这次请求：\(message)"
+            return T(.connectionErrorGatewayRejected, message)
         case .gatewayNotFound:
-            return "网关状态里没有找到 UniFi 网关设备"
+            return T(.connectionErrorGatewayNotFound)
         case .certificateUnavailable:
-            return "没有读到 UniFi 网关的证书，请重新测试连接"
+            return T(.connectionErrorCertificateUnavailable)
         case .certificateChanged:
-            return "UniFi 网关的证书变了，请在连接设置里重新测试连接"
+            return T(.connectionErrorCertificateChanged)
         }
     }
 }
@@ -252,7 +252,7 @@ public final class ConnectionTester: @unchecked Sendable {
         case .invalidResponse(let statusCode):
             return .unreadableResponse("HTTP \(statusCode)")
         case .tooManyPages(let limit):
-            return .unreadableResponse("日志页数超过上限 \(limit)")
+            return .unreadableResponse(T(.connectionErrorPageLimit, limit))
         case .invalidURL:
             return .invalidAddress
         case .certificateChanged:

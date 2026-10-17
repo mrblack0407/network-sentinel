@@ -210,49 +210,49 @@ public struct NotificationPlanner {
         "\(event.displayName) \(severity.squares)"
     }
 
-    /// Body of one monitored entry, in Chinese.
+    /// Body of one monitored entry, in the current language.
     ///
     /// The leading line comes from the event's parameters; a merged group adds
     /// its own count line on top of this.
     public func notificationBody(for event: MonitoredLogEvent) -> String {
         switch event.event {
         case .internetDown:
-            return "\(lineText(event)) 已断开。"
+            return T(.bodyInternetDown, lineText(event))
 
         case .internetRestored:
-            let duration = event.durationSeconds.map(ChineseDuration.text(seconds:))
+            let duration = event.durationSeconds.map(DurationText.text(seconds:))
                 ?? event.durationText
-                ?? "未知"
-            return "\(lineText(event)) 已恢复，断网 \(duration)。"
+                ?? T(.commonUnknownLower)
+            return T(.bodyInternetRestored, lineText(event), duration)
 
         case .internetDownMultipleTimes:
-            return "\(lineText(event)) 在过去 24 小时内多次中断。"
+            return T(.bodyInternetDownMultipleTimes, lineText(event))
 
         case .internetDownTemporary:
-            let duration = event.durationSeconds.map(ChineseDuration.text(seconds:))
+            let duration = event.durationSeconds.map(DurationText.text(seconds:))
                 ?? event.durationText
-                ?? "未知"
-            return "\(lineText(event)) 临时中断后已恢复，断开 \(duration)。"
+                ?? T(.commonUnknownLower)
+            return T(.bodyInternetDownTemporary, lineText(event), duration)
 
         case .packetLoss:
-            return "\(lineText(event)) 检测到丢包。"
+            return T(.bodyPacketLoss, lineText(event))
 
         case .highLatency:
-            let latency = event.latencyMilliseconds.map(String.init) ?? "未知"
-            return "\(lineText(event)) 延迟升高到 \(latency) ms。"
+            let latency = event.latencyMilliseconds.map(String.init) ?? T(.commonUnknownLower)
+            return T(.bodyHighLatency, lineText(event), latency)
 
         case .threatDetected:
             // The gateway names the source and the destination from either a
-            // client or a raw address; a missing one is shown as 未知.
-            let source = event.source?.value ?? "未知"
-            let destination = event.destination?.value ?? "未知"
-            return "来自 \(source) 到 \(destination) 的入侵尝试。"
+            // client or a raw address; a missing one is shown as unknown.
+            let source = event.source?.value ?? T(.commonUnknownLower)
+            let destination = event.destination?.value ?? T(.commonUnknownLower)
+            return T(.bodyThreat, source, destination)
         }
     }
 
     /// `WAN1 (China Telecom)`, or `WAN1` when the gateway sent no provider.
     private func lineText(_ event: MonitoredLogEvent) -> String {
-        let line = event.wanID ?? "未知线路"
+        let line = event.wanID ?? T(.commonUnknownLine)
         if let isp = event.ispName, !isp.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
             return "\(line) (\(isp))"
         }
@@ -382,7 +382,7 @@ public struct NotificationPlanner {
         }
 
         static func countLine(_ count: Int) -> String {
-            "10 分钟内同类 \(count) 条。"
+            T(.bodyMergedCount, count)
         }
     }
 }

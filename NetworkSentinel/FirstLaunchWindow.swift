@@ -46,17 +46,17 @@ struct FirstLaunchWindow: View {
             Image(nsImage: appIcon)
                 .resizable()
                 .frame(width: 136, height: 136)
-                .accessibilityLabel("Network Sentinel App 图标")
+                .accessibilityLabel(T(.firstLaunchIconReadOut))
 
             VStack(spacing: 2) {
-                Text("欢迎使用 Network Sentinel")
+                Text(T(.firstLaunchWelcome))
                     .font(.system(size: SentinelMetrics.welcomeTitleFontSize, weight: .semibold))
                 Text("for UniFi")
                     .font(.system(size: 11, design: .monospaced))
                     .foregroundStyle(.secondary)
             }
 
-            Text("先连上你的 UniFi 网关，才能开始监控断网和威胁日志。")
+            Text(T(.firstLaunchIntro))
                 .font(.system(size: SentinelMetrics.welcomeBodyFontSize))
                 .foregroundStyle(.secondary)
                 .multilineTextAlignment(.center)
@@ -67,19 +67,19 @@ struct FirstLaunchWindow: View {
             pageDots(current: 1)
 
             HStack(spacing: 8) {
-                Button("退出") {
+                Button(T(.firstLaunchQuit)) {
                     NSApp.terminate(nil)
                 }
-                .accessibilityLabel("退出 Network Sentinel")
+                .accessibilityLabel(T(.panelQuitReadOut))
 
                 Spacer()
 
-                Button("下一步") {
+                Button(T(.firstLaunchNext)) {
                     page = .connect
                 }
                 .buttonStyle(.borderedProminent)
                 .keyboardShortcut(.defaultAction)
-                .accessibilityLabel("下一步：填写 UniFi 网关地址和 API Key")
+                .accessibilityLabel(T(.firstLaunchNextReadOut))
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
@@ -89,7 +89,7 @@ struct FirstLaunchWindow: View {
 
     private var connectPage: some View {
         VStack(alignment: .leading, spacing: 14) {
-            Text("连接 UniFi 网关")
+            Text(T(.connectionTitle))
                 .font(.system(size: SentinelMetrics.welcomeTitleFontSize, weight: .semibold))
                 .frame(maxWidth: .infinity, alignment: .center)
 
@@ -106,25 +106,25 @@ struct FirstLaunchWindow: View {
             pageDots(current: 2)
 
             HStack(spacing: 8) {
-                Button("上一步") {
+                Button(T(.firstLaunchBack)) {
                     page = .welcome
                 }
-                .accessibilityLabel("上一步：回到欢迎页")
+                .accessibilityLabel(T(.firstLaunchBackReadOut))
 
                 Spacer()
 
-                Button("测试连接") {
+                Button(T(.connectionTest)) {
                     test()
                 }
                 .disabled(!canTest)
 
-                Button("开始使用") {
+                Button(T(.firstLaunchStart)) {
                     finish()
                 }
                 .buttonStyle(.borderedProminent)
                 .disabled(!canFinish)
                 .keyboardShortcut(.defaultAction)
-                .accessibilityLabel("开始使用，保存配置并打开主窗口")
+                .accessibilityLabel(T(.firstLaunchStartReadOut))
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
@@ -162,7 +162,7 @@ struct FirstLaunchWindow: View {
                 pendingResult = value
                 state = .success(gatewayName: value.gatewayName)
             case .failure(let error):
-                state = .failure(reason: error.reason, field: error.field)
+                state = .failure(reason: .connection(error), field: error.field)
             }
         }
     }
@@ -175,7 +175,7 @@ struct FirstLaunchWindow: View {
             try configuration.saveConnection(result: pendingResult, apiKey: apiKeyText)
         } catch {
             self.pendingResult = nil
-            state = .failure(reason: error.localizedDescription, field: .none)
+            state = .failure(reason: .text(error.localizedDescription), field: .none)
             return
         }
 
@@ -208,6 +208,6 @@ struct FirstLaunchWindow: View {
         }
         .frame(maxWidth: .infinity)
         .accessibilityElement(children: .ignore)
-        .accessibilityLabel("第 \(current) 页，共 2 页")
+        .accessibilityLabel(T(.firstLaunchPageDots, current))
     }
 }

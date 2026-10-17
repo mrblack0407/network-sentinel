@@ -234,7 +234,8 @@ public struct BarkConfiguration: Equatable {
 
 /// Why the text of the Key field was refused.
 ///
-/// The text is Chinese: the 通知 page shows it as it is. No case carries the Key.
+/// The text follows the language: the 通知 page shows it as it is. No case
+/// carries the Key.
 public enum BarkConfigurationError: Error, Equatable {
     /// The field is empty, and so is a link without a Key.
     case missingKey
@@ -248,11 +249,11 @@ extension BarkConfigurationError: LocalizedError {
     public var errorDescription: String? {
         switch self {
         case .missingKey:
-            return "请输入 Bark Key"
+            return T(.barkErrorMissingKey)
         case .invalidKey:
-            return "Bark Key 格式不对，请粘贴 Bark 里的推送地址或 Key"
+            return T(.barkErrorInvalidKey)
         case .invalidServer:
-            return "服务器地址格式不对"
+            return T(.barkErrorInvalidServer)
         }
     }
 }
@@ -439,13 +440,13 @@ extension BarkError: LocalizedError {
     public var errorDescription: String? {
         switch self {
         case .network:
-            return "连不上 Bark 服务器，请检查服务器地址和网络。"
+            return T(.barkErrorNetwork)
         case .invalidKey:
-            return "Bark Key 不对，请在「通知」里重新填。"
+            return T(.barkErrorRejectedKey)
         case .server(let message):
-            return "Bark 服务器返回错误：\(message)"
+            return T(.barkErrorServer, message)
         case .unreadableResponse:
-            return "看不懂 Bark 服务器返回的内容。"
+            return T(.barkErrorUnreadableResponse)
         }
     }
 
@@ -467,7 +468,8 @@ public struct BarkResult: Equatable {
     public let succeeded: Bool
     /// When the push was attempted.
     public let date: Date
-    /// Chinese reason of a failed push; never the Key. `nil` on success.
+    /// Reason of a failed push, in the language of the moment of the push;
+    /// never the Key. `nil` on success.
     public let failureReason: String?
 
     private init(succeeded: Bool, date: Date, failureReason: String?) {
@@ -481,7 +483,7 @@ public struct BarkResult: Equatable {
         BarkResult(succeeded: true, date: date, failureReason: nil)
     }
 
-    /// A push that failed, with the Chinese reason the page shows.
+    /// A push that failed, with the reason the page shows.
     public static func failure(_ reason: String, at date: Date) -> BarkResult {
         BarkResult(succeeded: false, date: date, failureReason: reason)
     }

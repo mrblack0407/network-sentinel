@@ -77,7 +77,7 @@ struct MenuBarPanel: View {
         }
         .foregroundStyle(SentinelColor.failure)
         .accessibilityElement(children: .combine)
-        .accessibilityLabel("连接问题：\(reason)")
+        .accessibilityLabel(T(.panelConnectionProblem, reason))
     }
 
     // MARK: - WAN lines
@@ -141,16 +141,16 @@ struct MenuBarPanel: View {
                 },
                 selection: filter,
                 onSelect: { filter = $0 },
-                accessibilityLabel: "事件筛选"
+                accessibilityLabel: T(.overviewEventFilter)
             )
 
             Spacer(minLength: 8)
 
-            Text("24 小时：中断 \(status.outageCount24h) 次 · 威胁 \(status.threatCount24h) 条")
+            Text(T(.panelSummary, status.outageCount24h, status.threatCount24h))
                 .font(.system(size: SentinelMetrics.hintFontSize))
                 .foregroundStyle(.secondary)
                 .lineLimit(1)
-                .accessibilityLabel("近 24 小时中断 \(status.outageCount24h) 次，威胁 \(status.threatCount24h) 条")
+                .accessibilityLabel(T(.panelSummaryReadOut, status.outageCount24h, status.threatCount24h))
         }
     }
 
@@ -176,7 +176,7 @@ struct MenuBarPanel: View {
             .accessibilityHidden(true)
 
             if events.isEmpty {
-                Text("近 24 小时没有监控事件")
+                Text(T(.overviewNoEvents))
                     .font(.system(size: SentinelMetrics.hintFontSize))
                     .foregroundStyle(.secondary)
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
@@ -206,7 +206,7 @@ struct MenuBarPanel: View {
     private var placeholderRow: some View {
         HStack(spacing: 12) {
             SeverityBar(severity: .low)
-            Text("互联网中断")
+            Text(T(.eventInternetDown))
                 .font(.system(size: SentinelMetrics.panelRowFontSize))
                 .frame(maxWidth: .infinity, alignment: .leading)
             LogTimestampColumns(date: Date(timeIntervalSince1970: 0))
@@ -239,7 +239,10 @@ struct MenuBarPanel: View {
 
     /// One event in one sentence, for a screen reader.
     private static func readOut(of event: MonitoredLogEvent) -> String {
-        "\(event.severity?.displayName ?? "严重性未知")，\(event.event.displayName)，\(LogTimestampText.stamp(event.timestamp))"
+        let separator = T(.commonListSeparator)
+        let severity = event.severity?.displayName ?? T(.commonUnknownSeverity)
+        return "\(severity)\(separator)\(event.event.displayName)"
+            + "\(separator)\(LogTimestampText.stamp(event.timestamp))"
     }
 
     // MARK: - Footer
@@ -247,21 +250,21 @@ struct MenuBarPanel: View {
     /// The three links (`.foot`), evenly spread under a hairline.
     private var footer: some View {
         HStack(spacing: 12) {
-            PanelFooterButton(title: "打开主窗口", accessibilityLabel: "打开主窗口") {
+            PanelFooterButton(title: T(.panelOpenMainWindow), accessibilityLabel: T(.panelOpenMainWindow)) {
                 state.windows.showMainWindow()
             }
 
             Spacer(minLength: 12)
 
-            PanelFooterButton(title: "设置…", accessibilityLabel: "打开设置") {
+            PanelFooterButton(title: T(.panelOpenSettings), accessibilityLabel: T(.panelOpenSettingsReadOut)) {
                 state.windows.showMainWindow(selecting: .settings)
             }
 
             Spacer(minLength: 12)
 
             PanelFooterButton(
-                title: "退出",
-                accessibilityLabel: "退出 Network Sentinel",
+                title: T(.panelQuit),
+                accessibilityLabel: T(.panelQuitReadOut),
                 shortcut: KeyboardShortcut("q", modifiers: .command)
             ) {
                 NSApp.terminate(nil)
@@ -281,9 +284,9 @@ enum PanelEventFilter: String, CaseIterable, Identifiable {
 
     var title: String {
         switch self {
-        case .all: return "全部"
-        case .network: return "网络"
-        case .threat: return "威胁"
+        case .all: return T(.logCategoryAll)
+        case .network: return T(.logCategoryNetwork)
+        case .threat: return T(.logCategoryThreat)
         }
     }
 

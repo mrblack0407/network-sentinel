@@ -16,13 +16,13 @@ public enum GatewayConnectionState: String, Codable {
     /// of waiting, so it has its own state.
     case certificateChanged
 
-    /// Chinese text for the app.
+    /// Text for the app, in the current language.
     public var displayName: String {
         switch self {
-        case .connected: return "已连接"
-        case .reconnecting: return "网关连不上"
-        case .apiKeyRejected: return "API Key 无效"
-        case .certificateChanged: return "证书变了"
+        case .connected: return T(.connectionStateConnected)
+        case .reconnecting: return T(.connectionStateReconnecting)
+        case .apiKeyRejected: return T(.connectionStateAPIKeyRejected)
+        case .certificateChanged: return T(.connectionStateCertificateChanged)
         }
     }
 

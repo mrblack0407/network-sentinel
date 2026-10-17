@@ -159,7 +159,7 @@ public struct GatewayAddress: Equatable {
 
 /// Why a user-typed gateway address was rejected.
 ///
-/// The text is Chinese: the connection settings window shows it as it is.
+/// The text follows the language: the connection settings window shows it as it is.
 public enum GatewayAddressError: Error, Equatable {
     /// Empty input.
     case empty
@@ -171,19 +171,19 @@ extension GatewayAddressError: LocalizedError {
     public var errorDescription: String? {
         switch self {
         case .empty:
-            return "请输入 UniFi 网关地址"
+            return T(.addressErrorEmpty)
         case .invalid:
-            return "地址格式不对，请输入网关的 IP 地址或主机名，例如 192.168.8.254"
+            return T(.addressErrorInvalid)
         }
     }
 }
 
 /// What the connection settings window shows for the typed address: the
-/// normalized address, or the Chinese text next to the field.
+/// normalized address, or the text next to the field.
 public enum GatewayAddressInput: Equatable {
     /// The input was readable.
     case valid(GatewayAddress)
-    /// The input has to be corrected; the error carries the Chinese text.
+    /// The input has to be corrected; the error carries the text.
     case invalid(GatewayAddressError)
 
     /// Reads a user-typed address without throwing.
@@ -208,7 +208,7 @@ public enum GatewayAddressInput: Equatable {
         address?.urlString
     }
 
-    /// Chinese text for the window, or `nil` when the input is usable.
+    /// Text for the window, or `nil` when the input is usable.
     public var message: String? {
         guard case .invalid(let error) = self else { return nil }
         return error.errorDescription

@@ -39,10 +39,10 @@ struct ConnectionSettingsSheet: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 14) {
             VStack(alignment: .leading, spacing: 4) {
-                Text("连接 UniFi 网关")
+                Text(T(.connectionTitle))
                     .font(.system(size: SentinelMetrics.sheetTitleFontSize, weight: .semibold))
                     .accessibilityAddTraits(.isHeader)
-                Text("在 UniFi 网页左侧边栏点「Integrations → Create New API Key」生成，复制过来。")
+                Text(T(.connectionAPIKeyHintLong))
                     .font(.system(size: SentinelMetrics.cardBodyFontSize))
                     .foregroundStyle(.secondary)
                     .fixedSize(horizontal: false, vertical: true)
@@ -57,26 +57,26 @@ struct ConnectionSettingsSheet: View {
             ConnectionStatusRow(state: state)
 
             HStack(spacing: 8) {
-                Button("测试连接") {
+                Button(T(.connectionTest)) {
                     test()
                 }
                 .disabled(!canTest)
 
                 Spacer()
 
-                Button("取消") {
+                Button(T(.connectionCancel)) {
                     dismiss()
                 }
                 .keyboardShortcut(.cancelAction)
-                .accessibilityLabel("取消，不改动连接设置")
+                .accessibilityLabel(T(.connectionCancelReadOut))
 
-                Button("保存") {
+                Button(T(.connectionSave)) {
                     save()
                 }
                 .buttonStyle(.borderedProminent)
                 .disabled(!canSave)
                 .keyboardShortcut(.defaultAction)
-                .accessibilityLabel("保存连接设置")
+                .accessibilityLabel(T(.connectionSaveReadOut))
             }
             .padding(.top, 4)
         }
@@ -115,7 +115,7 @@ struct ConnectionSettingsSheet: View {
                 pendingResult = value
                 state = .success(gatewayName: value.gatewayName)
             case .failure(let error):
-                state = .failure(reason: error.reason, field: error.field)
+                state = .failure(reason: .connection(error), field: error.field)
             }
         }
     }
@@ -125,7 +125,7 @@ struct ConnectionSettingsSheet: View {
         do {
             try configuration.saveConnection(result: pendingResult, apiKey: apiKeyText)
         } catch {
-            state = .failure(reason: error.localizedDescription, field: .none)
+            state = .failure(reason: .text(error.localizedDescription), field: .none)
             return
         }
         dismiss()

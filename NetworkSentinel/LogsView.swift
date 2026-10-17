@@ -6,12 +6,14 @@ import UniformTypeIdentifiers
 /// 日志: the monitored local log with the 时间, 类型 and 严重性 filters, a
 /// paged table and the CSV export.
 ///
-/// The table shows the same Chinese text the notifications use, and the entries
+/// The table shows the same text the notifications use, and the entries
 /// themselves are the ones `MonitorService` published: the page never queries the
 /// gateway itself.
 struct LogsView: View {
     /// The monitoring engine: the local log comes from it.
     @ObservedObject var monitor: MonitorService
+    /// Settings of the app; observed so a language change redraws the table at once.
+    @ObservedObject var configuration: AppConfiguration
 
     // The three filters, with the defaults of the mockup.
     @State private var timeRange: LogTimeRange = .day7
@@ -27,7 +29,9 @@ struct LogsView: View {
     private static let pageSize = 17
     /// Widths of the fixed columns, so the header and the rows line up.
     private static let severityWidth = SentinelMetrics.logsSeverityColumnWidth
-    private static let eventNameWidth = SentinelMetrics.logsEventNameColumnWidth
+    private static var eventNameWidth: CGFloat {
+        AppText.language == .english ? SentinelMetrics.logsEventNameColumnWidthEnglish : SentinelMetrics.logsEventNameColumnWidth
+    }
 
     var body: some View {
         // The 时间 filter counts from 「现在」, so the table follows the clock
@@ -64,14 +68,14 @@ struct LogsView: View {
         .onChange(of: category) { _ in currentPage = 1 }
         .onChange(of: minimumSeverity) { _ in currentPage = 1 }
         .alert(
-            "导出失败",
+            T(.logsExportFailed),
             isPresented: Binding(
                 get: { exportErrorMessage != nil },
                 set: { if !$0 { exportErrorMessage = nil } }
             ),
             presenting: exportErrorMessage
         ) { _ in
-            Button("好", role: .cancel) {}
+            Button(T(.logsOK), role: .cancel) {}
         } message: { message in
             Text(message)
         }
@@ -94,7 +98,7 @@ struct LogsView: View {
     }
 
     private var titleLabel: some View {
-        Text("日志")
+        Text(T(.pageLogs))
             .font(.system(size: SentinelMetrics.pageTitleFontSize, weight: .bold))
             .tracking(SentinelMetrics.pageTitleTracking)
             .accessibilityAddTraits(.isHeader)
@@ -108,7 +112,7 @@ struct LogsView: View {
                 },
                 selection: timeRange,
                 onSelect: { timeRange = $0 },
-                accessibilityLabel: "时间范围"
+                accessibilityLabel: T(.logFilterTimeRange)
             )
 
             SegmentedPills(
@@ -117,7 +121,7 @@ struct LogsView: View {
                 },
                 selection: category,
                 onSelect: { category = $0 },
-                accessibilityLabel: "事件类型"
+                accessibilityLabel: T(.logFilterEventType)
             )
 
             SegmentedPills(
@@ -126,10 +130,10 @@ struct LogsView: View {
                 },
                 selection: minimumSeverity,
                 onSelect: { minimumSeverity = $0 },
-                accessibilityLabel: "严重性"
+                accessibilityLabel: T(.logFilterSeverity)
             )
 
-            ToolbarButton(title: "导出 CSV", accessibilityLabel: "导出 CSV") {
+            ToolbarButton(title: T(.logsExport), accessibilityLabel: T(.logsExport)) {
                 export(entries)
             }
         }
@@ -163,16 +167,16 @@ struct LogsView: View {
 
     private var tableHeader: some View {
         HStack(spacing: 12) {
-            Text("严重性")
+            Text(T(.logsTableSeverity))
                 .frame(width: Self.severityWidth, alignment: .leading)
-            Text("事件")
+            Text(T(.logsTableEvent))
                 .frame(width: Self.eventNameWidth, alignment: .leading)
-            Text("描述")
+            Text(T(.logsTableDescription))
                 .frame(maxWidth: .infinity, alignment: .leading)
             HStack(spacing: 4) {
-                Text("日期")
+                Text(T(.logsTableDate))
                     .frame(width: SentinelMetrics.dateColumnWidth, alignment: .trailing)
-                Text("时间")
+                Text(T(.logsTableTime))
                     .frame(width: SentinelMetrics.timeColumnWidth, alignment: .trailing)
             }
         }
@@ -183,12 +187,12 @@ struct LogsView: View {
     }
 
     private var emptyMessage: some View {
-        Text("这段时间没有符合条件的日志")
+        Text(T(.logsEmpty))
             .font(.system(size: SentinelMetrics.bodyFontSize))
             .foregroundStyle(.secondary)
             .frame(maxWidth: .infinity)
             .padding(.vertical, 40)
-            .accessibilityLabel("这段时间没有符合条件的日志")
+            .accessibilityLabel(T(.logsEmpty))
     }
 
     private func tableRow(_ event: MonitoredLogEvent) -> some View {
@@ -231,7 +235,7 @@ struct LogsView: View {
                     title: "«",
                     isCurrent: false,
                     isEnabled: pagination.canGoBack,
-                    accessibilityLabel: "第一页"
+                    accessibilityLabel: T(.logPagerFirst)
                 ) {
                     currentPage = 1
                 }
@@ -239,7 +243,7 @@ struct LogsView: View {
                     title: "‹",
                     isCurrent: false,
                     isEnabled: pagination.canGoBack,
-                    accessibilityLabel: "上一页"
+                    accessibilityLabel: T(.logPagerPrevious)
                 ) {
                     currentPage = max(1, pagination.currentPage - 1)
                 }
@@ -251,7 +255,7 @@ struct LogsView: View {
                             title: "\(number)",
                             isCurrent: number == pagination.currentPage,
                             isEnabled: true,
-                            accessibilityLabel: "第 \(number) 页"
+                            accessibilityLabel: T(.logPagerPage, number)
                         ) {
                             currentPage = number
                         }
@@ -268,7 +272,7 @@ struct LogsView: View {
                     title: "›",
                     isCurrent: false,
                     isEnabled: pagination.canGoForward,
-                    accessibilityLabel: "下一页"
+                    accessibilityLabel: T(.logPagerNext)
                 ) {
                     currentPage = min(pagination.pageCount, pagination.currentPage + 1)
                 }
@@ -276,7 +280,7 @@ struct LogsView: View {
                     title: "»",
                     isCurrent: false,
                     isEnabled: pagination.canGoForward,
-                    accessibilityLabel: "最后一页"
+                    accessibilityLabel: T(.logPagerLast)
                 ) {
                     currentPage = pagination.pageCount
                 }
@@ -300,7 +304,7 @@ struct LogsView: View {
         do {
             try LogCSVExporter.data(events: entries).write(to: url, options: .atomic)
         } catch {
-            exportErrorMessage = "无法写入 \(url.lastPathComponent)：\(error.localizedDescription)"
+            exportErrorMessage = T(.logsWriteFailed, url.lastPathComponent, error.localizedDescription)
         }
     }
 
@@ -308,9 +312,11 @@ struct LogsView: View {
 
     /// One entry in one sentence, for a screen reader.
     private static func readOut(of event: MonitoredLogEvent) -> String {
-        let severity = event.severity?.displayName ?? "严重性未知"
-        let line = event.wanID.map { "\($0)，" } ?? ""
+        let severity = event.severity?.displayName ?? T(.commonUnknownSeverity)
+        let separator = T(.commonListSeparator)
+        let line = event.wanID.map { "\($0)\(separator)" } ?? ""
         let description = LogDescription.text(for: event)
-        return "\(severity)，\(event.event.displayName)，\(line)\(description)，\(LogTimestampText.stamp(event.timestamp))"
+        return "\(severity)\(separator)\(event.event.displayName)\(separator)"
+            + "\(line)\(description)\(separator)\(LogTimestampText.stamp(event.timestamp))"
     }
 }

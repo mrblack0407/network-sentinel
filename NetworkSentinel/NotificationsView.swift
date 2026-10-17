@@ -4,6 +4,45 @@ import SentinelCore
 import SwiftUI
 import UserNotifications
 
+/// What 「保存」 or 「发送测试」 of the Bark card last did.
+///
+/// The message is kept as a case, not as a finished text, so a language change
+/// rewrites the line under the buttons like every other text of the page.
+enum BarkMessage: Equatable {
+    /// The Key was saved.
+    case saved
+    /// The Key was removed.
+    case deleted
+    /// The test push was sent.
+    case testSent
+    /// Something failed; the reason is text of the app or of the system.
+    case failure(String)
+
+    var isFailure: Bool {
+        if case .failure = self { return true }
+        return false
+    }
+
+    /// Color of the dot in front of the message.
+    var tone: StatusTone {
+        switch self {
+        case .saved, .testSent: return .ok
+        case .deleted: return .neutral
+        case .failure: return .failure
+        }
+    }
+
+    /// Text of the message in the current language.
+    var text: String {
+        switch self {
+        case .saved: return T(.notificationsBarkSaved)
+        case .deleted: return T(.notificationsBarkDeleted)
+        case .testSent: return T(.notificationsBarkTestSent)
+        case .failure(let reason): return reason
+        }
+    }
+}
+
 /// 通知: the system permission of the app and the rules that decide what is
 /// posted.
 ///
@@ -20,7 +59,7 @@ struct NotificationsPage: View {
     @State private var barkKeyText = ""
     @State private var isBarkKeyRevealed = false
     /// Result of 「保存」 or 「发送测试」 on this page, shown under the buttons.
-    @State private var barkMessage: (tone: StatusTone, text: String)?
+    @State private var barkMessage: BarkMessage?
     @State private var isSendingBarkTest = false
 
     /// Authorization the system reports for this app.
@@ -32,24 +71,24 @@ struct NotificationsPage: View {
 
             ScrollView {
                 VStack(alignment: .leading, spacing: SentinelMetrics.contentSpacing) {
-                    Text("通知")
+                    Text(T(.pageNotifications))
                         .font(.system(size: SentinelMetrics.pageTitleFontSize, weight: .bold))
                         .tracking(SentinelMetrics.pageTitleTracking)
                         .accessibilityAddTraits(.isHeader)
 
-                    GroupHeader(title: "权限", color: SentinelColor.groupPink)
+                    GroupHeader(title: T(.notificationsGroupPermission), color: SentinelColor.groupPink)
                     LazyVGrid(columns: columns, alignment: .leading, spacing: SentinelMetrics.cardSpacing) {
                         permissionCard
                     }
 
-                    GroupHeader(title: "通知", color: SentinelColor.groupPurple)
+                    GroupHeader(title: T(.notificationsGroupNotifications), color: SentinelColor.groupPurple)
                     LazyVGrid(columns: columns, alignment: .leading, spacing: SentinelMetrics.cardSpacing) {
                         notificationThresholdCard
                         alwaysNotifyOnRestoreCard
                         mergeSameKindCard
                     }
 
-                    GroupHeader(title: "Bark 推送", color: SentinelColor.groupTeal)
+                    GroupHeader(title: T(.notificationsGroupBark), color: SentinelColor.groupTeal)
                     LazyVGrid(columns: SettingsGridLayout.twoColumns, alignment: .leading, spacing: SentinelMetrics.cardSpacing) {
                         barkSwitchCard
                         barkKeyCard
@@ -80,10 +119,10 @@ struct NotificationsPage: View {
 
     private var permissionCard: some View {
         SettingsCard(
-            title: "系统通知权限",
-            description: "在系统设置里允许后，断网和威胁的通知才会弹出来。",
+            title: T(.notificationsPermissionTitle),
+            description: T(.notificationsPermissionDescription),
             statusTone: isAuthorized ? .ok : .warn,
-            statusText: isAuthorized ? "已允许" : "已关闭",
+            statusText: isAuthorized ? T(.notificationsPermissionAllowed) : T(.notificationsPermissionOff),
             control: permissionControl
         )
     }
@@ -93,8 +132,8 @@ struct NotificationsPage: View {
     private var permissionControl: some View {
         if !isAuthorized {
             ToolbarButton(
-                title: "打开系统设置",
-                accessibilityLabel: "打开系统设置的通知面板"
+                title: T(.notificationsPermissionOpen),
+                accessibilityLabel: T(.notificationsPermissionOpenReadOut)
             ) {
                 openNotificationSettings()
             }
@@ -123,8 +162,8 @@ struct NotificationsPage: View {
 
     private var notificationThresholdCard: some View {
         SettingsCard(
-            title: "弹通知",
-            description: "选哪一级，就通知这一级及以上。",
+            title: T(.notificationsThreshold),
+            description: T(.notificationsThresholdDescription),
             statusTone: .ok,
             statusText: Self.thresholdStatusText(for: configuration.monitorSettings.notifications.minimumSeverity),
             control: SegmentedPills(
@@ -133,7 +172,7 @@ struct NotificationsPage: View {
                 },
                 selection: configuration.monitorSettings.notifications.minimumSeverity,
                 onSelect: { configuration.setMinimumSeverity($0) },
-                accessibilityLabel: "弹通知的严重性"
+                accessibilityLabel: T(.notificationsThresholdReadOut)
             )
         )
     }
@@ -141,18 +180,22 @@ struct NotificationsPage: View {
     private static func thresholdStatusText(for minimum: LogSeverity) -> String {
         let names = LogSeverity.allCases
             .filter { $0 >= minimum }
-            .map { "「\($0.displayName)」" }
-        return names.joined(separator: names.count > 2 ? "" : "和") + "会弹通知"
+            .map { T(.notificationsThresholdQuoted, $0.displayName) }
+        let separator = names.count > 2
+            ? T(.notificationsThresholdList)
+            : T(.notificationsThresholdPair)
+        return names.joined(separator: separator) + T(.notificationsThresholdSuffix)
     }
 
     private var alwaysNotifyOnRestoreCard: some View {
         let isOn = configuration.monitorSettings.notifications.alwaysNotifyOnRestore
 
         return SettingsCard(
-            title: "恢复时总是通知",
-            description: "线路恢复时不管严重性都弹一条，写明断了多久。",
+            title: T(.notificationsRestoreTitle),
+            description: T(.notificationsRestoreDescription),
             statusTone: isOn ? .ok : .neutral,
-            statusText: isOn ? "已开启" : "已关闭",
+            statusText: isOn ? T(.settingsOn) : T(.settingsOff),
+            keepsControlBeside: true,
             control: Toggle("", isOn: Binding(
                 get: { configuration.monitorSettings.notifications.alwaysNotifyOnRestore },
                 set: { configuration.setAlwaysNotifyOnRestore($0) }
@@ -160,7 +203,7 @@ struct NotificationsPage: View {
             .labelsHidden()
             .toggleStyle(.switch)
             .controlSize(.small)
-            .accessibilityLabel("恢复时总是通知")
+            .accessibilityLabel(T(.notificationsRestoreTitle))
         )
     }
 
@@ -169,10 +212,11 @@ struct NotificationsPage: View {
         let minutes = configuration.monitorSettings.notifications.mergeWindowSeconds / 60
 
         return SettingsCard(
-            title: "同类事件合并",
-            description: "\(minutes) 分钟内同类的事件合成一条通知。",
+            title: T(.notificationsMergeTitle),
+            description: T(.notificationsMergeDescription, minutes),
             statusTone: isOn ? .ok : .neutral,
-            statusText: isOn ? "已开启" : "已关闭",
+            statusText: isOn ? T(.settingsOn) : T(.settingsOff),
+            keepsControlBeside: true,
             control: Toggle("", isOn: Binding(
                 get: { configuration.monitorSettings.notifications.mergeSameKind },
                 set: { configuration.setMergeSameKind($0) }
@@ -180,7 +224,7 @@ struct NotificationsPage: View {
             .labelsHidden()
             .toggleStyle(.switch)
             .controlSize(.small)
-            .accessibilityLabel("同类事件合并")
+            .accessibilityLabel(T(.notificationsMergeTitle))
         )
     }
 
@@ -190,39 +234,43 @@ struct NotificationsPage: View {
     private var barkSwitchCard: some View {
         let status = barkStatus
         return SettingsCard(
-            title: "Bark 推送",
-            description: "把同样的通知同步推到装了 Bark 的 iPhone。网关连不上和「非常高」的事件用时效性通知，专注模式下也能收到。",
+            title: T(.notificationsBarkTitle),
+            description: T(.notificationsBarkDescription),
             statusTone: status.tone,
             statusText: status.text,
+            keepsControlBeside: true,
             control: Toggle("", isOn: $configuration.barkEnabled)
                 .labelsHidden()
                 .toggleStyle(.switch)
                 .controlSize(.small)
                 .disabled(!configuration.hasBarkKey)
-                .accessibilityLabel("Bark 推送")
+                .accessibilityLabel(T(.notificationsBarkTitle))
         )
     }
 
     private var barkStatus: (tone: StatusTone, text: String) {
-        guard configuration.hasBarkKey else { return (.neutral, "还没填 Bark Key") }
-        guard configuration.barkEnabled else { return (.neutral, "已关闭") }
+        guard configuration.hasBarkKey else { return (.neutral, T(.notificationsBarkNoKey)) }
+        guard configuration.barkEnabled else { return (.neutral, T(.settingsOff)) }
         if let result = monitor.lastBarkResult {
             if result.succeeded {
-                return (.ok, "已开启，上次推送 \(Self.barkTimeFormatter.string(from: result.date))")
+                return (.ok, T(.notificationsBarkLastPush, Self.barkTime(result.date)))
             }
-            return (.failure, "上次推送失败：\(result.failureReason ?? "原因不明")")
+            return (.failure, T(
+                .notificationsBarkLastFailed,
+                result.failureReason ?? T(.notificationsBarkUnknownReason)
+            ))
         }
-        return (.ok, "已开启")
+        return (.ok, T(.notificationsBarkOn))
     }
 
     /// 「Bark 设置」: the server, the key, the ringtone and the actions.
     private var barkKeyCard: some View {
         VStack(alignment: .leading, spacing: 10) {
-            Text("Bark 设置")
+            Text(T(.notificationsBarkSettings))
                 .font(.system(size: SentinelMetrics.cardTitleFontSize, weight: .semibold))
 
             VStack(alignment: .leading, spacing: 6) {
-                Text("服务器（用自建服务器时才改）")
+                Text(T(.notificationsBarkServer))
                     .font(.system(size: SentinelMetrics.cardBodyFontSize))
                     .foregroundStyle(.secondary)
                 ConnectionFieldBox(isError: false) {
@@ -230,45 +278,49 @@ struct NotificationsPage: View {
                         .textFieldStyle(.plain)
                         .font(.system(size: SentinelMetrics.inputFontSize, design: .monospaced))
                 }
-                .accessibilityLabel("Bark 服务器地址")
+                .accessibilityLabel(T(.notificationsBarkServerReadOut))
             }
 
             VStack(alignment: .leading, spacing: 6) {
-                Text(configuration.hasBarkKey ? "Bark Key（存在钥匙串里）" : "Bark Key（在 Bark App 首页复制推送链接或 Key）")
+                Text(
+                    configuration.hasBarkKey
+                        ? T(.notificationsBarkKeySaved)
+                        : T(.notificationsBarkKeyEmpty)
+                )
                     .font(.system(size: SentinelMetrics.cardBodyFontSize))
                     .foregroundStyle(.secondary)
-                ConnectionFieldBox(isError: barkMessage?.tone == .failure) {
+                ConnectionFieldBox(isError: barkMessage?.isFailure == true) {
                     HStack(spacing: 8) {
                         Group {
                             if isBarkKeyRevealed {
-                                TextField("粘贴 Bark Key 或推送链接", text: $barkKeyText)
+                                TextField(T(.notificationsBarkKeyPlaceholder), text: $barkKeyText)
                             } else {
-                                SecureField("粘贴 Bark Key 或推送链接", text: $barkKeyText)
+                                SecureField(T(.notificationsBarkKeyPlaceholder), text: $barkKeyText)
                             }
                         }
                         .textFieldStyle(.plain)
                         .font(.system(size: SentinelMetrics.inputFontSize, design: .monospaced))
 
-                        Button(isBarkKeyRevealed ? "隐藏" : "显示") { isBarkKeyRevealed.toggle() }
+                        Button(isBarkKeyRevealed ? T(.notificationsBarkHide) : T(.notificationsBarkShow)) { isBarkKeyRevealed.toggle() }
                             .buttonStyle(.plain)
                             .font(.system(size: SentinelMetrics.cardBodyFontSize))
                             .foregroundStyle(Color.accentColor)
-                            .accessibilityLabel(isBarkKeyRevealed ? "隐藏 Bark Key" : "显示 Bark Key")
+                            .accessibilityLabel(isBarkKeyRevealed ? T(.notificationsBarkHideReadOut) : T(.notificationsBarkShowReadOut))
                     }
                 }
                 .accessibilityLabel("Bark Key")
             }
 
             VStack(alignment: .leading, spacing: 6) {
-                Text("自定义铃声（不填用 Bark 默认铃声）")
+                Text(T(.notificationsBarkRingtone))
                     .font(.system(size: SentinelMetrics.cardBodyFontSize))
                     .foregroundStyle(.secondary)
                 ConnectionFieldBox(isError: false) {
-                    TextField("例如 minuet", text: $configuration.barkSound)
+                    TextField(T(.notificationsBarkRingtonePlaceholder), text: $configuration.barkSound)
                         .textFieldStyle(.plain)
                         .font(.system(size: SentinelMetrics.inputFontSize, design: .monospaced))
                 }
-                .accessibilityLabel("Bark 自定义铃声")
+                .accessibilityLabel(T(.notificationsBarkRingtone))
             }
 
             HStack(spacing: 8) {
@@ -284,14 +336,14 @@ struct NotificationsPage: View {
                 }
                 Spacer(minLength: 8)
                 if configuration.hasBarkKey {
-                    ToolbarButton(title: "删除 Key", accessibilityLabel: "删除 Bark Key") { removeBarkKey() }
+                    ToolbarButton(title: T(.notificationsBarkDeleteKey), accessibilityLabel: T(.notificationsBarkDeleteKeyReadOut)) { removeBarkKey() }
                     ToolbarButton(
-                        title: isSendingBarkTest ? "发送中…" : "发送测试",
-                        accessibilityLabel: "发送一条 Bark 测试推送"
+                        title: isSendingBarkTest ? T(.notificationsBarkSending) : T(.notificationsBarkSendTest),
+                        accessibilityLabel: T(.notificationsBarkSendTestReadOut)
                     ) { sendBarkTest() }
                     .disabled(isSendingBarkTest)
                 }
-                ToolbarButton(title: "保存", accessibilityLabel: "保存 Bark Key") { saveBarkKey() }
+                ToolbarButton(title: T(.notificationsBarkSave), accessibilityLabel: T(.notificationsBarkSaveReadOut)) { saveBarkKey() }
                     .disabled(!isBarkKeyChanged)
             }
         }
@@ -317,9 +369,9 @@ struct NotificationsPage: View {
             barkKeyText = configuration.barkKey() ?? ""
             isBarkKeyRevealed = false
             configuration.barkEnabled = true
-            barkMessage = (.ok, "已保存，可以点「发送测试」试一下")
+            barkMessage = .saved
         } catch {
-            barkMessage = (.failure, error.localizedDescription)
+            barkMessage = .failure(error.localizedDescription)
         }
     }
 
@@ -328,9 +380,9 @@ struct NotificationsPage: View {
             try configuration.removeBarkKey()
             barkKeyText = ""
             configuration.barkEnabled = false
-            barkMessage = (.neutral, "已删除 Bark Key")
+            barkMessage = .deleted
         } catch {
-            barkMessage = (.failure, error.localizedDescription)
+            barkMessage = .failure(error.localizedDescription)
         }
     }
 
@@ -340,15 +392,16 @@ struct NotificationsPage: View {
             let result = await monitor.sendBarkTest()
             isSendingBarkTest = false
             barkMessage = result.succeeded
-                ? (.ok, "测试推送已发出，看看手机收到没有")
-                : (.failure, result.failureReason ?? "发送失败")
+                ? .testSent
+                : .failure(result.failureReason ?? T(.notificationsBarkSendFailed))
         }
     }
 
-    private static let barkTimeFormatter: DateFormatter = {
+    /// `10/16 9:44` of the last push, in the language of the page.
+    private static func barkTime(_ date: Date) -> String {
         let formatter = DateFormatter()
-        formatter.locale = Locale(identifier: "zh_Hans_CN")
+        formatter.locale = AppText.locale
         formatter.dateFormat = "M/d H:mm"
-        return formatter
-    }()
+        return formatter.string(from: date)
+    }
 }
