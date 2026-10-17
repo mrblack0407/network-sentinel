@@ -2,7 +2,7 @@ import AppKit
 import SentinelCore
 import SwiftUI
 
-/// 界面: 语言 and 外观, one card each, saved on every change.
+/// 界面: 语言 and 外观, one card each with a pop-up menu, saved on every change.
 struct InterfacePage: View {
     @ObservedObject var configuration: AppConfiguration
 
@@ -35,16 +35,18 @@ struct InterfacePage: View {
                     ? T(.interfaceLanguageChinese)
                     : T(.interfaceLanguageEnglish)
             ),
-            control: SegmentedPills(
-                options: [
-                    .init(value: AppLanguage.system, title: T(.interfaceLanguageSystem)),
-                    .init(value: AppLanguage.chinese, title: T(.interfaceLanguageChinese)),
-                    .init(value: AppLanguage.english, title: T(.interfaceLanguageEnglish)),
-                ],
-                selection: configuration.language,
-                onSelect: { configuration.language = $0 },
-                accessibilityLabel: T(.interfaceLanguage)
-            )
+            keepsControlBeside: true,
+            control: Picker(T(.interfaceLanguage), selection: Binding(
+                get: { configuration.language },
+                set: { configuration.language = $0 }
+            )) {
+                Text(T(.interfaceLanguageSystem)).tag(AppLanguage.system)
+                Text(T(.interfaceLanguageChinese)).tag(AppLanguage.chinese)
+                Text(T(.interfaceLanguageEnglish)).tag(AppLanguage.english)
+            }
+            .pickerStyle(.menu)
+            .labelsHidden()
+            .fixedSize()
         )
     }
 
@@ -54,16 +56,18 @@ struct InterfacePage: View {
             description: T(.interfaceAppearanceDescription),
             statusTone: .ok,
             statusText: Self.appearanceStatus(configuration.appearance),
-            control: SegmentedPills(
-                options: [
-                    .init(value: AppAppearance.system, title: T(.interfaceAppearanceSystem)),
-                    .init(value: AppAppearance.light, title: T(.interfaceAppearanceLight)),
-                    .init(value: AppAppearance.dark, title: T(.interfaceAppearanceDark)),
-                ],
-                selection: configuration.appearance,
-                onSelect: { configuration.appearance = $0 },
-                accessibilityLabel: T(.interfaceAppearance)
-            )
+            keepsControlBeside: true,
+            control: Picker(T(.interfaceAppearance), selection: Binding(
+                get: { configuration.appearance },
+                set: { configuration.appearance = $0 }
+            )) {
+                Text(T(.interfaceAppearanceSystem)).tag(AppAppearance.system)
+                Text(T(.interfaceAppearanceLight)).tag(AppAppearance.light)
+                Text(T(.interfaceAppearanceDark)).tag(AppAppearance.dark)
+            }
+            .pickerStyle(.menu)
+            .labelsHidden()
+            .fixedSize()
         )
     }
 
