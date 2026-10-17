@@ -54,25 +54,13 @@ struct MenuBarPanel: View {
 
     // MARK: - Header
 
-    /// Gateway name and the 「30 秒查一次」 chip (`.gwrow`, `.chip`).
+    /// Gateway name (`.gwrow`).
     private func header(_ status: MenuBarStatus) -> some View {
-        HStack(spacing: 10) {
-            Text(status.gatewayName.isEmpty ? "Network Sentinel" : status.gatewayName)
-                .font(.system(size: SentinelMetrics.panelTitleFontSize, weight: .bold))
-                .lineLimit(1)
-                .accessibilityAddTraits(.isHeader)
-
-            Spacer(minLength: 8)
-
-            Text("\(status.queryIntervalSeconds) 秒查一次")
-                .font(.system(size: SentinelMetrics.chipFontSize))
-                .foregroundStyle(.secondary)
-                .padding(.horizontal, SentinelMetrics.chipHorizontalPadding)
-                .padding(.vertical, SentinelMetrics.chipVerticalPadding)
-                .background(Capsule().fill(SentinelColor.card))
-                .overlay(Capsule().stroke(SentinelColor.border, lineWidth: 1))
-                .accessibilityLabel("每 \(status.queryIntervalSeconds) 秒查一次")
-        }
+        Text(status.gatewayName.isEmpty ? "Network Sentinel" : status.gatewayName)
+            .font(.system(size: SentinelMetrics.panelTitleFontSize, weight: .bold))
+            .lineLimit(1)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .accessibilityAddTraits(.isHeader)
     }
 
     /// The red line above the WAN lines: why the app cannot read the gateway.
