@@ -72,6 +72,13 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     /// 退出: the engine stops before the process goes away.
+    /// A click on the Dock icon while no window is open brings the 主窗口 back.
+    func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
+        guard let state = Self.appState, state.configuration.isConfigured, !flag else { return true }
+        state.windows.showMainWindow()
+        return true
+    }
+
     func applicationWillTerminate(_ notification: Notification) {
         Self.appState?.monitor.stop()
     }

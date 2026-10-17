@@ -115,11 +115,38 @@ final class WindowCoordinator: NSObject, NSWindowDelegate {
 
     /// Closing the 首次启动窗口 quits the app; closing the 主窗口 does not.
     func windowWillClose(_ notification: Notification) {
-        guard let window = notification.object as? NSWindow, window === firstLaunchWindow else { return }
+        guard let window = notification.object as? NSWindow else { return }
 
-        firstLaunchWindow = nil
-        guard !isFirstLaunchFinished else { return }
-        NSApp.terminate(nil)
+        if window === firstLaunchWindow {
+            firstLaunchWindow = nil
+            guard isFirstLaunchFinished else {
+                NSApp.terminate(nil)
+                return
+            }
+        }
+
+        // The window is still on screen during this call: check once it is gone.
+        DispatchQueue.main.async { [weak self] in
+            self?.hideDockIconIfNoWindow()
+        }
+    }
+
+    // MARK: - Dock icon
+
+    /// While the 主窗口 or the 首次启动窗口 is open the app shows a Dock icon
+    /// (and its menu bar menus), like a normal app.
+    private func showDockIcon() {
+        if NSApp.activationPolicy() != .regular {
+            NSApp.setActivationPolicy(.regular)
+        }
+    }
+
+    /// With every window closed it goes back to a menu bar app.
+    private func hideDockIconIfNoWindow() {
+        let hasOpenWindow = (firstLaunchWindow?.isVisible ?? false) || (mainWindow?.isVisible ?? false)
+        if !hasOpenWindow, NSApp.activationPolicy() != .accessory {
+            NSApp.setActivationPolicy(.accessory)
+        }
     }
 
     // MARK: - Pieces
@@ -178,7 +205,8 @@ final class WindowCoordinator: NSObject, NSWindowDelegate {
 
     /// Brings a window to the front and makes it the key window.
     private func bringToFront(_ window: NSWindow) {
-        // The app has no Dock icon, so it has to ask for the front itself.
+        showDockIcon()
+        // A menu bar app is not brought forward by a click, so it asks itself.
         NSApp.activate(ignoringOtherApps: true)
         window.makeKeyAndOrderFront(nil)
 
