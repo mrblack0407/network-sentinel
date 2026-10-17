@@ -149,14 +149,18 @@ struct SettingsPage: View {
             description: T(.settingsQueryIntervalDescription),
             statusTone: .ok,
             statusText: T(.settingsQueryIntervalStatus, configuration.monitorSettings.queryIntervalSeconds),
-            control: SegmentedPills(
-                options: MonitorSettings.queryIntervalOptions.map {
-                    SegmentedPills<Int>.Option(value: $0, title: T(.settingsQueryIntervalOption, $0))
-                },
-                selection: configuration.monitorSettings.queryIntervalSeconds,
-                onSelect: { configuration.setQueryInterval(seconds: $0) },
-                accessibilityLabel: T(.settingsQueryInterval)
-            )
+            keepsControlBeside: true,
+            control: Picker(T(.settingsQueryInterval), selection: Binding(
+                get: { configuration.monitorSettings.queryIntervalSeconds },
+                set: { configuration.setQueryInterval(seconds: $0) }
+            )) {
+                ForEach(MonitorSettings.queryIntervalOptions, id: \.self) {
+                    Text(T(.settingsQueryIntervalOption, $0)).tag($0)
+                }
+            }
+            .pickerStyle(.menu)
+            .labelsHidden()
+            .fixedSize()
         )
     }
 
@@ -250,14 +254,18 @@ struct SettingsPage: View {
             description: T(.settingsRetentionDescription),
             statusTone: .ok,
             statusText: T(.settingsRetentionStatus, configuration.monitorSettings.logRetentionDays),
-            control: SegmentedPills(
-                options: MonitorSettings.logRetentionOptions.map {
-                    SegmentedPills<Int>.Option(value: $0, title: T(.settingsRetentionOption, $0))
-                },
-                selection: configuration.monitorSettings.logRetentionDays,
-                onSelect: { configuration.setLogRetention(days: $0) },
-                accessibilityLabel: T(.settingsRetention)
-            )
+            keepsControlBeside: true,
+            control: Picker(T(.settingsRetention), selection: Binding(
+                get: { configuration.monitorSettings.logRetentionDays },
+                set: { configuration.setLogRetention(days: $0) }
+            )) {
+                ForEach(MonitorSettings.logRetentionOptions, id: \.self) {
+                    Text(T(.settingsRetentionOption, $0)).tag($0)
+                }
+            }
+            .pickerStyle(.menu)
+            .labelsHidden()
+            .fixedSize()
         )
     }
 }
