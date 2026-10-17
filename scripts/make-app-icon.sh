@@ -14,7 +14,7 @@ set -euo pipefail
 
 cd "$(dirname "$0")/.."
 
-SVG="Design/Icons/AppIcon-Dark.svg"
+SVG="Design/Icons/AppIcon-Dark-FullBleed.svg"
 RENDERER="scripts/render-svg.swift"
 ICONSET="NetworkSentinel/Assets.xcassets/AppIcon.appiconset"
 DEVELOPER_DIR="${DEVELOPER_DIR:-/Applications/Xcode.app/Contents/Developer}"
