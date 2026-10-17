@@ -39,15 +39,7 @@ struct MenuBarPanel: View {
 
             filterRow(status)
 
-            if events.isEmpty {
-                Text("近 24 小时没有监控事件")
-                    .font(.system(size: SentinelMetrics.hintFontSize))
-                    .foregroundStyle(.secondary)
-                    .frame(maxWidth: .infinity, alignment: .center)
-                    .padding(.vertical, 16)
-            } else {
-                eventList(events)
-            }
+            eventList(events)
 
             Divider()
 
@@ -177,13 +169,38 @@ struct MenuBarPanel: View {
     // MARK: - Events
 
     /// The newest events of the filter, in the same grouped box as the lines.
+    ///
+    /// The box always keeps the height of a full list, whatever the filter
+    /// finds: a shorter panel makes the menu bar window resize, and macOS then
+    /// moves it away from the icon.
     private func eventList(_ events: [MonitoredLogEvent]) -> some View {
-        VStack(spacing: 0) {
-            ForEach(Array(events.enumerated()), id: \.element.id) { index, event in
-                if index > 0 {
-                    Divider()
+        ZStack(alignment: .top) {
+            // Invisible full list that sets the height of the box.
+            VStack(spacing: 0) {
+                ForEach(0..<Self.eventLimit, id: \.self) { index in
+                    if index > 0 {
+                        Divider()
+                    }
+                    placeholderRow
                 }
-                eventRow(event)
+            }
+            .hidden()
+            .accessibilityHidden(true)
+
+            if events.isEmpty {
+                Text("近 24 小时没有监控事件")
+                    .font(.system(size: SentinelMetrics.hintFontSize))
+                    .foregroundStyle(.secondary)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+            } else {
+                VStack(spacing: 0) {
+                    ForEach(Array(events.enumerated()), id: \.element.id) { index, event in
+                        if index > 0 {
+                            Divider()
+                        }
+                        eventRow(event)
+                    }
+                }
             }
         }
         .padding(.vertical, SentinelMetrics.tightGroupVerticalPadding)
@@ -195,6 +212,19 @@ struct MenuBarPanel: View {
             RoundedRectangle(cornerRadius: SentinelMetrics.tightGroupCornerRadius)
                 .stroke(SentinelColor.border, lineWidth: 1)
         )
+    }
+
+    /// A row with the same parts and paddings as `eventRow`, for the height.
+    private var placeholderRow: some View {
+        HStack(spacing: 12) {
+            SeverityBar(severity: .low)
+            Text("互联网中断")
+                .font(.system(size: SentinelMetrics.panelRowFontSize))
+                .frame(maxWidth: .infinity, alignment: .leading)
+            LogTimestampColumns(date: Date(timeIntervalSince1970: 0))
+        }
+        .monospacedDigit()
+        .padding(SentinelMetrics.tightRowPadding)
     }
 
     private func eventRow(_ event: MonitoredLogEvent) -> some View {

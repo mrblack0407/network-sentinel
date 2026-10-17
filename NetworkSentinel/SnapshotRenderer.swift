@@ -32,7 +32,12 @@ enum SnapshotRenderer {
             try? configuration.saveConnection(result: result, apiKey: "snapshot")
         }
 
-        let monitor = MonitorService(configuration: configuration, sender: SilentSender())
+        // NS_SNAPSHOT_EMPTY=1 renders with an empty local log (empty states).
+        let isEmpty = ProcessInfo.processInfo.environment["NS_SNAPSHOT_EMPTY"] == "1"
+        let monitor = isEmpty
+            ? MonitorService(configuration: configuration, sender: SilentSender(),
+                             logStore: MonitorLogStore(directory: directory.appendingPathComponent("empty-store", isDirectory: true)))
+            : MonitorService(configuration: configuration, sender: SilentSender())
         monitor.loadSnapshotState(gatewayStatus: gatewayStatus(withWAN2: withWAN2), now: Date())
 
         let state = AppState(configuration: configuration, monitor: monitor)
