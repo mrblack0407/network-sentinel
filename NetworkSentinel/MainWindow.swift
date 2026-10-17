@@ -2,7 +2,7 @@ import AppKit
 import SentinelCore
 import SwiftUI
 
-/// 主窗口: the sidebar of 「概览」「日志」「通知」「设置」 and the page it selects.
+/// 主窗口: the sidebar of 「概览」「日志」「通知」「界面」「设置」 and the page it selects.
 struct MainWindow: View {
     @ObservedObject var configuration: AppConfiguration
     /// The monitoring engine, for the status line of 设置 and the 线路标签.
@@ -43,6 +43,8 @@ struct MainWindow: View {
             LogsView(monitor: monitor, configuration: configuration)
         case .notifications:
             NotificationsPage(configuration: configuration, monitor: monitor)
+        case .interface:
+            InterfacePage(configuration: configuration)
         case .settings:
             SettingsPage(configuration: configuration, monitor: monitor)
         }
@@ -103,6 +105,7 @@ enum SidebarItem: String, CaseIterable, Identifiable {
     case overview
     case logs
     case notifications
+    case interface
     case settings
 
     var id: String { rawValue }
@@ -112,6 +115,7 @@ enum SidebarItem: String, CaseIterable, Identifiable {
         case .overview: return T(.pageOverview)
         case .logs: return T(.pageLogs)
         case .notifications: return T(.pageNotifications)
+        case .interface: return T(.pageInterface)
         case .settings: return T(.pageSettings)
         }
     }
@@ -121,6 +125,7 @@ enum SidebarItem: String, CaseIterable, Identifiable {
         case .overview: return "chart.line.uptrend.xyaxis"
         case .logs: return "list.bullet.rectangle"
         case .notifications: return "bell"
+        case .interface: return "paintpalette"
         case .settings: return "slider.horizontal.3"
         }
     }
@@ -133,7 +138,7 @@ struct SidebarView: View {
     /// Pages above the 「配置」 group title.
     private static let mainPages: [SidebarItem] = [.overview, .logs]
     /// Pages under the 「配置」 group title.
-    private static let configuredPages: [SidebarItem] = [.notifications, .settings]
+    private static let configuredPages: [SidebarItem] = [.notifications, .interface, .settings]
 
     var body: some View {
         VStack(alignment: .leading, spacing: SentinelMetrics.sidebarSpacing) {

@@ -28,8 +28,6 @@ struct SettingsPage: View {
                     LazyVGrid(columns: SettingsGridLayout.twoColumns, alignment: .leading, spacing: SentinelMetrics.cardSpacing) {
                         launchAtLoginCard
                         logRetentionCard
-                        languageCard
-                        appearanceCard
                     }
 
                     GroupHeader(title: T(.settingsGroupGateway), color: SentinelColor.groupPurple)
@@ -261,58 +259,5 @@ struct SettingsPage: View {
                 accessibilityLabel: T(.settingsRetention)
             )
         )
-    }
-
-    private var languageCard: some View {
-        SettingsCard(
-            title: T(.settingsLanguage),
-            description: T(.settingsLanguageDescription),
-            statusTone: .ok,
-            statusText: T(
-                .settingsLanguageStatus,
-                configuration.language.resolved() == .chinese
-                    ? T(.settingsLanguageChinese)
-                    : T(.settingsLanguageEnglish)
-            ),
-            control: SegmentedPills(
-                options: [
-                    .init(value: AppLanguage.system, title: T(.settingsLanguageSystem)),
-                    .init(value: AppLanguage.chinese, title: T(.settingsLanguageChinese)),
-                    .init(value: AppLanguage.english, title: T(.settingsLanguageEnglish)),
-                ],
-                selection: configuration.language,
-                onSelect: { configuration.language = $0 },
-                accessibilityLabel: T(.settingsLanguage)
-            )
-        )
-    }
-
-    private var appearanceCard: some View {
-        SettingsCard(
-            title: T(.settingsAppearance),
-            description: T(.settingsAppearanceDescription),
-            statusTone: .ok,
-            statusText: Self.appearanceStatus(configuration.appearance),
-            control: SegmentedPills(
-                options: [
-                    .init(value: AppAppearance.system, title: T(.settingsAppearanceSystem)),
-                    .init(value: AppAppearance.light, title: T(.settingsAppearanceLight)),
-                    .init(value: AppAppearance.dark, title: T(.settingsAppearanceDark)),
-                ],
-                selection: configuration.appearance,
-                onSelect: { configuration.appearance = $0 },
-                accessibilityLabel: T(.settingsAppearance)
-            )
-        )
-    }
-
-    private static func appearanceStatus(_ appearance: AppAppearance) -> String {
-        switch appearance {
-        case .light: return T(.settingsAppearanceLightCurrent)
-        case .dark: return T(.settingsAppearanceDarkCurrent)
-        case .system:
-            let isDark = NSApplication.shared.effectiveAppearance.bestMatch(from: [.darkAqua, .aqua]) == .darkAqua
-            return isDark ? T(.settingsAppearanceDarkSystem) : T(.settingsAppearanceLightSystem)
-        }
     }
 }
