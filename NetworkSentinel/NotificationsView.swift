@@ -36,19 +36,19 @@ struct NotificationsPage: View {
                         .tracking(SentinelMetrics.pageTitleTracking)
                         .accessibilityAddTraits(.isHeader)
 
-                    GroupHeader(title: "系统通知", color: SentinelColor.groupNotifications)
+                    GroupHeader(title: "系统通知", color: SentinelColor.groupBlue)
                     LazyVGrid(columns: columns, alignment: .leading, spacing: SentinelMetrics.cardSpacing) {
                         permissionCard
                     }
 
-                    GroupHeader(title: "通知", color: SentinelColor.groupNotifications)
+                    GroupHeader(title: "通知", color: SentinelColor.groupBlue)
                     LazyVGrid(columns: columns, alignment: .leading, spacing: SentinelMetrics.cardSpacing) {
                         notificationThresholdCard
                         alwaysNotifyOnRestoreCard
                         mergeSameKindCard
                     }
 
-                    GroupHeader(title: "Bark 推送", color: SentinelColor.groupGeneral)
+                    GroupHeader(title: "Bark 推送", color: SentinelColor.groupTeal)
                     LazyVGrid(columns: SettingsGridLayout.twoColumns, alignment: .leading, spacing: SentinelMetrics.cardSpacing) {
                         barkSwitchCard
                         barkKeyCard

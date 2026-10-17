@@ -22,23 +22,25 @@ struct SettingsPage: View {
                         .tracking(SentinelMetrics.pageTitleTracking)
                         .accessibilityAddTraits(.isHeader)
 
-                    GroupHeader(title: "UniFi 网关", color: SentinelColor.groupGateway)
+                    // Group order and title colors: 通用 pink, UniFi 网关 purple,
+                    // 监控事件 teal — the colors follow the position, not the group.
+                    GroupHeader(title: "通用", color: SentinelColor.groupPink)
+                    LazyVGrid(columns: SettingsGridLayout.twoColumns, alignment: .leading, spacing: SentinelMetrics.cardSpacing) {
+                        launchAtLoginCard
+                        logRetentionCard
+                    }
+
+                    GroupHeader(title: "UniFi 网关", color: SentinelColor.groupPurple)
                     LazyVGrid(columns: SettingsGridLayout.twoColumns, alignment: .leading, spacing: SentinelMetrics.cardSpacing) {
                         connectionCard
                         queryIntervalCard
                     }
 
-                    GroupHeader(title: "监控事件", color: SentinelColor.groupEvents)
+                    GroupHeader(title: "监控事件", color: SentinelColor.groupTeal)
                     LazyVGrid(columns: columns, alignment: .leading, spacing: SentinelMetrics.cardSpacing) {
                         ForEach(Self.displayedEvents, id: \.self) { event in
                             eventCard(event)
                         }
-                    }
-
-                    GroupHeader(title: "通用", color: SentinelColor.groupGeneral)
-                    LazyVGrid(columns: SettingsGridLayout.twoColumns, alignment: .leading, spacing: SentinelMetrics.cardSpacing) {
-                        launchAtLoginCard
-                        logRetentionCard
                     }
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
