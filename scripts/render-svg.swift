@@ -1,23 +1,40 @@
-// Render an SVG file to a square PNG using WebKit.
+// Render an SVG file to a PNG using WebKit.
 //
-// Used by scripts/make-app-icon.sh. This is a build helper only: it is not part
-// of the app target and adds no dependency to the project.
+// Used by scripts/make-app-icon.sh and scripts/make-dmg.sh. This is a build
+// helper only: it is not part of the app target and adds no dependency to the
+// project.
 //
-// Usage: render-svg.swift <input.svg> <output.png> <pixels>
+// Usage: render-svg.swift <input.svg> <output.png> <width-pixels> [<height-pixels>]
+//
+// Without <height-pixels> the output is square, which is what the app icon
+// pipeline expects.
 
 import AppKit
 import WebKit
 
 let arguments = CommandLine.arguments
-guard arguments.count == 4,
-      let pixels = Int(arguments[3]), pixels > 0 else {
-    FileHandle.standardError.write(Data("usage: render-svg.swift <input.svg> <output.png> <pixels>\n".utf8))
+let usage = "usage: render-svg.swift <input.svg> <output.png> <width-pixels> [<height-pixels>]\n"
+
+guard arguments.count == 4 || arguments.count == 5,
+      let widthPixels = Int(arguments[3]), widthPixels > 0 else {
+    FileHandle.standardError.write(Data(usage.utf8))
     exit(2)
+}
+
+let heightPixels: Int
+if arguments.count == 5 {
+    guard let value = Int(arguments[4]), value > 0 else {
+        FileHandle.standardError.write(Data(usage.utf8))
+        exit(2)
+    }
+    heightPixels = value
+} else {
+    heightPixels = widthPixels
 }
 
 let inputURL = URL(fileURLWithPath: arguments[1])
 let outputURL = URL(fileURLWithPath: arguments[2])
-let side = CGFloat(pixels)
+let size = NSSize(width: widthPixels, height: heightPixels)
 
 let svg: String
 do {
@@ -27,28 +44,28 @@ do {
     exit(1)
 }
 
-// Pin the drawing to the requested square, whatever the viewBox of the document.
+// Pin the drawing to the requested size, whatever the viewBox of the document.
 let html = """
 <!DOCTYPE html>
 <html><head><meta charset="utf-8"><style>
 html, body { margin: 0; padding: 0; background: transparent; }
-svg { display: block; width: \(pixels)px; height: \(pixels)px; }
+svg { display: block; width: \(widthPixels)px; height: \(heightPixels)px; }
 </style></head><body>\(svg)</body></html>
 """
 
 final class Renderer: NSObject, WKNavigationDelegate {
     private let webView: WKWebView
     private let outputURL: URL
-    private let side: CGFloat
+    private let size: NSSize
 
-    init(outputURL: URL, side: CGFloat, svg: String) {
+    init(outputURL: URL, size: NSSize, svg: String) {
         self.outputURL = outputURL
-        self.side = side
+        self.size = size
         // In-memory only: the renderer must not touch ~/Library caches.
         let configuration = WKWebViewConfiguration()
         configuration.websiteDataStore = .nonPersistent()
         self.webView = WKWebView(
-            frame: NSRect(x: 0, y: 0, width: side, height: side),
+            frame: NSRect(origin: .zero, size: size),
             configuration: configuration
         )
         super.init()
@@ -58,8 +75,8 @@ final class Renderer: NSObject, WKNavigationDelegate {
 
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
         let configuration = WKSnapshotConfiguration()
-        configuration.rect = NSRect(x: 0, y: 0, width: side, height: side)
-        configuration.snapshotWidth = NSNumber(value: Double(side))
+        configuration.rect = NSRect(origin: .zero, size: size)
+        configuration.snapshotWidth = NSNumber(value: Double(size.width))
         configuration.afterScreenUpdates = true
 
         webView.takeSnapshot(with: configuration) { [outputURL] image, error in
@@ -95,7 +112,7 @@ final class Renderer: NSObject, WKNavigationDelegate {
 let application = NSApplication.shared
 application.setActivationPolicy(.accessory)
 
-let renderer = Renderer(outputURL: outputURL, side: side, svg: html)
+let renderer = Renderer(outputURL: outputURL, size: size, svg: html)
 
 // Give up rather than hang a build script.
 DispatchQueue.main.asyncAfter(deadline: .now() + 30) {
