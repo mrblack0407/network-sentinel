@@ -36,12 +36,12 @@ struct NotificationsPage: View {
                         .tracking(SentinelMetrics.pageTitleTracking)
                         .accessibilityAddTraits(.isHeader)
 
-                    GroupHeader(title: "系统通知", color: SentinelColor.groupBlue)
+                    GroupHeader(title: "权限", color: SentinelColor.groupPink)
                     LazyVGrid(columns: columns, alignment: .leading, spacing: SentinelMetrics.cardSpacing) {
                         permissionCard
                     }
 
-                    GroupHeader(title: "通知", color: SentinelColor.groupBlue)
+                    GroupHeader(title: "通知", color: SentinelColor.groupPurple)
                     LazyVGrid(columns: columns, alignment: .leading, spacing: SentinelMetrics.cardSpacing) {
                         notificationThresholdCard
                         alwaysNotifyOnRestoreCard

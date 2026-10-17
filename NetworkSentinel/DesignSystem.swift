@@ -266,12 +266,10 @@ enum SentinelColor {
     /// Nothing known yet, for example 还没测试连接.
     static let neutral = Color(nsColor: .secondaryLabelColor)
 
-    /// First group title of a page (`#d55cf0`): 设置 「通用」.
+    /// First group title of a page (`#d55cf0`): 设置 「通用」, 通知 「权限」.
     static let groupPink = Color(red: 0.835, green: 0.361, blue: 0.941)
-    /// Second group title (`#8e8cf8`): 设置 「UniFi 网关」.
+    /// Second group title (`#8e8cf8`): 设置 「UniFi 网关」, 通知 「通知」.
     static let groupPurple = Color(red: 0.557, green: 0.549, blue: 0.973)
-    /// 通知 page group titles (`#4fa3ff`).
-    static let groupBlue = Color(red: 0.310, green: 0.639, blue: 1.000)
     /// Third group title (`#4fd1c5`): 设置 「监控事件」, 通知 「Bark 推送」.
     static let groupTeal = Color(red: 0.310, green: 0.820, blue: 0.773)
 
