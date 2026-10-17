@@ -39,21 +39,17 @@ public struct WANLineStatus: Equatable, Identifiable {
     public let state: SnapshotWANState
     /// Start of the outage that is still open, `nil` while the line is up.
     public let outageStartedAt: Date?
-    /// Length of the newest finished outage, `nil` when there was none.
-    public let restoredAfterSeconds: Int?
 
     public init(
         id: String,
         ispName: String?,
         state: SnapshotWANState,
-        outageStartedAt: Date? = nil,
-        restoredAfterSeconds: Int? = nil
+        outageStartedAt: Date? = nil
     ) {
         self.id = id
         self.ispName = ispName
         self.state = state
         self.outageStartedAt = outageStartedAt
-        self.restoredAfterSeconds = restoredAfterSeconds
     }
 
     /// `true` while the gateway reports the line as down.
@@ -81,8 +77,7 @@ public struct WANLineStatus: Equatable, Identifiable {
     public func detailText(now: Date) -> String {
         switch state {
         case .online:
-            guard let restoredAfterSeconds else { return "在线" }
-            return "在线 · 已恢复 \(ChineseDuration.text(seconds: restoredAfterSeconds))"
+            return "在线"
         case .offline:
             guard let outageStartedAt else { return "已断开" }
             let seconds = Int(max(0, now.timeIntervalSince(outageStartedAt)).rounded(.down))
@@ -233,8 +228,7 @@ public enum MenuBarStatusBuilder {
                 id: wan.id,
                 ispName: WANLineRules.ispName(forWAN: wan.id, in: events),
                 state: states[index],
-                outageStartedAt: OutagePairer.ongoingOutage(forWAN: wan.id, in: outages)?.start,
-                restoredAfterSeconds: WANLineRules.restoredAfterSeconds(forWAN: wan.id, in: outages)
+                outageStartedAt: OutagePairer.ongoingOutage(forWAN: wan.id, in: outages)?.start
             )
         }
 
@@ -341,11 +335,4 @@ enum WANLineRules {
             .ispName
     }
 
-    /// Length of the newest finished outage of that line.
-    static func restoredAfterSeconds(forWAN wanID: String, in outages: [Outage]) -> Int? {
-        outages
-            .filter { ($0.wanID == wanID) && !$0.isOngoing }
-            .max { $0.start < $1.start }?
-            .durationWholeSeconds
-    }
 }

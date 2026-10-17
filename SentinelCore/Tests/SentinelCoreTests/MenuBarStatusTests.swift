@@ -132,7 +132,6 @@ final class MenuBarStatusTests: XCTestCase {
         // stays available as the start of the outage.
         XCTAssertEqual(line.state, .online)
         XCTAssertEqual(line.outageStartedAt, LogicFixture.time(-600))
-        XCTAssertNil(line.restoredAfterSeconds)
         XCTAssertFalse(line.isDown)
         XCTAssertEqual(line.detailText(now: LogicFixture.now), "在线")
     }
@@ -176,8 +175,8 @@ final class MenuBarStatusTests: XCTestCase {
 
         XCTAssertEqual(line.state, .online)
         XCTAssertNil(line.outageStartedAt)
-        XCTAssertEqual(line.restoredAfterSeconds, 100)
-        XCTAssertEqual(line.detailText(now: LogicFixture.now), "在线 · 已恢复 1 分 40 秒")
+        // A line that is up only says so: no 「已恢复」 time.
+        XCTAssertEqual(line.detailText(now: LogicFixture.now), "在线")
     }
 
     func testADownLineCountsFromItsOpenOutage() throws {

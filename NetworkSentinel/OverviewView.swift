@@ -161,7 +161,7 @@ struct OverviewView: View {
         }
     }
 
-    /// 一条线路一张卡片: 状态, 「已恢复 1 分 25 秒」, 24 小时色条 and the 三栏统计.
+    /// 一条线路一张卡片: 状态, how long it has been down, 24 小时色条 and the 三栏统计.
     private func lineCard(_ line: WANLineStatus, outages: [Outage], now: Date) -> some View {
         let strip = OutageStripBuilder.strip(
             events: monitor.events,
@@ -334,11 +334,11 @@ struct OverviewView: View {
         return "\(severity)，\(event.event.displayName)，\(description)，\(LogTimestampText.stamp(event.timestamp))"
     }
 
-    /// The line hint under the big state: the state is already written large
-    /// above it, so 「在线 · 已恢复 X」 drops its 「在线 · 」 prefix.
+    /// The line hint under the big state: how long a line has been down, blank
+    /// while it is up.
     private static func hint(for line: WANLineStatus, now: Date) -> String {
-        let text = line.detailText(now: now)
-        let prefix = "在线 · "
-        return text.hasPrefix(prefix) ? String(text.dropFirst(prefix.count)) : text
+        // The big state already says 「在线」; the hint line stays (blank) so
+        // the cards keep their height.
+        line.state == .online ? " " : line.detailText(now: now)
     }
 }
