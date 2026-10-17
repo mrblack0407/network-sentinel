@@ -23,6 +23,8 @@ final class AppConfiguration: ObservableObject {
         static let barkEnabled = "barkEnabled"
         static let barkServerAddress = "barkServerAddress"
         static let barkSound = "barkSound"
+        static let appearance = "appearance"
+        static let language = "language"
     }
 
     private let defaults: UserDefaults
@@ -60,6 +62,19 @@ final class AppConfiguration: ObservableObject {
     /// `true` when the keychain holds a Bark Key.
     @Published private(set) var hasBarkKey: Bool = false
 
+    /// 设置 → 通用 → 外观; applied to the whole app as soon as it changes.
+    @Published var appearance: AppAppearance {
+        didSet {
+            defaults.set(appearance.rawValue, forKey: DefaultsKey.appearance)
+            appearance.apply()
+        }
+    }
+
+    /// 设置 → 通用 → 语言.
+    @Published var language: AppLanguage {
+        didSet { defaults.set(language.rawValue, forKey: DefaultsKey.language) }
+    }
+
     /// The Bark Key, read from the keychain at most once.
     private var cachedBarkKey: String?
     /// `true` once the keychain was asked for the Bark Key.
@@ -88,6 +103,8 @@ final class AppConfiguration: ObservableObject {
         self.gatewayName = defaults.string(forKey: DefaultsKey.gatewayName)
         self.pinnedCertificate = Self.loadPinnedCertificate(from: defaults)
         self.barkEnabled = defaults.bool(forKey: DefaultsKey.barkEnabled)
+        self.appearance = defaults.string(forKey: DefaultsKey.appearance).flatMap(AppAppearance.init(rawValue:)) ?? .system
+        self.language = defaults.string(forKey: DefaultsKey.language).flatMap(AppLanguage.init(rawValue:)) ?? .system
         self.barkSound = defaults.string(forKey: DefaultsKey.barkSound) ?? ""
         let storedBarkServer = defaults.string(forKey: DefaultsKey.barkServerAddress) ?? ""
         self.barkServerAddress = storedBarkServer.isEmpty

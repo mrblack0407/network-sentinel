@@ -28,6 +28,8 @@ struct SettingsPage: View {
                     LazyVGrid(columns: SettingsGridLayout.twoColumns, alignment: .leading, spacing: SentinelMetrics.cardSpacing) {
                         launchAtLoginCard
                         logRetentionCard
+                        languageCard
+                        appearanceCard
                     }
 
                     GroupHeader(title: "UniFi 网关", color: SentinelColor.groupPurple)
@@ -254,5 +256,53 @@ struct SettingsPage: View {
                 accessibilityLabel: "日志保留"
             )
         )
+    }
+
+    private var languageCard: some View {
+        SettingsCard(
+            title: "语言",
+            description: "界面、系统通知和 Bark 推送用的语言。",
+            statusTone: .ok,
+            statusText: configuration.language.resolved() == .chinese ? "当前：中文" : "当前：English",
+            control: SegmentedPills(
+                options: [
+                    .init(value: AppLanguage.system, title: "跟随系统"),
+                    .init(value: AppLanguage.chinese, title: "中文"),
+                    .init(value: AppLanguage.english, title: "English"),
+                ],
+                selection: configuration.language,
+                onSelect: { configuration.language = $0 },
+                accessibilityLabel: "语言"
+            )
+        )
+    }
+
+    private var appearanceCard: some View {
+        SettingsCard(
+            title: "外观",
+            description: "主窗口和菜单栏面板的颜色。",
+            statusTone: .ok,
+            statusText: Self.appearanceStatus(configuration.appearance),
+            control: SegmentedPills(
+                options: [
+                    .init(value: AppAppearance.system, title: "跟随系统"),
+                    .init(value: AppAppearance.light, title: "浅色"),
+                    .init(value: AppAppearance.dark, title: "深色"),
+                ],
+                selection: configuration.appearance,
+                onSelect: { configuration.appearance = $0 },
+                accessibilityLabel: "外观"
+            )
+        )
+    }
+
+    private static func appearanceStatus(_ appearance: AppAppearance) -> String {
+        switch appearance {
+        case .light: return "当前：浅色"
+        case .dark: return "当前：深色"
+        case .system:
+            let isDark = NSApplication.shared.effectiveAppearance.bestMatch(from: [.darkAqua, .aqua]) == .darkAqua
+            return isDark ? "当前：深色（跟随系统）" : "当前：浅色（跟随系统）"
+        }
     }
 }

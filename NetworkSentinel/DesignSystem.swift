@@ -231,15 +231,24 @@ struct GlassBackground: View {
 
 /// `NSVisualEffectView` blending with what is behind the window.
 struct VisualEffectBackground: NSViewRepresentable {
+    @Environment(\.colorScheme) private var colorScheme
+
     func makeNSView(context: Context) -> NSVisualEffectView {
         let view = NSVisualEffectView()
-        view.material = .hudWindow
         view.blendingMode = .behindWindow
         view.state = .active
+        view.material = material
         return view
     }
 
-    func updateNSView(_ nsView: NSVisualEffectView, context: Context) {}
+    func updateNSView(_ nsView: NSVisualEffectView, context: Context) {
+        nsView.material = material
+    }
+
+    /// The HUD material is always dark, so light mode takes the sidebar one.
+    private var material: NSVisualEffectView.Material {
+        colorScheme == .dark ? .hudWindow : .sidebar
+    }
 }
 
 /// The description column of a log list: the notification body without its

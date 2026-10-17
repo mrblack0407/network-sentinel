@@ -20,6 +20,7 @@ final class AppState: ObservableObject {
 
     init(configuration: AppConfiguration, monitor injectedMonitor: MonitorService? = nil) {
         self.configuration = configuration
+        configuration.appearance.apply()
         // An unconfigured app shows the 首次启动窗口 only: no menu bar icon.
         self.showsMenuBarIcon = configuration.isConfigured
         let monitor = injectedMonitor ?? MonitorService(configuration: configuration)
