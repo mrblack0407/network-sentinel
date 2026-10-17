@@ -31,7 +31,7 @@ targets:
         MARKETING_VERSION: "0.1"
         CURRENT_PROJECT_VERSION: "1"
         INFOPLIST_FILE: NetworkSentinel/Info.plist
-        CODE_SIGN_IDENTITY: "-"
+        CODE_SIGN_IDENTITY: "Network Sentinel Code Signing"
         CODE_SIGN_STYLE: Manual
         CODE_SIGN_ENTITLEMENTS: NetworkSentinel/NetworkSentinel.entitlements
         DEVELOPMENT_TEAM: ""

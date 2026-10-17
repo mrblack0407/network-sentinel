@@ -8,6 +8,7 @@ macOS menu bar app (for UniFi). Reads the UniFi gateway system log with an API K
 - `xcodegen generate` regenerates `NetworkSentinel.xcodeproj` (not committed).
 - Core logic lives in the Swift package `SentinelCore/`; test it with `swift test --package-path SentinelCore`.
 - App icon PNGs come from `Design/Icons/AppIcon-Dark-FullBleed.svg` (full square: macOS 26 rounds it itself; artwork with its own rounded tile gets put inside a white plate): rerun `scripts/make-app-icon.sh` after changing it.
+- Code signing: self-signed certificate 「Network Sentinel Code Signing」 (10 years) in the login keychain, made by `scripts/make-signing-cert.sh`. It keeps the Keychain's 「始终允许」 across rebuilds and versions; never switch back to ad-hoc. Backup `.p12`: `~/SynologyDrive/Studio Files/Network Sentinel 签名证书/`; its password is the login-keychain item 「Network Sentinel signing p12」. GitHub Actions signs releases from the secrets `MACOS_SIGNING_P12` (base64) and `MACOS_SIGNING_P12_PASSWORD`.
 - UI must match `Design/Mockups.html` (local only, not committed). Debug builds render every screen to PNG for comparison: run the app binary with `NS_SNAPSHOT_DIR=~/Library/Containers/com.mrblack0407.NetworkSentinel/Data/tmp/snap` (sandbox: the folder must be inside the container).
 
 ## Rules
@@ -33,3 +34,4 @@ Keep it in sync while developing: after each step update 「当前状态」 in `
 | 首次启动窗口 (first-launch window) | 欢迎向导, 引导页 |
 | 连接设置窗口 (connection settings sheet) | 配置弹窗 |
 | 状态文件 (status file in the App Group, for the future widget) | 快照, 缓存 |
+| 自签证书 (self-signed code-signing certificate) | 自建证书, 开发者证书 |

@@ -32,6 +32,34 @@ jobs:
       - name: Test SentinelCore
         run: swift test --package-path SentinelCore
 
+      # Releases are signed with the project's self-signed certificate, so the
+      # Keychain keeps 「始终允许」 across versions. A run by hand without the
+      # secrets (a fork, say) falls back to ad-hoc signing.
+      - name: Import the signing certificate
+        env:
+          SIGNING_P12: ${{ secrets.MACOS_SIGNING_P12 }}
+          SIGNING_P12_PASSWORD: ${{ secrets.MACOS_SIGNING_P12_PASSWORD }}
+        run: |
+          if [ -z "$SIGNING_P12" ]; then
+            if [ "$GITHUB_REF_TYPE" = "tag" ]; then
+              echo "Secret MACOS_SIGNING_P12 is missing: releases must be signed with the project certificate"
+              exit 1
+            fi
+            echo "SIGN_IDENTITY=-" >> "$GITHUB_ENV"
+            exit 0
+          fi
+          KEYCHAIN="$RUNNER_TEMP/signing.keychain-db"
+          KEYCHAIN_PASSWORD="$(openssl rand -hex 24)"
+          echo "$SIGNING_P12" | base64 --decode > "$RUNNER_TEMP/signing.p12"
+          security create-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN"
+          security set-keychain-settings -lut 3600 "$KEYCHAIN"
+          security unlock-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN"
+          security import "$RUNNER_TEMP/signing.p12" -k "$KEYCHAIN" -P "$SIGNING_P12_PASSWORD" -T /usr/bin/codesign
+          security set-key-partition-list -S apple-tool:,apple: -s -k "$KEYCHAIN_PASSWORD" "$KEYCHAIN" > /dev/null
+          security list-keychains -d user -s "$KEYCHAIN" $(security list-keychains -d user | tr -d '"')
+          rm "$RUNNER_TEMP/signing.p12"
+          echo "SIGN_IDENTITY=Network Sentinel Code Signing" >> "$GITHUB_ENV"
+
       - name: Build the app
         run: |
           xcodegen generate
@@ -40,8 +68,9 @@ jobs:
             -scheme NetworkSentinel \
             -configuration Release \
             -derivedDataPath build \
-            CODE_SIGN_IDENTITY=- \
+            CODE_SIGN_IDENTITY="$SIGN_IDENTITY" \
             build
+          codesign -dvv -r- build/Build/Products/Release/NetworkSentinel.app 2>&1 | grep -E "Authority|designated"
 
       - name: Make the DMG
         run: scripts/make-dmg.sh build/Build/Products/Release/NetworkSentinel.app "NetworkSentinel-$VERSION.dmg"
@@ -63,8 +92,10 @@ jobs:
             1. 下载 `NetworkSentinel-${{ env.VERSION }}.dmg`，双击打开，把 Network Sentinel 拖进「应用程序」。
             2. 这个版本没有 Apple 签名公证，第一次打开会被系统拦下：到「系统设置 → 隐私与安全性」，在下面找到 Network Sentinel，点「仍要打开」。
             3. 按首次启动窗口填 UniFi 网关地址和 API Key（UniFi 网页左侧边栏「Integrations → Create New API Key」）。
+            4. 如果弹出钥匙串对话框，输入 Mac 登录密码，点「始终允许」（从 v0.1 升级时会问一次，之后的版本不再问）。
 
             ## Install
             1. Open the DMG and drag Network Sentinel into Applications.
             2. This build is not notarized. On first launch macOS blocks it: open System Settings → Privacy & Security and click **Open Anyway**.
             3. Enter your UniFi gateway address and API Key in the first-launch window.
+            4. If a Keychain dialog appears, enter your Mac login password and click **Always Allow** (asked once when upgrading from v0.1, not again after that).
