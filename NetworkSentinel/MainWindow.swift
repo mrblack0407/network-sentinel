@@ -7,13 +7,19 @@ struct MainWindow: View {
     @ObservedObject var configuration: AppConfiguration
     /// The monitoring engine, for the status line of 设置 and the 线路标签.
     @ObservedObject var monitor: MonitorService
+    /// The update check, for the line above the GitHub row.
+    @ObservedObject var updateChecker: UpdateChecker
     /// The selected page, owned by `WindowCoordinator` so 「设置…」 of the
     /// 菜单栏弹出面板 can switch the page of a window that is already open.
     @ObservedObject var windowState: MainWindowState
 
     var body: some View {
         HStack(spacing: 0) {
-            SidebarView(selection: $windowState.selection)
+            SidebarView(
+                configuration: configuration,
+                selection: $windowState.selection,
+                updateChecker: updateChecker
+            )
                 .frame(width: SentinelMetrics.sidebarWidth)
 
             // The 线路标签 and the page share one padded column, the `.main` of
@@ -42,7 +48,7 @@ struct MainWindow: View {
         case .logs:
             LogsView(monitor: monitor, configuration: configuration)
         case .notifications:
-            NotificationsPage(configuration: configuration, monitor: monitor)
+            NotificationsPage(configuration: configuration, monitor: monitor, updateChecker: updateChecker)
         case .interface:
             InterfacePage(configuration: configuration)
         case .settings:
@@ -131,9 +137,16 @@ enum SidebarItem: String, CaseIterable, Identifiable {
     }
 }
 
-/// The sidebar: the pages, the 「配置」 group and the GitHub row at the bottom.
+/// The sidebar: the pages, the 「配置」 group, the update line and the GitHub row
+/// at the bottom.
 struct SidebarView: View {
+    /// The app settings. The rows read `T()`, and a language change publishes
+    /// through this object, so observing it redraws every row in the new
+    /// language at once.
+    @ObservedObject var configuration: AppConfiguration
     @Binding var selection: SidebarItem
+    /// The update check, for the line above the GitHub row.
+    @ObservedObject var updateChecker: UpdateChecker
 
     /// Pages above the 「配置」 group title.
     private static let mainPages: [SidebarItem] = [.overview, .logs]
@@ -157,6 +170,12 @@ struct SidebarView: View {
             }
 
             Spacer(minLength: 12)
+
+            // Nothing at all while the app is up to date, so the GitHub row
+            // stays at the bottom as before.
+            if let release = updateChecker.latestRelease {
+                UpdateAvailableRow(release: release)
+            }
 
             GitHubRow()
         }
@@ -243,5 +262,30 @@ struct GitHubRow: View {
         .onHover { isHovering = $0 }
         .help(T(.sidebarGitHubHelp))
         .accessibilityLabel(T(.sidebarGitHubHelp))
+    }
+}
+
+/// The 「有新版本可用」 line above the GitHub row.
+///
+/// It is green like 监控中 and opens the release page in the browser; it takes
+/// no room while no newer release is known.
+struct UpdateAvailableRow: View {
+    let release: AppUpdate.Release
+
+    var body: some View {
+        Button {
+            NSWorkspace.shared.open(release.pageURL)
+        } label: {
+            Text(T(.sidebarUpdateAvailable))
+                .font(.system(size: SentinelMetrics.bodyFontSize, weight: .medium))
+                .foregroundStyle(SentinelColor.ok)
+                .lineLimit(1)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(SentinelMetrics.sidebarRowPadding)
+                .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
+        .help(T(.sidebarUpdateHelp, "v\(release.version)"))
+        .accessibilityLabel(T(.sidebarUpdateHelp, "v\(release.version)"))
     }
 }

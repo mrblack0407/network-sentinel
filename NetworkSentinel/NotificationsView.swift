@@ -43,16 +43,19 @@ enum BarkMessage: Equatable {
     }
 }
 
-/// 通知: the system permission of the app and the rules that decide what is
-/// posted.
+/// 通知: the system permission of the app, the update check and the rules that
+/// decide what is posted.
 ///
-/// The page only reads and writes the settings `AppConfiguration` owns and the
-/// authorization state of `UNUserNotificationCenter`; the decision to post a
-/// notification stays in `MonitorService` and `SentinelCore`.
+/// The page only reads and writes the settings `AppConfiguration` owns, the
+/// authorization state of `UNUserNotificationCenter` and the result of
+/// `UpdateChecker`; the decision to post a notification stays in
+/// `MonitorService` and `SentinelCore`.
 struct NotificationsPage: View {
     @ObservedObject var configuration: AppConfiguration
     /// The engine, for the Bark test push and the result of the last push.
     @ObservedObject var monitor: MonitorService
+    /// The update check, for the 「自动检查更新」 card.
+    @ObservedObject var updateChecker: UpdateChecker
 
     /// The Bark Key field: filled with the saved Key (shown as dots, 「显示」
     /// reveals it), like the API Key of the 连接设置窗口.
@@ -77,8 +80,9 @@ struct NotificationsPage: View {
                         .accessibilityAddTraits(.isHeader)
 
                     GroupHeader(title: T(.notificationsGroupPermission), color: SentinelColor.groupPink)
-                    LazyVGrid(columns: columns, alignment: .leading, spacing: SentinelMetrics.cardSpacing) {
+                    LazyVGrid(columns: SettingsGridLayout.twoColumns, alignment: .leading, spacing: SentinelMetrics.cardSpacing) {
                         permissionCard
+                        updateCard
                     }
 
                     GroupHeader(title: T(.notificationsGroupNotifications), color: SentinelColor.groupPurple)
@@ -156,6 +160,41 @@ struct NotificationsPage: View {
     private func refreshAuthorization() async {
         let settings = await UNUserNotificationCenter.current().notificationSettings()
         authorization = settings.authorizationStatus
+    }
+
+    // MARK: - 自动检查更新
+
+    /// 「自动检查更新」: the switch and what the last check found.
+    private var updateCard: some View {
+        let status = updateStatus
+
+        return SettingsCard(
+            title: T(.notificationsUpdateTitle),
+            description: T(.notificationsUpdateDescription),
+            statusTone: status.tone,
+            statusText: status.text,
+            keepsControlBeside: true,
+            control: Toggle("", isOn: $configuration.checksForUpdates)
+                .labelsHidden()
+                .toggleStyle(.switch)
+                .controlSize(.small)
+                .accessibilityLabel(T(.notificationsUpdateTitle))
+        )
+    }
+
+    /// The state of the update check, in the order the card shows it.
+    ///
+    /// A switch that is off wins over everything else: while it is off there is
+    /// no result to show. A check that never read a release — a new install, an
+    /// unreachable GitHub — is 尚未检查.
+    private var updateStatus: (tone: StatusTone, text: String) {
+        guard configuration.checksForUpdates else { return (.neutral, T(.settingsOff)) }
+        if let release = updateChecker.latestRelease {
+            return (.ok, T(.notificationsUpdateAvailable, release.version))
+        }
+        return updateChecker.hasChecked
+            ? (.ok, T(.notificationsUpdateUpToDate))
+            : (.neutral, T(.notificationsUpdateNotChecked))
     }
 
     // MARK: - 通知

@@ -4,7 +4,7 @@ import Foundation
 
 /// The one language the whole app reads its texts in.
 ///
-/// The app writes it whenever 设置 → 通用 → 语言 changes, so a new language
+/// The app writes it whenever 界面 → 语言 changes, so a new language
 /// takes effect at once: no view, no notification and no CSV export keeps the
 /// old text. `SentinelCore` and the app both read this value, so the two never
 /// disagree.
@@ -27,7 +27,7 @@ public enum AppText {
         }
     }
 
-    /// Applies the setting of 设置 → 通用 → 语言.
+    /// Applies the setting of 界面 → 语言.
     ///
     /// - Parameter preferredLanguages: the Mac's languages, for `.system`.
     public static func use(
@@ -278,6 +278,8 @@ enum TextTable {
         .pageSettings: t("设置", "Settings"),
         .sidebarConfiguration: t("配置", "Configuration"),
         .sidebarGitHubHelp: t("在 GitHub 上查看源代码", "View the source on GitHub"),
+        .sidebarUpdateAvailable: t("有新版本可用", "Update available"),
+        .sidebarUpdateHelp: t("在 GitHub 上查看 %@ 的版本页面", "View the %@ release on GitHub"),
 
         // MARK: 概览
         .overviewOpenSettings: t("去设置", "Open Settings"),
@@ -320,6 +322,31 @@ enum TextTable {
         .panelOpenSettingsReadOut: t("打开设置", "Open Settings"),
         .panelQuit: t("退出", "Quit"),
         .panelQuitReadOut: t("退出 Network Sentinel", "Quit Network Sentinel"),
+
+        // MARK: 主菜单
+        // 「Network Sentinel」 is the app name in both languages; macOS keeps its
+        // own wording for the standard items (关于, 隐藏, 编辑, 窗口, 帮助).
+        .menuApplication: t("Network Sentinel", "Network Sentinel"),
+        .menuAbout: t("关于 Network Sentinel", "About Network Sentinel"),
+        .menuSettings: t("设置…", "Settings…"),
+        .menuHide: t("隐藏 Network Sentinel", "Hide Network Sentinel"),
+        .menuHideOthers: t("隐藏其他", "Hide Others"),
+        .menuShowAll: t("全部显示", "Show All"),
+        .menuQuit: t("退出 Network Sentinel", "Quit Network Sentinel"),
+        .menuEdit: t("编辑", "Edit"),
+        .menuUndo: t("撤销", "Undo"),
+        .menuRedo: t("重做", "Redo"),
+        .menuCut: t("剪切", "Cut"),
+        .menuCopy: t("拷贝", "Copy"),
+        .menuPaste: t("粘贴", "Paste"),
+        .menuSelectAll: t("全选", "Select All"),
+        .menuWindow: t("窗口", "Window"),
+        .menuMinimize: t("最小化", "Minimize"),
+        .menuZoom: t("缩放", "Zoom"),
+        .menuCloseWindow: t("关闭窗口", "Close Window"),
+        .menuBringAllToFront: t("前置全部窗口", "Bring All to Front"),
+        .menuHelp: t("帮助", "Help"),
+        .menuGitHub: t("Network Sentinel 在 GitHub 上", "Network Sentinel on GitHub"),
 
         // MARK: 日志 page controls
         .logsExport: t("导出 CSV", "Export CSV"),
@@ -449,6 +476,14 @@ enum TextTable {
             "打开系统设置的通知面板",
             "Open the Notifications pane of System Settings"
         ),
+        .notificationsUpdateTitle: t("自动检查更新", "Check for Updates Automatically"),
+        .notificationsUpdateDescription: t(
+            "有新版本时在侧边栏底部提示。",
+            "Shows a note at the bottom of the sidebar when a new version is out."
+        ),
+        .notificationsUpdateAvailable: t("有新版本 v%@", "Version %@ available"),
+        .notificationsUpdateUpToDate: t("已是最新版本", "Up to date"),
+        .notificationsUpdateNotChecked: t("尚未检查", "Not checked yet"),
         .notificationsThreshold: t("弹通知", "Notify me"),
         .notificationsThresholdDescription: t(
             "选哪一级，就通知这一级及以上。",

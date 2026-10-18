@@ -28,8 +28,8 @@ targets:
       base:
         PRODUCT_NAME: NetworkSentinel
         PRODUCT_BUNDLE_IDENTIFIER: com.mrblack0407.NetworkSentinel
-        MARKETING_VERSION: "0.2"
-        CURRENT_PROJECT_VERSION: "1"
+        MARKETING_VERSION: "0.3"
+        CURRENT_PROJECT_VERSION: "3"
         INFOPLIST_FILE: NetworkSentinel/Info.plist
         CODE_SIGN_IDENTITY: "Network Sentinel Code Signing"
         CODE_SIGN_STYLE: Manual

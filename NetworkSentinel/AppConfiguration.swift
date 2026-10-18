@@ -1,7 +1,8 @@
 import Foundation
 import SentinelCore
 
-/// Everything the app remembers about the UniFi gateway and the monitoring.
+/// Everything the app remembers about the UniFi gateway, the monitoring and the
+/// update check.
 ///
 /// Only the API Key lives in the keychain (`KeychainAPIKeyStore`); the
 /// normalized address, the site, the gateway name, the pinned certificate and
@@ -25,6 +26,8 @@ final class AppConfiguration: ObservableObject {
         static let barkSound = "barkSound"
         static let appearance = "appearance"
         static let language = "language"
+        static let checksForUpdates = "checksForUpdates"
+        static let lastUpdateCheckAt = "lastUpdateCheckAt"
     }
 
     private let defaults: UserDefaults
@@ -70,7 +73,7 @@ final class AppConfiguration: ObservableObject {
         }
     }
 
-    /// 设置 → 通用 → 语言.
+    /// 界面 → 语言.
     ///
     /// The app has one text table with a Chinese and an English version of every
     /// text, and `AppText` is the source `SentinelCore` and the app both read. A
@@ -80,6 +83,7 @@ final class AppConfiguration: ObservableObject {
         didSet {
             defaults.set(language.rawValue, forKey: DefaultsKey.language)
             AppText.use(language)
+            Self.applySystemLanguage(language, to: defaults)
         }
     }
 
@@ -87,6 +91,21 @@ final class AppConfiguration: ObservableObject {
     private var cachedBarkKey: String?
     /// `true` once the keychain was asked for the Bark Key.
     private var isBarkKeyLoaded = false
+
+    /// 通知 → 权限 → 自动检查更新.
+    ///
+    /// On by default: the app asks GitHub for its latest release once after
+    /// launch and then once every 24 hours. While it is off `UpdateChecker`
+    /// holds no timer and sends no request at all.
+    @Published var checksForUpdates: Bool {
+        didSet { defaults.set(checksForUpdates, forKey: DefaultsKey.checksForUpdates) }
+    }
+
+    /// When the update checker last asked GitHub, `nil` before the first check.
+    ///
+    /// Kept across launches, so a Mac that slept through the 24 hours checks
+    /// again when it wakes instead of waiting for the next day.
+    private(set) var lastUpdateCheckAt: Date?
 
     /// What the app monitors and when it notifies. Every change is saved at
     /// once: there is no 「保存」 button.
@@ -116,6 +135,13 @@ final class AppConfiguration: ObservableObject {
         self.language = storedLanguage
         // The stored language is applied before the app reads its first text.
         AppText.use(storedLanguage)
+        Self.applySystemLanguage(storedLanguage, to: defaults)
+        // The switch is on until it is turned off once; an absent value is not a
+        // turned-off switch.
+        self.checksForUpdates = defaults.object(forKey: DefaultsKey.checksForUpdates) == nil
+            ? true
+            : defaults.bool(forKey: DefaultsKey.checksForUpdates)
+        self.lastUpdateCheckAt = defaults.object(forKey: DefaultsKey.lastUpdateCheckAt) as? Date
         self.barkSound = defaults.string(forKey: DefaultsKey.barkSound) ?? ""
         let storedBarkServer = defaults.string(forKey: DefaultsKey.barkServerAddress) ?? ""
         self.barkServerAddress = storedBarkServer.isEmpty
@@ -195,6 +221,33 @@ final class AppConfiguration: ObservableObject {
         let trimmed = key?.trimmingCharacters(in: .whitespacesAndNewlines)
         cachedBarkKey = trimmed?.isEmpty == false ? trimmed : nil
         hasBarkKey = cachedBarkKey != nil
+    }
+
+    // MARK: - Language
+
+    /// Hands 界面 → 语言 to macOS through `AppleLanguages` of the app.
+    ///
+    /// The menu items macOS adds by itself — 「填充」「居中」「移动与调整大小」 in
+    /// 窗口, the About panel — come in the language macOS picks for the app, not
+    /// from `T()`. macOS reads `AppleLanguages` at launch, so those items follow
+    /// a change on the next launch; 跟随系统 removes the key again.
+    private static func applySystemLanguage(_ language: AppLanguage, to defaults: UserDefaults) {
+        switch language {
+        case .system: defaults.removeObject(forKey: "AppleLanguages")
+        case .chinese: defaults.set(["zh-Hans"], forKey: "AppleLanguages")
+        case .english: defaults.set(["en"], forKey: "AppleLanguages")
+        }
+    }
+
+    // MARK: - Updates
+
+    /// Remembers when the update check ran.
+    ///
+    /// The time is stored, not only kept in memory, so a wake after a long sleep
+    /// can tell whether the 24 hours are up.
+    func recordUpdateCheck(at date: Date) {
+        lastUpdateCheckAt = date
+        defaults.set(date, forKey: DefaultsKey.lastUpdateCheckAt)
     }
 
     // MARK: - Saving

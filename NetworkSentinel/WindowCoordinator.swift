@@ -21,6 +21,8 @@ final class WindowCoordinator: NSObject, NSWindowDelegate {
     let configuration: AppConfiguration
     /// The monitoring engine of the app, used by 设置 and the 线路标签.
     let monitor: MonitorService
+    /// The update check of the app, used by the sidebar and 通知.
+    let updateChecker: UpdateChecker
     /// The page the 主窗口 shows; 「设置…」 of the 菜单栏弹出面板 sets it.
     let mainWindowState = MainWindowState()
     /// Window state of the app; weak, because the app state owns this object.
@@ -33,9 +35,10 @@ final class WindowCoordinator: NSObject, NSWindowDelegate {
     /// `true` once 「开始使用」 ran: closing that window then keeps the app alive.
     private var isFirstLaunchFinished = false
 
-    init(configuration: AppConfiguration, monitor: MonitorService) {
+    init(configuration: AppConfiguration, monitor: MonitorService, updateChecker: UpdateChecker) {
         self.configuration = configuration
         self.monitor = monitor
+        self.updateChecker = updateChecker
         super.init()
     }
 
@@ -94,6 +97,7 @@ final class WindowCoordinator: NSObject, NSWindowDelegate {
                 content: MainWindow(
                     configuration: configuration,
                     monitor: monitor,
+                    updateChecker: updateChecker,
                     windowState: mainWindowState
                 ),
                 contentSize: Self.mainWindowSize,
@@ -135,10 +139,15 @@ final class WindowCoordinator: NSObject, NSWindowDelegate {
 
     /// While the 主窗口 or the 首次启动窗口 is open the app shows a Dock icon
     /// (and its menu bar menus), like a normal app.
+    ///
+    /// The main menu is installed again on every visit: AppKit writes its
+    /// default menu back while the app activates, and the app has menus of its
+    /// own (`MainMenu`).
     private func showDockIcon() {
         if NSApp.activationPolicy() != .regular {
             NSApp.setActivationPolicy(.regular)
         }
+        MainMenu.shared.install()
     }
 
     /// With every window closed it goes back to a menu bar app.
@@ -209,6 +218,9 @@ final class WindowCoordinator: NSObject, NSWindowDelegate {
         // A menu bar app is not brought forward by a click, so it asks itself.
         NSApp.activate(ignoringOtherApps: true)
         window.makeKeyAndOrderFront(nil)
+        // Activating is when AppKit is most likely to swap the menu; the app's
+        // own menu goes in after that.
+        MainMenu.shared.install()
 
         // The 首次启动窗口 is created while the app is still launching, and the
         // launch sequence can take the focus away again; ask once more.
@@ -216,6 +228,7 @@ final class WindowCoordinator: NSObject, NSWindowDelegate {
             guard window.isVisible else { return }
             NSApp.activate(ignoringOtherApps: true)
             window.makeKeyAndOrderFront(nil)
+            MainMenu.shared.install()
         }
     }
 }

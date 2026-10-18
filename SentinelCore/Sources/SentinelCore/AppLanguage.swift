@@ -1,6 +1,6 @@
 import Foundation
 
-/// The language setting of 设置 → 通用 → 语言.
+/// The language setting of 界面 → 语言.
 public enum AppLanguage: String, CaseIterable, Codable {
     /// Chinese when the Mac prefers Chinese, English otherwise.
     case system

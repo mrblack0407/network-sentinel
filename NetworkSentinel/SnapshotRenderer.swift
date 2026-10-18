@@ -55,7 +55,12 @@ enum SnapshotRenderer {
         for page in SidebarItem.allCases {
             let windowState = MainWindowState()
             windowState.selection = page
-            let view = MainWindow(configuration: configuration, monitor: monitor, windowState: windowState)
+            let view = MainWindow(
+                configuration: configuration,
+                monitor: monitor,
+                updateChecker: state.updateChecker,
+                windowState: windowState
+            )
             render(view, size: NSSize(width: 1180, height: 920),
                    appearance: appearance, to: directory.appendingPathComponent("main-\(page.rawValue).png"))
         }

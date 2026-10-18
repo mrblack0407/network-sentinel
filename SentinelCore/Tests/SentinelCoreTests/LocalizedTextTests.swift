@@ -178,6 +178,57 @@ final class LocalizedTextTests: XCTestCase {
         }
     }
 
+    // MARK: - 主菜单
+
+    /// The menu bar menus follow 界面 → 语言, with the names macOS uses.
+    func testTheMainMenuFollowsTheLanguage() {
+        XCTAssertEqual(T(.menuApplication), "Network Sentinel")
+        XCTAssertEqual(T(.menuAbout), "关于 Network Sentinel")
+        XCTAssertEqual(T(.menuSettings), "设置…")
+        XCTAssertEqual(T(.menuHide), "隐藏 Network Sentinel")
+        XCTAssertEqual(T(.menuHideOthers), "隐藏其他")
+        XCTAssertEqual(T(.menuShowAll), "全部显示")
+        XCTAssertEqual(T(.menuQuit), "退出 Network Sentinel")
+        XCTAssertEqual(T(.menuEdit), "编辑")
+        XCTAssertEqual(T(.menuUndo), "撤销")
+        XCTAssertEqual(T(.menuRedo), "重做")
+        XCTAssertEqual(T(.menuCut), "剪切")
+        XCTAssertEqual(T(.menuCopy), "拷贝")
+        XCTAssertEqual(T(.menuPaste), "粘贴")
+        XCTAssertEqual(T(.menuSelectAll), "全选")
+        XCTAssertEqual(T(.menuWindow), "窗口")
+        XCTAssertEqual(T(.menuMinimize), "最小化")
+        XCTAssertEqual(T(.menuZoom), "缩放")
+        XCTAssertEqual(T(.menuCloseWindow), "关闭窗口")
+        XCTAssertEqual(T(.menuBringAllToFront), "前置全部窗口")
+        XCTAssertEqual(T(.menuHelp), "帮助")
+        XCTAssertEqual(T(.menuGitHub), "Network Sentinel 在 GitHub 上")
+
+        AppText.withLanguage(.english) {
+            XCTAssertEqual(T(.menuApplication), "Network Sentinel")
+            XCTAssertEqual(T(.menuAbout), "About Network Sentinel")
+            XCTAssertEqual(T(.menuSettings), "Settings…")
+            XCTAssertEqual(T(.menuHide), "Hide Network Sentinel")
+            XCTAssertEqual(T(.menuHideOthers), "Hide Others")
+            XCTAssertEqual(T(.menuShowAll), "Show All")
+            XCTAssertEqual(T(.menuQuit), "Quit Network Sentinel")
+            XCTAssertEqual(T(.menuEdit), "Edit")
+            XCTAssertEqual(T(.menuUndo), "Undo")
+            XCTAssertEqual(T(.menuRedo), "Redo")
+            XCTAssertEqual(T(.menuCut), "Cut")
+            XCTAssertEqual(T(.menuCopy), "Copy")
+            XCTAssertEqual(T(.menuPaste), "Paste")
+            XCTAssertEqual(T(.menuSelectAll), "Select All")
+            XCTAssertEqual(T(.menuWindow), "Window")
+            XCTAssertEqual(T(.menuMinimize), "Minimize")
+            XCTAssertEqual(T(.menuZoom), "Zoom")
+            XCTAssertEqual(T(.menuCloseWindow), "Close Window")
+            XCTAssertEqual(T(.menuBringAllToFront), "Bring All to Front")
+            XCTAssertEqual(T(.menuHelp), "Help")
+            XCTAssertEqual(T(.menuGitHub), "Network Sentinel on GitHub")
+        }
+    }
+
     // MARK: - 测试连接 and the gateway errors
 
     func testTheConnectionErrorFollowsTheLanguage() {

@@ -16,6 +16,7 @@ The app is not notarized by Apple, so macOS blocks the first launch: open System
 - System notifications for outages, restores, packet loss, high latency and threats, by UniFi severity
 - Optional push to your iPhone through [Bark](https://github.com/Finb/Bark)
 - A main window with an overview, the log (filters, CSV export), notifications, interface (Chinese or English, light or dark) and settings
+- A daily check of GitHub for a new version, shown as a note at the bottom of the sidebar (it only links to the release page and never installs an update)
 
 ## Requirements
 

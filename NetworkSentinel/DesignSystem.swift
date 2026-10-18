@@ -600,7 +600,7 @@ enum LogTimestampText {
 
     /// One formatter per language and pattern, rebuilt when the language changes.
     ///
-    /// The locale follows 设置 → 通用 → 语言: `zh_Hans_CN` or `en_US`.
+    /// The locale follows 界面 → 语言: `zh_Hans_CN` or `en_US`.
     private static func formatter(_ format: String) -> DateFormatter {
         let key = "\(AppText.localeIdentifier)|\(format)"
         if let cached = formatters[key] {
